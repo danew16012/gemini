@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>樱兰学院咖啡谷</title>
+  <title>下单系统</title>
 
   <style>
     :root{
@@ -12,9 +12,7 @@
       --dock-margin: 12px;
       --filter-gap: 8px;
     }
-
     *{ box-sizing:border-box; }
-
     body{
       font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,"Noto Sans",sans-serif;
       margin:16px;
@@ -31,32 +29,31 @@
 
     .imgbtn{border:0;background:transparent;padding:0;cursor:pointer}
     .imgbtn:focus{outline:2px solid #999;outline-offset:3px;border-radius:12px}
-    img.goodsimg{width:180px;max-width:100%;height:auto;border-radius:12px;border:1px solid #eee;display:block}
+    img.goodsimg{
+      width:180px;max-width:100%;height:auto;border-radius:12px;
+      border:1px solid #eee;display:block
+    }
 
     .zh{font-size:16px;font-weight:900;word-break:break-word}
     .ja{color:#666;font-size:12px;margin-top:2px;word-break:break-word}
     .meta{color:#666;font-size:12px;margin-top:6px;word-break:break-word}
 
     .needTicket{
-      margin-top:8px;
-      font-size:12px;
-      color:#1a4d2e;
-      background:#ecfff2;
-      border:1px solid #b8f2c7;
-      padding:6px 8px;
-      border-radius:10px;
-      display:none;
-      max-width:100%;
-      white-space:normal;
-      word-break:break-word;
-      overflow-wrap:anywhere;
+      margin-top:8px;font-size:12px;color:#1a4d2e;
+      background:#ecfff2;border:1px solid #b8f2c7;
+      padding:6px 8px;border-radius:10px;
+      display:none;max-width:100%;
+      white-space:normal;word-break:break-word;overflow-wrap:anywhere;
     }
     .needTicket.show{display:block}
 
     .num{width:96px}
     .right{text-align:right;white-space:nowrap}
 
-    .btn{padding:8px 12px;border:1px solid #ccc;border-radius:10px;background:#fff;cursor:pointer;font-weight:800}
+    .btn{
+      padding:8px 12px;border:1px solid #ccc;border-radius:10px;
+      background:#fff;cursor:pointer;font-weight:800
+    }
     .btn:hover{background:#f4f4f4}
     .btn.primary{border-color:#222;background:#222;color:#fff}
     .btn.primary:hover{background:#111}
@@ -75,7 +72,7 @@
 
       tr{
         display:grid;
-        grid-template-columns: 132px minmax(0, 1fr); /* ✅关键 */
+        grid-template-columns: 132px minmax(0, 1fr);
         grid-template-areas:
           "img name"
           "img price"
@@ -87,7 +84,6 @@
         overflow:hidden;
         background:#fff;
       }
-
       td{border:0;padding:10px;min-width:0}
       td:nth-child(1){grid-area:img;border-right:1px solid #eee;display:flex;align-items:center;justify-content:center}
       td:nth-child(2){grid-area:name;min-width:0}
@@ -100,7 +96,7 @@
 
       img.goodsimg{width:110px}
 
-      .right{ text-align:left; white-space:normal; } /* ✅关键 */
+      .right{ text-align:left; white-space:normal; } /* 关键：不强制不换行 */
       .label{display:inline-block}
       .num{width:120px;font-size:16px}
       .needTicket{font-size:11px;padding:5px 6px}
@@ -238,8 +234,8 @@
 </head>
 
 <body>
-  <h1><strong>樱兰学院咖啡谷</strong></h1>
-  <p class="hint">欢迎使用自助下单系统，联系微信 <strong>zhangxy1223</strong> 咨询或获取报价。</p>
+  <h1><strong id="pageTitle">下单系统</strong></h1>
+  <p class="hint" id="pageSubtitle"></p>
 
   <table id="goodsTable">
     <thead>
@@ -295,7 +291,7 @@
       <h2 id="modalTitle">提交订单</h2>
 
       <div id="stepEmail">
-        <div class="muted">为防止恶意提交，请填写可联系的邮箱（提交后会生成订单号，建议截图保存）。</div>
+        <div class="muted" id="modalHint"></div>
 
         <div class="field">
           <label for="email1">邮箱</label>
@@ -352,48 +348,27 @@
     </div>
   </div>
 
+  <!-- 方案A：只换这个数据文件即可 -->
+  <script src="./goods-data.js"></script>
+
 <script>
-  // 你的 Worker 域名
-  const WORKER_BASE = "https://ouran-order.danew16012.workers.dev";
+  // ===== Worker 配置（不随活动变化，也可以放进 goods-data.js 的 config 里）=====
+  const WORKER_BASE = (window.GOODS_CONFIG && window.GOODS_CONFIG.workerBase) || "https://ouran-order.danew16012.workers.dev";
 
-  // 图片目录：按你 repo 实际路径调整
-  const IMG_BASE = "../assets/images/tokyo/goods/";
+  // ===== 读取配置/数据 =====
+  const CONFIG = window.GOODS_CONFIG || {};
+  const items = window.GOODS_ITEMS || [];
 
-  // 价格格式
+  // ===== 填充页面文案 =====
+  const pageTitle = document.getElementById("pageTitle");
+  const pageSubtitle = document.getElementById("pageSubtitle");
+  document.title = CONFIG.title || "下单系统";
+  pageTitle.textContent = CONFIG.title || "下单系统";
+  pageSubtitle.innerHTML = CONFIG.subtitle || "";
+  document.getElementById("modalHint").textContent = CONFIG.modalHint || "为防止恶意提交，请填写可联系的邮箱（提交后会生成订单号，建议截图保存）。";
+
+  const IMG_BASE = CONFIG.imgBase || "";
   const yen = (n)=> new Intl.NumberFormat("ja-JP").format(n);
-
-  /**
-   * ✅ 把你当前跑通的 items 数组，完整粘贴到这里即可
-   *
-   * 字段说明（不要删字段名）：
-   * id: 唯一字符串
-   * img: 图片文件名（相对 IMG_BASE）
-   * cat: "blind" 或 "single"
-   * zh: 中文名（加粗大字）
-   * ja: 日文名（参考小字）
-   * price: 单价（数字，JPY）
-   * inputUnit: 显示单位，例如 "个" / "盒"
-   * unitsPerQty: 这一行的数量换算成“最小单位”的倍率（默认1）
-   * groupId: 同一系列的合并限购组（例如同款“单抽+整套”要累积）
-   * limitPiecesPerTicket: 每张票允许的最小单位上限（用于计算票数）
-   * limitDisplay: 限购列展示文本（例如：单抽“14个”、整套“2盒”）
-   */
-  const items = [
-    // 示例（你会用自己的替换）
-    // {
-    //   id:"laser_pick",
-    //   img:"goods-xxx.png",
-    //   cat:"blind",
-    //   zh:"镭射吧唧（单抽）",
-    //   ja:"レーザー缶バッジ（単品）",
-    //   price:550,
-    //   inputUnit:"个",
-    //   unitsPerQty:1,
-    //   groupId:"laser_badge",
-    //   limitPiecesPerTicket:14,
-    //   limitDisplay:"14个"
-    // },
-  ];
 
   const tbody = document.querySelector("#goodsTable tbody");
   const grandTotalEl = document.getElementById("grandTotal");
@@ -405,7 +380,6 @@
   const lbCap = document.getElementById("lbCap");
   const lbBackdrop = document.getElementById("lbBackdrop");
   const lbClose = document.getElementById("lbClose");
-
   function openLightbox(src, cap){
     lbImg.src = src;
     lbImg.alt = cap || "预览";
@@ -461,87 +435,40 @@
     if(e.key === "Escape" && orderModal.classList.contains("open")) closeModal();
   });
 
-  function setErr(el, msg){
-    el.textContent = msg || "";
-    el.classList.toggle("show", !!msg);
-  }
-
-  function resetModal(){
-    stepEmail.style.display = "";
-    stepResult.style.display = "none";
-    email1.value = "";
-    email2.value = "";
-    hp.value = "";
-    setErr(emailErr1, "");
-    setErr(emailErr2, "");
-    confirmSubmitBtn.disabled = false;
-    confirmSubmitBtn.textContent = "确认提交";
-    document.getElementById("modalTitle").textContent = "提交订单";
-  }
-
-  // 邮箱校验（按你要求）
-  function validateEmailLocal(email){
-    const s = (email || "").trim();
-    const at = s.indexOf("@");
-    if (at <= 0 || at !== s.lastIndexOf("@")) return {ok:false, reason:"邮箱必须包含且只包含一个 @"};
-    const local = s.slice(0, at);
-    const domain = s.slice(at+1);
-
-    if (local.length < 2) return {ok:false, reason:"邮箱前缀至少 2 个字符"};
-    if (/^\d+$/.test(local)) return {ok:false, reason:"邮箱前缀不能全是数字"};
-    if (local.includes("123")) return {ok:false, reason:'邮箱前缀不能包含 "123"'};
-
-    if (domain.length < 2) return {ok:false, reason:"邮箱后缀至少 2 个字符"};
-    if (domain.startsWith(".") || domain.endsWith(".")) return {ok:false, reason:"域名中的 . 位置不正确"};
-    if (domain.includes("..")) return {ok:false, reason:"域名不能包含连续的 .."};
-
-    const lastDot = domain.lastIndexOf(".");
-    if (lastDot < 2) return {ok:false, reason:"域名必须包含 . 且不能太靠前"};
-    if (lastDot === domain.length - 1) return {ok:false, reason:"域名的 . 不能在最后"};
-    const tld = domain.slice(lastDot+1);
-    if (tld.length < 2) return {ok:false, reason:"域名后缀（如 .com）至少 2 个字符"};
-
-    if (!/^[A-Za-z0-9._%+-]+$/.test(local)) return {ok:false, reason:"邮箱前缀包含不允许字符"};
-    if (!/^[A-Za-z0-9.-]+$/.test(domain)) return {ok:false, reason:"邮箱域名包含不允许字符"};
-
-    return {ok:true, reason:""};
-  }
-
   function render(){
     tbody.innerHTML = "";
     items.forEach((it)=>{
       const imgSrc = IMG_BASE + it.img;
       const tr = document.createElement("tr");
       tr.dataset.id = it.id;
-      tr.dataset.cat = it.cat;
+      tr.dataset.cat = it.cat; // blind/single
 
       const groupNote = it.groupId ? "（与同系列单抽/整套合计限购）" : "";
 
       tr.innerHTML = `
         <td>
           <button class="imgbtn" type="button" aria-label="点击放大图片">
-            <img class="goodsimg" src="${imgSrc}" alt="${it.zh}">
+            <img class="goodsimg" src="${imgSrc}" alt="${escapeHtml(it.zh)}">
           </button>
         </td>
         <td>
-          <div class="zh">${it.zh}</div>
-          <div class="ja">${it.ja}</div>
-          <div class="meta">每张票限购：${it.limitDisplay} ${groupNote}</div>
+          <div class="zh">${escapeHtml(it.zh)}</div>
+          <div class="ja">${escapeHtml(it.ja)}</div>
+          <div class="meta">每张票限购：${escapeHtml(it.limitDisplay)} ${groupNote}</div>
         </td>
         <td>${it.cat === "blind" ? "盲抽" : "单领"}</td>
-        <td class="right">${it.limitDisplay}</td>
+        <td class="right">${escapeHtml(it.limitDisplay)}</td>
         <td class="right"><span class="label">单价</span>¥${yen(it.price)}</td>
         <td class="right">
           <span class="label">数量</span>
           <input class="num" type="number" min="0" step="1" value="0" inputmode="numeric" />
-          <span class="unit">${it.inputUnit || ""}</span>
-          <div class="needTicket" data-need-for="${it.id}"></div>
+          <span class="unit">${escapeHtml(it.inputUnit || "")}</span>
+          <div class="needTicket" data-need-for="${escapeAttr(it.id)}"></div>
         </td>
         <td class="right"><span class="label">小计</span><span class="subtotal">¥0</span></td>
       `;
 
       tr.querySelector(".imgbtn").addEventListener("click", ()=> openLightbox(imgSrc, it.zh));
-
       const input = tr.querySelector("input");
       const subtotalEl = tr.querySelector(".subtotal");
 
@@ -553,7 +480,6 @@
         subtotalEl.textContent = "¥" + yen(qty * it.price);
         recalcAll();
       }
-
       input.addEventListener("input", recalcRow);
       input.addEventListener("change", recalcRow);
 
@@ -576,7 +502,6 @@
       el.classList.remove("show");
     });
   }
-
   function setNeedTicketsForIds(ids, msg){
     ids.forEach(id=>{
       const tr = tbody.querySelector(`tr[data-id="${CSS.escape(id)}"]`);
@@ -588,7 +513,6 @@
     });
   }
 
-  // 合并限购计算：groupId 合并；unitsPerQty 做换算；limitPiecesPerTicket 决定每票上限
   function buildConstraints(){
     const constraints = new Map();
     items.forEach(it=>{
@@ -619,17 +543,18 @@
   function computeTotal(){
     let total = 0;
     items.forEach(it=>{
-      total += getQtyById(it.id) * it.price;
+      const qty = getQtyById(it.id);
+      total += qty * it.price;
     });
     return total;
   }
 
   function recalcAll(){
-    grandTotalEl.textContent = "¥" + yen(computeTotal());
+    const total = computeTotal();
+    grandTotalEl.textContent = "¥" + yen(total);
 
     const constraints = buildConstraints();
 
-    // 每个商品行的“至少需要票数”（针对该商品/组）
     clearNeedTickets();
     constraints.forEach(c=>{
       if(c.pieces <= 0) return;
@@ -637,8 +562,8 @@
       setNeedTicketsForIds(c.rowIds, `该商品至少需要 ${need} 张票`);
     });
 
-    // 底部全单票数（取所有组的最大票数）
-    ticketsNeededEl.textContent = String(computeTicketsNeeded(constraints));
+    const tickets = computeTicketsNeeded(constraints);
+    ticketsNeededEl.textContent = String(tickets);
   }
 
   // 清空
@@ -663,13 +588,59 @@
     btn.addEventListener("click", ()=> setFilter(btn.dataset.filter));
   });
 
+  // 邮箱校验（同后端规则）
+  function validateEmailLocal(email){
+    const s = (email || "").trim();
+    const at = s.indexOf("@");
+    if (at <= 0 || at !== s.lastIndexOf("@")) return {ok:false, reason:"邮箱必须包含且只包含一个 @"};
+    const local = s.slice(0, at);
+    const domain = s.slice(at+1);
+
+    if (local.length < 2) return {ok:false, reason:"邮箱前缀至少 2 个字符"};
+    if (/^\d+$/.test(local)) return {ok:false, reason:"邮箱前缀不能全是数字"};
+    if (local.includes("123")) return {ok:false, reason:'邮箱前缀不能包含 "123"'};
+
+    if (domain.length < 2) return {ok:false, reason:"邮箱后缀至少 2 个字符"};
+    if (domain.startsWith(".") || domain.endsWith(".")) return {ok:false, reason:"域名中的 . 位置不正确"};
+    if (domain.includes("..")) return {ok:false, reason:"域名不能包含连续的 .."};
+
+    const lastDot = domain.lastIndexOf(".");
+    if (lastDot < 2) return {ok:false, reason:"域名必须包含 . 且不能太靠前"};
+    if (lastDot === domain.length - 1) return {ok:false, reason:"域名的 . 不能在最后"};
+    const tld = domain.slice(lastDot+1);
+    if (tld.length < 2) return {ok:false, reason:"域名后缀（如 .com）至少 2 个字符"};
+
+    if (!/^[A-Za-z0-9._%+-]+$/.test(local)) return {ok:false, reason:"邮箱前缀包含不允许字符"};
+    if (!/^[A-Za-z0-9.-]+$/.test(domain)) return {ok:false, reason:"邮箱域名包含不允许字符"};
+
+    return {ok:true, reason:""};
+  }
+
+  function setErr(el, msg){
+    el.textContent = msg || "";
+    el.classList.toggle("show", !!msg);
+  }
+
+  function resetModal(){
+    stepEmail.style.display = "";
+    stepResult.style.display = "none";
+    email1.value = "";
+    email2.value = "";
+    hp.value = "";
+    setErr(emailErr1, "");
+    setErr(emailErr2, "");
+    confirmSubmitBtn.disabled = false;
+    confirmSubmitBtn.textContent = "确认提交";
+    document.getElementById("modalTitle").textContent = "提交订单";
+  }
+
   function pickedItems(){
     return items
       .map(it => ({ it, qty: getQtyById(it.id) }))
       .filter(x => x.qty > 0);
   }
 
-  function buildSummaryTable(){
+  function buildSummaryTable(orderId, email){
     summaryTbody.innerHTML = "";
     const picked = pickedItems();
     picked.forEach(x=>{
@@ -677,8 +648,8 @@
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td>${x.it.cat==="blind" ? "盲抽" : "单领"}</td>
-        <td><strong>${x.it.zh}</strong><div class="muted">${x.it.ja}</div></td>
-        <td class="right">${x.qty}${x.it.inputUnit}</td>
+        <td><strong>${escapeHtml(x.it.zh)}</strong><div class="muted">${escapeHtml(x.it.ja)}</div></td>
+        <td class="right">${x.qty}${escapeHtml(x.it.inputUnit)}</td>
         <td class="right">¥${yen(x.it.price)}</td>
         <td class="right">¥${yen(sub)}</td>
       `;
@@ -688,7 +659,7 @@
     const constraints = buildConstraints();
     const tickets = computeTicketsNeeded(constraints);
     const total = computeTotal();
-    summaryMeta.textContent = `全单至少需要票数：${tickets}    总价：¥${yen(total)}`;
+    summaryMeta.textContent = `邮箱：${email}    全单至少需要票数：${tickets}    总价：¥${yen(total)}    订单号：${orderId}`;
     return { tickets, total, picked };
   }
 
@@ -697,7 +668,6 @@
     catch{ return false; }
   }
 
-  // 提交到 Worker（带超时，防卡）
   async function submitToWorker(email){
     const picked = pickedItems();
     const constraints = buildConstraints();
@@ -721,37 +691,30 @@
       })),
     };
 
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 12000);
+    const resp = await fetch(`${WORKER_BASE}/api/order`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+    });
 
-    try{
-      const resp = await fetch(`${WORKER_BASE}/api/order`, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(payload),
-        signal: controller.signal,
-      });
-
-      const data = await resp.json().catch(()=>({ok:false,error:"Bad response"}));
-      if (!data.ok) throw new Error(data.error || "submit failed");
-      return data.order_id;
-    } finally {
-      clearTimeout(timer);
-    }
+    const data = await resp.json().catch(()=>({ok:false,error:"Bad response"}));
+    if (!data.ok) throw new Error(data.error || "submit failed");
+    return data.order_id;
   }
 
-  // 打开提交弹窗
+  // 提交按钮
   document.getElementById("submitBtn").addEventListener("click", ()=>{
-    if (!pickedItems().length){
+    const picked = pickedItems();
+    if (!picked.length){
       alert("请先填写希望数量后再提交。");
       return;
     }
     resetModal();
     openModal();
-    buildSummaryTable();
+    // 先渲染一次 summary（无订单号）
+    buildSummaryTable("-", "-");
   });
 
-  // 邮箱确认提交
   confirmSubmitBtn.addEventListener("click", async ()=>{
     setErr(emailErr1, "");
     setErr(emailErr2, "");
@@ -774,15 +737,17 @@
       stepResult.style.display = "";
       orderIdBig.textContent = orderId;
 
-      const makePlainText = ()=>{
-        const { tickets, total, picked } = buildSummaryTable();
+      const { tickets, total, picked } = buildSummaryTable(orderId, e1);
+
+      const plainText = (() => {
         const lines = [];
-        lines.push("樱兰学院咖啡谷 订单");
+        lines.push(CONFIG.title || "订单");
         lines.push(`订单号：${orderId}`);
         lines.push(`邮箱：${e1}`);
         lines.push(`全单至少需要票数：${tickets}`);
         lines.push(`总价：¥${yen(total)}`);
         lines.push("");
+
         const blind = picked.filter(x=>x.it.cat==="blind");
         const single = picked.filter(x=>x.it.cat==="single");
 
@@ -797,7 +762,7 @@
           lines.push("");
         }
         return lines.join("\n");
-      };
+      })();
 
       copyIdBtn.onclick = async ()=>{
         const ok = await copyText(orderId);
@@ -806,7 +771,7 @@
       };
 
       copyTextBtn.onclick = async ()=>{
-        const ok = await copyText(makePlainText());
+        const ok = await copyText(plainText);
         copyTextBtn.textContent = ok ? "已复制" : "复制失败";
         setTimeout(()=> copyTextBtn.textContent="复制订单清单", 900);
       };
@@ -817,6 +782,15 @@
       confirmSubmitBtn.textContent = "确认提交";
     }
   });
+
+  function escapeHtml(s){
+    return String(s ?? "").replace(/[&<>"]/g, c => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"
+    }[c]));
+  }
+  function escapeAttr(s){
+    return escapeHtml(s).replace(/'/g,"&#39;");
+  }
 
   // 初始化
   render();
