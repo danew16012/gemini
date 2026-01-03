@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>欢迎 | [你的名字]</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Noto+Sans+SC:wght@300;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- CSS Reset & 基础设置 --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            font-family: 'Montserrat', 'Noto Sans SC', sans-serif;
+            background-color: #000; /* 防止图片加载前的闪白 */
+            overflow: hidden; /* 禁止滚动，保持单页冲击力 */
+        }
+
+        /* --- 核心容器 --- */
+        .welcome-section {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #fff;
+        }
+
+        /* --- 背景处理 (关键点：冲击力来源) --- */
+        .bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* 替换下方 URL 为你自己的高质量照片 (建议：黑白、建筑、抽象或肖像) */
+            background-image: url('https://images.unsplash.com/photo-1492551557933-34265f7af79e?q=80&w=3840&auto=format&fit=crop&ixlib=rb-4.0.3');
+            background-size: cover;
+            background-position: center;
+            z-index: -2;
+            /* 微妙的缩放动画，增加呼吸感 */
+            animation: subtleZoom 20s infinite alternate ease-in-out;
+        }
+
+        /* 深色遮罩层，确保文字清晰可见 */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6); /* 调整透明度以改变背景亮度 */
+            z-index: -1;
+        }
+
+        /* --- 内容区域 --- */
+        .content-wrapper {
+            padding: 2rem;
+            z-index: 1;
+        }
+
+        /* --- 巨大的冲击力标题 --- */
+        .mega-title {
+            /* 使用 clamp 实现响应式巨大字体 */
+            font-size: clamp(4rem, 15vw, 12rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            line-height: 0.9;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            
+            /* 镂空文字效果 (可选，不需要则注释掉下面三行) */
+            color: transparent; */
+            -webkit-text-stroke: 2px rgba(255, 255, 255, 0.8); */
+            /*color: #fff; /* 如果不用镂空，保持白色 */
+
+            /* 动画初始化状态 */
+            opacity: 0;
+            transform: translateY(30px);
+            /* 执行动画 */
+            animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            animation-delay: 0.3s; /* 延迟出现 */
+        }
+
+        /* --- 副标题/名字 --- */
+        .sub-title {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            font-weight: 500;
+            margin-bottom: 3rem;
+            color: rgba(255, 255, 255, 0.9);
+
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            animation-delay: 0.6s;
+        }
+
+        /* --- 行动按钮 (CTA) --- */
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 3rem;
+            border: 2px solid #fff;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            animation-delay: 0.9s;
+        }
+
+        /* 按钮悬停效果：填满白色 */
+        .cta-button:hover {
+            background-color: #fff;
+            color: #000;
+            transform: translateY(-5px); /* 轻微上浮 */
+            box-shadow: 0 10px 20px -10px rgba(255,255,255, 0.5);
+        }
+
+        /* --- 动画定义 --- */
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes subtleZoom {
+            from { transform: scale(1); }
+            to { transform: scale(1.05); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <section class="welcome-section">
+        <div class="bg-image"></div>
+        <div class="overlay"></div>
+
+        <div class="content-wrapper">
+            <h1 class="mega-title">Hello.</h1>
+            <p class="sub-title">HELLO WORLD</p>
+            
+            <a href="#enter" class="cta-button">进入网站</a>
+        </div>
+    </section>
+
+</body>
+</html>
