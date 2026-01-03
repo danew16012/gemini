@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>历史周期律与现代国家治理：交互式分析报告</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fdfbf7; /* Warm paper-like background */
+            color: #333;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (max-width: 640px) {
+            .chart-container {
+                height: 300px;
+            }
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .active-phase {
+            border-left: 4px solid #b45309;
+            background-color: #fff7ed;
+        }
+    </style>
+    <!-- Chosen Palette: Warm Neutrals (History) transitioning to Cool Slate (Modern). 
+         Background: #fdfbf7 (Paper). 
+         Accents: #b45309 (Rust/History), #3b82f6 (Blue/Modern), #64748b (Slate/Data). -->
+    <!-- Application Structure Plan: 
+         1. Hero Section: Sets the context of the question.
+         2. Historical Analysis (The 300-Year Limit): Interactive Bar Chart showing dynastic durations. Interaction highlights specific causes of fall.
+         3. The Mechanics of Collapse: A 4-step interactive grid explaining the feudal "Dynastic Cycle" (Land annexation, etc.).
+         4. Modern Transformation (Comparative): Radar Chart contrasting Feudal vs. Modern state capabilities and burdens.
+         5. Modern Risk Simulation: Interactive Line Chart with Sliders. Users manipulate economic/social variables to see how modern stability is modeled differently.
+         This structure moves from "What happened?" (History) to "Why?" (Mechanics) to "What is different now?" (Comparison) to "What are the risks?" (Simulation). -->
+    <!-- Visualization & Content Choices:
+         1. Dynastic Duration: Horizontal Bar Chart. Goal: Visual proof of the 300-year cap. Interaction: Click for details. Library: Chart.js.
+         2. Feudal Cycle: CSS Grid with JS toggle. Goal: Explain the qualitative process of collapse. Method: Text/Card interaction.
+         3. Structure Comparison: Radar Chart. Goal: Show multi-dimensional differences (Tech, Legitimacy). Library: Chart.js.
+         4. Stability Sim: Line Chart + Range Inputs. Goal: Demonstrate modern risk factors (Economy vs Inequality). Library: Chart.js.
+         -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="antialiased text-slate-800">
+
+    <!-- Navigation / Header -->
+    <header class="w-full bg-white border-b border-stone-200 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold tracking-tight text-stone-800">🏛️ 历史与现代：国家治理分析</h1>
+            <nav class="hidden md:flex space-x-6 text-sm font-medium text-stone-600">
+                <a href="#history" class="hover:text-amber-700 transition">历史周期</a>
+                <a href="#mechanism" class="hover:text-amber-700 transition">崩溃机制</a>
+                <a href="#modern" class="hover:text-blue-700 transition">现代转型</a>
+                <a href="#simulation" class="hover:text-blue-700 transition">风险模拟</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-8 space-y-16">
+
+        <!-- Intro -->
+        <section class="text-center py-10">
+            <h2 class="text-3xl md:text-4xl font-extrabold text-stone-900 mb-4">“三百年大限”与现代治理逻辑</h2>
+            <p class="max-w-3xl mx-auto text-lg text-stone-600 leading-relaxed">
+                中国古代封建王朝的寿命极少超过300年。这一现象被称为“历史周期律”。
+                进入近现代后，科技、经济结构与社会契约发生了根本性变化。
+                本报告将通过数据可视化与交互模型，探讨古代王朝崩溃的根源，并分析现代政府面临的全新制约与风险。
+            </p>
+        </section>
+
+        <!-- Section 1: Historical Data -->
+        <section id="history" class="scroll-mt-24">
+            <div class="mb-6">
+                <h3 class="text-2xl font-bold text-stone-800 flex items-center gap-2">
+                    <span class="w-2 h-8 bg-amber-600 rounded-sm"></span>
+                    封建王朝的生命周期
+                </h3>
+                <p class="mt-2 text-stone-600">
+                    统计显示，大一统王朝的平均寿命在200-300年之间。请点击下方的柱状图，查看导致各朝代终结的具体核心因素。
+                </p>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-100">
+                <div class="chart-container">
+                    <canvas id="dynastyChart"></canvas>
+                </div>
+                <div id="dynasty-detail" class="mt-6 p-4 bg-amber-50 rounded-lg border border-amber-100 hidden">
+                    <h4 id="detail-title" class="font-bold text-amber-900 text-lg">王朝详情</h4>
+                    <p id="detail-text" class="text-amber-800 mt-1">点击图表查看详情...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: The Mechanism (Qualitative) -->
+        <section id="mechanism" class="scroll-mt-24">
+            <div class="mb-6">
+                <h3 class="text-2xl font-bold text-stone-800 flex items-center gap-2">
+                    <span class="w-2 h-8 bg-amber-600 rounded-sm"></span>
+                    古代：土地兼并与马尔萨斯陷阱
+                </h3>
+                <p class="mt-2 text-stone-600">
+                    古代社会的制约主要来自“土地-人口”的刚性矛盾。当人口增长超过土地承载力，且土地兼并导致税收流失时，王朝即进入衰退期。点击下方卡片了解演变过程。
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Interactive Cards -->
+                <div class="space-y-3">
+                    <button onclick="updateCycle(0)" class="cycle-btn w-full text-left p-4 rounded-lg bg-white border border-stone-200 shadow-sm hover:bg-stone-50 active-phase" data-index="0">
+                        <div class="font-bold text-stone-800">1. 王朝初期：休养生息</div>
+                        <div class="text-sm text-stone-500 mt-1">人少地多，自耕农为主，国家税收充沛。</div>
+                    </button>
+                    <button onclick="updateCycle(1)" class="cycle-btn w-full text-left p-4 rounded-lg bg-white border border-stone-200 shadow-sm hover:bg-stone-50" data-index="1">
+                        <div class="font-bold text-stone-800">2. 王朝中期：盛世危机</div>
+                        <div class="text-sm text-stone-500 mt-1">人口爆发，土地开发殆尽，豪强开始兼并土地。</div>
+                    </button>
+                    <button onclick="updateCycle(2)" class="cycle-btn w-full text-left p-4 rounded-lg bg-white border border-stone-200 shadow-sm hover:bg-stone-50" data-index="2">
+                        <div class="font-bold text-stone-800">3. 王朝晚期：财政崩溃</div>
+                        <div class="text-sm text-stone-500 mt-1">土地集中在免税的豪强手中，国库空虚，加税于贫民。</div>
+                    </button>
+                    <button onclick="updateCycle(3)" class="cycle-btn w-full text-left p-4 rounded-lg bg-white border border-stone-200 shadow-sm hover:bg-stone-50" data-index="3">
+                        <div class="font-bold text-stone-800">4. 终结：流民与战争</div>
+                        <div class="text-sm text-stone-500 mt-1">天灾诱发饥荒，流民起义，外部势力入侵，重新洗牌。</div>
+                    </button>
+                </div>
+                
+                <!-- Visualization/Explanation Area -->
+                <div class="bg-stone-800 text-stone-100 p-6 rounded-xl flex flex-col justify-center items-center text-center">
+                    <div id="cycle-icon" class="text-5xl mb-4">🌱</div>
+                    <h4 id="cycle-title" class="text-xl font-bold mb-2">资源充裕期</h4>
+                    <p id="cycle-desc" class="text-stone-300 leading-relaxed">
+                        新政权建立，由于战乱导致人口锐减，人均耕地面积大幅回升。社会矛盾缓和，进入恢复性增长。
+                    </p>
+                    <div class="mt-6 w-full bg-stone-700 rounded-full h-2">
+                        <div id="cycle-bar" class="bg-amber-500 h-2 rounded-full transition-all duration-500" style="width: 25%"></div>
+                    </div>
+                    <p class="text-xs text-stone-400 mt-2 text-right w-full">系统熵增程度</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Modern Comparison -->
+        <section id="modern" class="scroll-mt-24">
+            <div class="mb-6">
+                <h3 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
+                    <span class="w-2 h-8 bg-blue-600 rounded-sm"></span>
+                    近现代：规则改变了吗？
+                </h3>
+                <p class="mt-2 text-slate-600">
+                    工业革命后，土地不再是唯一的财富来源。现代政府拥有更强的控制力，但也面临更高的合法性要求。通过雷达图对比古代与现代国家的结构差异。
+                </p>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+                <div class="lg:col-span-2 chart-container">
+                    <canvas id="radarChart"></canvas>
+                </div>
+                <div class="lg:col-span-1 space-y-4">
+                    <div class="p-4 bg-slate-50 rounded border border-slate-100">
+                        <h4 class="font-bold text-slate-800">🏛️ 古代封建模式</h4>
+                        <ul class="text-sm text-slate-600 list-disc list-inside mt-2 space-y-1">
+                            <li><strong>统治基础：</strong> 神权/天命 + 暴力</li>
+                            <li><strong>资源瓶颈：</strong> 极低（农业产出上限）</li>
+                            <li><strong>信息控制：</strong> 弱（皇权不下县）</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 bg-blue-50 rounded border border-blue-100">
+                        <h4 class="font-bold text-blue-900">🏙️ 现代国家模式</h4>
+                        <ul class="text-sm text-blue-800 list-disc list-inside mt-2 space-y-1">
+                            <li><strong>统治基础：</strong> 绩效 + 法理程序</li>
+                            <li><strong>社会复杂度：</strong> 极高（需协调多元利益）</li>
+                            <li><strong>技术能力：</strong> 极强（数字化治理）</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Modern Risks Simulation -->
+        <section id="simulation" class="scroll-mt-24 mb-12">
+            <div class="mb-6">
+                <h3 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
+                    <span class="w-2 h-8 bg-red-600 rounded-sm"></span>
+                    现代风险模拟器：经济与分配
+                </h3>
+                <p class="mt-2 text-slate-600">
+                    现代政府更迭的风险不再单纯源于人口压力，而主要源于<strong>经济增长停滞</strong>与<strong>分配不均（基尼系数）</strong>。试着调整下方滑块，观察“政权稳定性曲线”的变化。
+                </p>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+                <div class="flex flex-col md:flex-row gap-8">
+                    <!-- Controls -->
+                    <div class="w-full md:w-1/3 space-y-6 bg-slate-50 p-6 rounded-lg">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">经济增长率 (%)</label>
+                            <input type="range" id="growthInput" min="-5" max="10" value="5" step="0.5" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
+                            <div class="flex justify-between text-xs text-slate-500 mt-1">
+                                <span>衰退 (-5%)</span>
+                                <span id="growthValue" class="font-bold text-blue-600">5%</span>
+                                <span>繁荣 (10%)</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">社会不平等 (模拟基尼系数)</label>
+                            <input type="range" id="giniInput" min="0.2" max="0.7" value="0.35" step="0.01" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-red-600">
+                            <div class="flex justify-between text-xs text-slate-500 mt-1">
+                                <span>平均 (0.2)</span>
+                                <span id="giniValue" class="font-bold text-red-600">0.35</span>
+                                <span>撕裂 (0.7)</span>
+                            </div>
+                        </div>
+
+                        <div class="pt-4 border-t border-slate-200">
+                            <p class="text-sm text-slate-600">
+                                <span class="font-bold">模型逻辑：</span> 现代政府的合法性很大程度上依赖于“把蛋糕做大”（增长）。如果增长停滞且分配极度不均，稳定性将急剧下降，导致选举失败或社会动荡。
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Chart Area -->
+                    <div class="w-full md:w-2/3">
+                        <div class="chart-container">
+                            <canvas id="simChart"></canvas>
+                        </div>
+                        <div id="sim-alert" class="mt-4 text-center text-sm font-medium text-green-600 bg-green-50 py-2 rounded">
+                            当前状态：社会结构稳定，主要矛盾可控。
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 mt-12">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p class="mb-2">基于政治学与历史数据生成的交互式演示</p>
+            <p class="text-xs opacity-50">注意：本页面模型为简化演示，不能涵盖复杂地缘政治与文化因素。</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- 1. Historical Dynasty Chart ---
+        const dynastyCtx = document.getElementById('dynastyChart').getContext('2d');
+        
+        const dynastyData = {
+            labels: ['汉朝 (西汉+东汉)', '唐朝', '宋朝 (北宋+南宋)', '明朝', '清朝'],
+            datasets: [{
+                label: '统治时长 (年)',
+                data: [405, 289, 319, 276, 268],
+                backgroundColor: 'rgba(180, 83, 9, 0.7)', // Amber-700
+                borderColor: 'rgba(180, 83, 9, 1)',
+                borderWidth: 1,
+                hoverBackgroundColor: 'rgba(180, 83, 9, 0.9)',
+            }]
+        };
+
+        const dynastyReasons = {
+            '汉朝 (西汉+东汉)': '核心原因：外戚宦官干政与豪强地主坐大。土地兼并严重导致税源枯竭，最终被黄巾起义瓦解基础，由军阀割据终结。',
+            '唐朝': '核心原因：藩镇割据。安史之乱后中央集权削弱，均田制崩溃，募兵制导致武将权力过大，最终亡于朱温篡位。',
+            '宋朝 (北宋+南宋)': '核心原因：冗官冗兵与积贫积弱。虽然经济极度繁荣，但重文轻武导致军事脆弱，最终亡于强大的外部文明（蒙元）入侵。',
+            '明朝': '核心原因：财政破产与气候灾难（小冰河期）。宗室供养负担极重，加上万历三大征耗尽国库，李自成起义与满清入侵双重打击。',
+            '清朝': '核心原因：现代化的冲击。作为传统封建顶峰，无法应对工业文明的降维打击，内部汉族督抚崛起，最终亡于辛亥革命。'
+        };
+
+        const dChart = new Chart(dynastyCtx, {
+            type: 'bar',
+            data: dynastyData,
+            options: {
+                indexAxis: 'y', // Horizontal bar
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    title: { display: true, text: '主要大一统王朝寿命统计' },
+                    tooltip: { enabled: false } // Custom interaction
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        max: 500,
+                        title: { display: true, text: '年份' },
+                        grid: { color: '#f3f4f6' }
+                    }
+                },
+                onClick: (e, activeElements) => {
+                    if (activeElements.length > 0) {
+                        const index = activeElements[0].index;
+                        const label = dynastyData.labels[index];
+                        const detailBox = document.getElementById('dynasty-detail');
+                        const detailTitle = document.getElementById('detail-title');
+                        const detailText = document.getElementById('detail-text');
+                        
+                        detailBox.classList.remove('hidden');
+                        detailTitle.innerText = label + ' 终结分析';
+                        detailText.innerText = dynastyReasons[label];
+                    }
+                }
+            }
+        });
+
+        // --- 2. Cycle Mechanism Logic ---
+        const cycleData = [
+            {
+                title: "资源充裕期",
+                desc: "新政权建立，由于战乱导致人口锐减，人均耕地面积大幅回升。社会矛盾缓和，进入恢复性增长（文景之治、贞观之治）。",
+                icon: "🌱",
+                progress: "25%"
+            },
+            {
+                title: "人口膨胀期",
+                desc: "和平带来人口指数级增长，人均耕地减少。土地开始向官僚与豪强手中集中，贫富差距初显。",
+                icon: "📈",
+                progress: "50%"
+            },
+            {
+                title: "资源锁死期",
+                desc: "马尔萨斯陷阱触发。大部分农民失去土地成为流民或佃农。国家税收被豪强截留，财政赤字，政府运转失灵。",
+                icon: "⚠️",
+                progress: "85%"
+            },
+            {
+                title: "系统崩溃期",
+                desc: "任何微小的扰动（旱灾、水灾）都会成为压垮骆驼的稻草，引爆大规模民变。旧秩序瓦解，人口锐减，等待重启。",
+                icon: "🔥",
+                progress: "100%"
+            }
+        ];
+
+        function updateCycle(index) {
+            // Update UI Styling
+            document.querySelectorAll('.cycle-btn').forEach((btn, i) => {
+                if (i === index) {
+                    btn.classList.add('active-phase', 'bg-amber-50');
+                    btn.classList.remove('bg-white');
+                } else {
+                    btn.classList.remove('active-phase', 'bg-amber-50');
+                    btn.classList.add('bg-white');
+                }
+            });
+
+            // Update Content
+            document.getElementById('cycle-title').innerText = cycleData[index].title;
+            document.getElementById('cycle-desc').innerText = cycleData[index].desc;
+            document.getElementById('cycle-icon').innerText = cycleData[index].icon;
+            
+            const bar = document.getElementById('cycle-bar');
+            bar.style.width = cycleData[index].progress;
+            
+            // Color shift based on danger
+            if (index < 2) bar.className = "bg-green-500 h-2 rounded-full transition-all duration-500";
+            else if (index === 2) bar.className = "bg-orange-500 h-2 rounded-full transition-all duration-500";
+            else bar.className = "bg-red-600 h-2 rounded-full transition-all duration-500";
+        }
+
+        // --- 3. Radar Chart (Ancient vs Modern) ---
+        const radarCtx = document.getElementById('radarChart').getContext('2d');
+        const radarChart = new Chart(radarCtx, {
+            type: 'radar',
+            data: {
+                labels: ['社会动员能力', '经济复杂度', '技术控制力', '合法性维护成本', '外部依赖度', '社会流动性'],
+                datasets: [{
+                    label: '古代封建王朝',
+                    data: [30, 20, 15, 40, 20, 40], // Low control, simple eco, low tech, low cost (divine right), low external, moderate mobility (exam)
+                    fill: true,
+                    backgroundColor: 'rgba(180, 83, 9, 0.2)',
+                    borderColor: 'rgb(180, 83, 9)',
+                    pointBackgroundColor: 'rgb(180, 83, 9)',
+                }, {
+                    label: '现代国家',
+                    data: [90, 95, 95, 85, 80, 60], // High control, complex eco, high tech, HIGH cost (needs performance), high external
+                    fill: true,
+                    backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                    borderColor: 'rgb(59, 130, 246)',
+                    pointBackgroundColor: 'rgb(59, 130, 246)',
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                elements: { line: { borderWidth: 2 } },
+                scales: {
+                    r: {
+                        angleLines: { color: '#e2e8f0' },
+                        grid: { color: '#e2e8f0' },
+                        pointLabels: {
+                            font: { size: 12, family: "'Noto Sans SC', sans-serif" },
+                            color: '#64748b'
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 100
+                    }
+                },
+                plugins: {
+                    legend: { position: 'top' }
+                }
+            }
+        });
+
+        // --- 4. Simulation Chart Logic ---
+        const simCtx = document.getElementById('simChart').getContext('2d');
+        const growthInput = document.getElementById('growthInput');
+        const giniInput = document.getElementById('giniInput');
+        const growthValueDisplay = document.getElementById('growthValue');
+        const giniValueDisplay = document.getElementById('giniValue');
+        const alertBox = document.getElementById('sim-alert');
+
+        // Initial Data Generation
+        const timeLabels = Array.from({length: 20}, (_, i) => `第${i*2}年`);
+        
+        function calculateStability(growth, gini) {
+            let data = [];
+            let currentStability = 80; // Start high
+            
+            // Formula Logic:
+            // Growth adds stability. 
+            // High Gini acts as a multiplier on negative shocks or reduces the effectiveness of growth.
+            // A Gini > 0.45 is dangerous. > 0.5 is very dangerous.
+            
+            for (let i = 0; i < 20; i++) {
+                // Random subtle fluctuation
+                let noise = (Math.random() - 0.5) * 2; 
+                
+                // Impact factors
+                let growthFactor = growth * 0.8; // Growth helps
+                let inequalityDrag = (gini - 0.3) * 20; // Gini drags down
+                
+                if (gini > 0.5) inequalityDrag *= 1.5; // Accelerate issues if gap is huge
+                
+                let change = growthFactor - inequalityDrag + noise;
+                
+                // Modern states are resilient, but fall fast if threshold crossed
+                currentStability += change;
+                if (currentStability > 100) currentStability = 100;
+                if (currentStability < 0) currentStability = 0;
+                
+                data.push(currentStability);
+            }
+            return data;
+        }
+
+        const simChart = new Chart(simCtx, {
+            type: 'line',
+            data: {
+                labels: timeLabels,
+                datasets: [{
+                    label: '政权稳定性指数 (0-100)',
+                    data: calculateStability(5, 0.35),
+                    borderColor: 'rgb(16, 185, 129)',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }, {
+                    label: '危险阈值',
+                    data: Array(20).fill(40),
+                    borderColor: 'rgb(239, 68, 68)',
+                    borderDash: [5, 5],
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        title: { display: true, text: '稳定性' }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                    }
+                }
+            }
+        });
+
+        function updateSimulation() {
+            const growth = parseFloat(growthInput.value);
+            const gini = parseFloat(giniInput.value);
+            
+            growthValueDisplay.innerText = growth + '%';
+            giniValueDisplay.innerText = gini;
+            
+            const newData = calculateStability(growth, gini);
+            simChart.data.datasets[0].data = newData;
+            
+            // Determine Color and Alert
+            const finalScore = newData[newData.length - 1];
+            let color = 'rgb(16, 185, 129)'; // Green
+            let message = "当前状态：社会结构稳定，主要矛盾可控。";
+            let alertClass = "text-green-600 bg-green-50";
+
+            if (finalScore < 40) {
+                color = 'rgb(239, 68, 68)'; // Red
+                message = "警告：极高风险！经济停滞与分配不均叠加，极易引发社会动荡或民粹主义崛起。";
+                alertClass = "text-red-600 bg-red-50";
+            } else if (finalScore < 60) {
+                color = 'rgb(245, 158, 11)'; // Orange
+                message = "注意：社会压力积聚。如遭遇外部冲击（战争、疫情），可能发生结构性危机。";
+                alertClass = "text-orange-600 bg-orange-50";
+            }
+
+            simChart.data.datasets[0].borderColor = color;
+            simChart.data.datasets[0].backgroundColor = color.replace(')', ', 0.1)');
+            
+            alertBox.innerText = message;
+            alertBox.className = `mt-4 text-center text-sm font-medium py-2 rounded ${alertClass}`;
+
+            simChart.update();
+        }
+
+        growthInput.addEventListener('input', updateSimulation);
+        giniInput.addEventListener('input', updateSimulation);
+
+    </script>
+</body>
+</html>
