@@ -3,42 +3,41 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>GOODS 订购表</title>
+  <title>樱兰学院咖啡谷</title>
   <style>
     body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,"Noto Sans",sans-serif;margin:16px;line-height:1.5}
-    h1{font-size:20px;margin:0 0 12px}
+    h1{font-size:22px;margin:0 0 8px;font-weight:900}
     .hint{color:#555;font-size:13px;margin:0 0 16px}
     table{width:100%;border-collapse:collapse}
     th,td{border:1px solid #ddd;padding:10px;vertical-align:top}
-    th{background:#f7f7f7;text-align:left;font-weight:600;white-space:nowrap}
-    img{width:180px;max-width:100%;height:auto;border-radius:8px;border:1px solid #eee}
-    .name{font-weight:700}
-    .sub{color:#666;font-size:13px}
+    th{background:#f7f7f7;text-align:left;font-weight:700;white-space:nowrap}
+    img{width:180px;max-width:100%;height:auto;border-radius:10px;border:1px solid #eee}
+    .zh{font-size:16px;font-weight:900}
+    .ja{color:#666;font-size:12px;margin-top:2px}
+    .sub{color:#666;font-size:12px;margin-top:6px}
     .num{width:84px}
     .right{text-align:right;white-space:nowrap}
     .totalbar{display:flex;gap:12px;align-items:center;justify-content:flex-end;margin-top:12px}
-    .total{font-size:18px;font-weight:800}
+    .total{font-size:18px;font-weight:900}
     .btn{padding:8px 12px;border:1px solid #ccc;border-radius:10px;background:#fff;cursor:pointer}
     .btn:hover{background:#f4f4f4}
     @media (max-width:900px){
       img{width:140px}
-      th:nth-child(4),td:nth-child(4),th:nth-child(5),td:nth-child(5){display:none;} /* 手机端隐藏“类型/限购”可按需删 */
+      th:nth-child(3),td:nth-child(3){display:none;} /* 手机端可隐藏“商品类型”，不想隐藏就删这行 */
     }
   </style>
 </head>
 <body>
-  <h1>GOODS 订购表（自动算总价）</h1>
-  <p class="hint">
-    单位：日元（含税）。数量输入后会自动计算小计与总价。限购按图上标注填写；没有标注的我用“—”表示。
-  </p>
+  <h1><strong>樱兰学院咖啡谷</strong></h1>
+  <p class="hint">欢迎使用自助下单系统，联系微信咨询或获取报价。</p>
 
   <table id="goodsTable">
     <thead>
       <tr>
         <th>图片</th>
-        <th>商品名（日 / 中）</th>
+        <th>商品名</th>
         <th>商品类型</th>
-        <th class="right">限购</th>
+        <th class="right">每张票限购</th>
         <th class="right">单价</th>
         <th class="right">希望数量</th>
         <th class="right">小计</th>
@@ -53,46 +52,66 @@
   </div>
 
 <script>
-  // 如果你的页面不在 tokyo/ 目录，把下面的 IMG_BASE 改成正确相对路径
+  // 你的页面在 tokyo/goods.html，所以图片目录在上一级
   const IMG_BASE = "../assets/images/tokyo/goods/";
 
   const items = [
-    {img:"goods-20251224-1.png",  ja:"アクリルスタンド", zh:"亚克力立牌", type:"亚克力周边", limit:3,  price:1650, note:"（多款角色，按“各”计）"},
+    // 1 亚克力立牌（拆成最小单位：每个角色一行）
+    {img:"goods-20251224-1.png", zh:"亚克力立牌｜藤冈春日", ja:"アクリルスタンド｜藤岡 ハルヒ", type:"亚克力周边", limit:3, price:1650},
+    {img:"goods-20251224-1.png", zh:"亚克力立牌｜须王环",   ja:"アクリルスタンド｜須王 環",     type:"亚克力周边", limit:3, price:1650},
+    {img:"goods-20251224-1.png", zh:"亚克力立牌｜凤镜夜",   ja:"アクリルスタンド｜鳳 鏡夜",     type:"亚克力周边", limit:3, price:1650},
+    {img:"goods-20251224-1.png", zh:"亚克力立牌｜常陆院光", ja:"アクリルスタンド｜常陸院 光",   type:"亚克力周边", limit:3, price:1650},
+    {img:"goods-20251224-1.png", zh:"亚克力立牌｜常陆院馨", ja:"アクリルスタンド｜常陸院 馨",   type:"亚克力周边", limit:3, price:1650},
+    {img:"goods-20251224-1.png", zh:"亚克力立牌｜埴之冢光邦（Honey）", ja:"アクリルスタンド｜埴之塚 光邦", type:"亚克力周边", limit:3, price:1650},
+    {img:"goods-20251224-1.png", zh:"亚克力立牌｜铦之冢崇（Mori）",   ja:"アクリルスタンド｜銛之塚 崇",   type:"亚克力周边", limit:3, price:1650},
 
-    {img:"goods-20251224-2.png",  ja:"トレーディングめじるしアクキー（単品）", zh:"盲抽 标记亚克力钥匙扣（单抽）", type:"盲抽/钥匙扣", limit:20, price:660},
-    {img:"goods-20251224-2.png",  ja:"トレーディングめじるしアクキー（コンプリートセット）", zh:"标记亚克力钥匙扣（整套）", type:"盲抽/整套", limit:2,  price:6600},
+    // 2 盲抽 标记亚克力钥匙扣
+    {img:"goods-20251224-2.png", zh:"盲抽 标记亚克力钥匙扣（单抽）", ja:"トレーディングめじるしアクキー（単品）", type:"盲抽/钥匙扣", limit:20, price:660},
+    {img:"goods-20251224-2.png", zh:"标记亚克力钥匙扣（整套）",       ja:"トレーディングめじるしアクキー（コンプリートセット）", type:"盲抽/整套", limit:2,  price:6600},
 
-    {img:"goods-20251224-3.png",  ja:"トレーディングホログラム缶バッジ（単品）", zh:"盲抽 镭射徽章（单抽）", type:"盲抽/徽章", limit:14, price:550},
-    {img:"goods-20251224-3.png",  ja:"トレーディングホログラム缶バッジ（コンプリートセット）", zh:"镭射徽章（整套）", type:"盲抽/整套", limit:2,  price:3850},
+    // 3 盲抽 镭射徽章
+    {img:"goods-20251224-3.png", zh:"盲抽 镭射徽章（单抽）", ja:"トレーディングホログラム缶バッジ（単品）", type:"盲抽/徽章", limit:14, price:550},
+    {img:"goods-20251224-3.png", zh:"镭射徽章（整套）",       ja:"トレーディングホログラム缶バッジ（コンプリートセット）", type:"盲抽/整套", limit:2,  price:3850},
 
-    {img:"goods-20251224-4.png",  ja:"トレーディングアクリルコースター（単品）", zh:"盲抽 亚克力杯垫（单抽）", type:"盲抽/杯垫", limit:30, price:770},
-    {img:"goods-20251224-4.png",  ja:"トレーディングアクリルコースター（コンプリートセット）", zh:"亚克力杯垫（整套）", type:"盲抽/整套", limit:2,  price:11550},
+    // 4 盲抽 亚克力杯垫
+    {img:"goods-20251224-4.png", zh:"盲抽 亚克力杯垫（单抽）", ja:"トレーディングアクリルコースター（単品）", type:"盲抽/杯垫", limit:30, price:770},
+    {img:"goods-20251224-4.png", zh:"亚克力杯垫（整套）",       ja:"トレーディングアクリルコースター（コンプリートセット）", type:"盲抽/整套", limit:2,  price:11550},
 
-    {img:"goods-20251224-5.png",  ja:"クリアファイル2枚セット", zh:"透明文件夹 2枚套装", type:"文件/文具", limit:3,  price:880},
+    // 5 文件夹
+    {img:"goods-20251224-5.png", zh:"透明文件夹 2枚套装", ja:"クリアファイル2枚セット", type:"文具/纸品", limit:3, price:880},
 
-    {img:"goods-20251224-6.png",  ja:"スライドアクキー", zh:"滑动亚克力钥匙扣", type:"钥匙扣", limit:3,  price:1100, note:"（多款，按“各”计）"},
+    // 6 滑动亚克力钥匙扣（拆成最小单位：每个款式一行）
+    {img:"goods-20251224-6.png", zh:"滑动亚克力钥匙扣 A（春日&环）",   ja:"スライドアクキー A（ハルヒ&環）",   type:"钥匙扣", limit:3, price:1100},
+    {img:"goods-20251224-6.png", zh:"滑动亚克力钥匙扣 B（环&镜夜）",   ja:"スライドアクキー B（環&鏡夜）",     type:"钥匙扣", limit:3, price:1100},
+    {img:"goods-20251224-6.png", zh:"滑动亚克力钥匙扣 C（光&馨）",     ja:"スライドアクキー C（光&馨）",       type:"钥匙扣", limit:3, price:1100},
+    {img:"goods-20251224-6.png", zh:"滑动亚克力钥匙扣 D（Honey&Mori）",ja:"スライドアクキー D（ハニー&モリ）", type:"钥匙扣", limit:3, price:1100},
 
-    {img:"goods-20251224-7.png",  ja:"トレーディングアクリルカード（単品）", zh:"盲抽 亚克力卡（单抽）", type:"盲抽/卡片", limit:14, price:660},
-    {img:"goods-20251224-7.png",  ja:"トレーディングアクリルカード（コンプリートセット）", zh:"亚克力卡（整套）", type:"盲抽/整套", limit:2,  price:4620},
+    // 7 盲抽 亚克力卡
+    {img:"goods-20251224-7.png", zh:"盲抽 亚克力卡（单抽）", ja:"トレーディングアクリルカード（単品）", type:"盲抽/卡片", limit:14, price:660},
+    {img:"goods-20251224-7.png", zh:"亚克力卡（整套）",       ja:"トレーディングアクリルカード（コンプリートセット）", type:"盲抽/整套", limit:2,  price:4620},
 
-    {img:"goods-20251224-8.png",  ja:"巾着", zh:"抽绳束口袋", type:"袋子/收纳", limit:3,  price:1650},
+    // 8 束口袋
+    {img:"goods-20251224-8.png", zh:"抽绳束口袋", ja:"巾着", type:"袋子/收纳", limit:3, price:1650},
 
-    {img:"goods-20251224-9.png",  ja:"トレーディングクリアカードコレクション（単品）", zh:"盲抽 透明卡收藏（单抽）", type:"盲抽/卡片", limit:24, price:660},
-    {img:"goods-20251224-9.png",  ja:"トレーディングクリアカードコレクション（コンプリートセット）", zh:"透明卡收藏（整套）", type:"盲抽/整套", limit:2,  price:7920},
+    // 9 盲抽 透明卡
+    {img:"goods-20251224-9.png", zh:"盲抽 透明卡收藏（单抽）", ja:"トレーディングクリアカードコレクション（単品）", type:"盲抽/卡片", limit:24, price:660},
+    {img:"goods-20251224-9.png", zh:"透明卡收藏（整套）",       ja:"トレーディングクリアカードコレクション（コンプリートセット）", type:"盲抽/整套", limit:2,  price:7920},
 
-    {img:"goods-20251224-10.png", ja:"ポストカードセット", zh:"明信片套装（12张）", type:"纸品", limit:3,  price:1540},
+    // 10 明信片
+    {img:"goods-20251224-10.png", zh:"明信片套装（12张）", ja:"ポストカードセット", type:"纸品", limit:3, price:1540},
 
-    {img:"goods-20251224-11.png", ja:"アクリルミニ色紙", zh:"亚克力迷你色纸板", type:"亚克力周边", limit:3,  price:2200},
+    // 11 亚克力迷你色纸板
+    {img:"goods-20251224-11.png", zh:"亚克力迷你色纸板", ja:"アクリルミニ色紙", type:"亚克力周边", limit:3, price:2200},
 
-    {img:"goods-20251224-12.png", ja:"証明写真シール", zh:"证件照贴纸", type:"贴纸", limit:3,  price:880},
+    // 12 证件照贴纸
+    {img:"goods-20251224-12.png", zh:"证件照贴纸", ja:"証明写真シール", type:"贴纸", limit:3, price:880},
 
-    {img:"goods-20251224-13.png", ja:"アクリルフォトケース A（キーホルダー）", zh:"亚克力相片夹 A（钥匙扣款）", type:"亚克力周边", limit:3,  price:1210},
-    {img:"goods-20251224-13.png", ja:"アクリルフォトケース B（スタンド）", zh:"亚克力相片夹 B（支架款）", type:"亚克力周边", limit:3,  price:2310},
+    // 13 相片夹
+    {img:"goods-20251224-13.png", zh:"亚克力相片夹 A（钥匙扣款）", ja:"アクリルフォトケース A（キーホルダー）", type:"亚克力周边", limit:3, price:1210},
+    {img:"goods-20251224-13.png", zh:"亚克力相片夹 B（支架款）",   ja:"アクリルフォトケース B（スタンド）",     type:"亚克力周边", limit:3, price:2310},
 
-    {img:"goods-20251224-15.png", ja:"アクリルモーテルキーホルダー（カプセルトイ）", zh:"亚克力旅馆钥匙牌钥匙扣（扭蛋/胶囊）", type:"扭蛋", limit:3, price:660, note:"（图上是“每人最多3回”）"},
-
-    {img:"goods-20251224-14.png", ja:"ペアグラス（受注商品）", zh:"对杯（受注/预订）", type:"受注商品", limit:null, price:8800, note:"（图上标注含运费）"},
-    {img:"goods-20251224-16.png", ja:"複製原画（受注商品）", zh:"高精度复制原画（受注/预订）", type:"受注商品", limit:null, price:25300, note:"（图上说明另收配送费）"},
+    // 15 扭蛋
+    {img:"goods-20251224-15.png", zh:"亚克力旅馆钥匙牌钥匙扣（扭蛋）", ja:"アクリルモーテルキーホルダー（カプセルトイ）", type:"扭蛋", limit:3, price:660},
   ];
 
   const yen = (n)=> new Intl.NumberFormat("ja-JP").format(n);
@@ -101,19 +120,21 @@
 
   function render(){
     tbody.innerHTML = "";
-    items.forEach((it, idx)=>{
+    items.forEach((it)=>{
       const max = (typeof it.limit === "number") ? it.limit : 999;
+
       const tr = document.createElement("tr");
       tr.dataset.price = it.price;
+      tr.dataset.max = max;
 
       tr.innerHTML = `
         <td>
-          <img src="${IMG_BASE + it.img}" alt="${it.ja}">
+          <img src="${IMG_BASE + it.img}" alt="${it.zh}">
           <div class="sub">${it.img}</div>
         </td>
         <td>
-          <div class="name">${it.ja}</div>
-          <div class="sub">${it.zh}${it.note ? " " + it.note : ""}</div>
+          <div class="zh">${it.zh}</div>
+          <div class="ja">${it.ja}</div>
         </td>
         <td>${it.type}</td>
         <td class="right">${(typeof it.limit==="number") ? it.limit : "—"}</td>
