@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>9号的十字路口：英格兰次顶级球员职业生涯分析</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Google Fonts (Noto Sans SC) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <!-- REQUIRED PLACEHOLDERS -->
+    <!-- Chosen Palette: "Warm Neutral & Deep Blue". Background: #F5F5F0 (Warm Off-white/Bone). Primary: #1e3a8a (Everton Blue). Accent: #d97706 (Amber/Gold for Ambition). Text: #1f2937 (Dark Gray). This palette reflects the traditional calmness of analysis contrasted with club loyalty and the heat of ambition. -->
+    
+    <!-- Application Structure Plan: A dashboard-style SPA with a top navigation bar leading to four distinct thematic sections: 
+         1. "Profile & Trajectory" (Overview of DCL's career stats and injury context).
+         2. "The Big Club Dilemma" (Interactive pros/cons of leaving vs. staying).
+         3. "Market Landscape" (Data comparison with peers like Watkins/Toney to understand value).
+         4. "Simulation & Dreams" (An interactive decision tree for the user to 'play agent').
+         Why? This structure moves from factual history -> analytical conflict -> broader market context -> personal synthesis, guiding the user through the player's mindset. -->
+
+    <!-- Visualization & Content Choices:
+         - Line Chart (Chart.js): Goals vs. Matches over time. Goal: Show the rise and the injury-hit plateau.
+         - Radar Chart (Chart.js): "The Player Profile". Goal: Visualize why he fits mid-table systems (Physicality/Heading) vs. potential limits at Elite clubs.
+         - Scatter Plot (Chart.js): Wages vs. Trophies. Goal: Position DCL against Kane, Watkins, etc., to show the "Income/Honor" trade-off.
+         - Interactive Cards: For "Loyalty vs. Ambition". Goal: Allow users to explore qualitative arguments without clutter.
+         - Logic: No SVG/Mermaid used. All visuals are Canvas (Chart.js) or HTML/CSS constructs. -->
+
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F5F5F0;
+            color: #1f2937;
+        }
+
+        /* Chart Container Styling - Strict Adherence to Requirements */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+        }
+
+        /* Specific constraints for different chart types */
+        .chart-standard {
+            max-width: 600px; /* Prevent excessive width */
+            height: 350px;    /* Base height */
+            max-height: 400px;
+        }
+
+        .chart-large {
+            max-width: 800px;
+            height: 400px;
+            max-height: 500px;
+        }
+
+        @media (max-width: 640px) {
+            .chart-standard, .chart-large {
+                height: 300px;
+            }
+        }
+
+        /* Custom Scrollbar for text areas */
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .nav-active {
+            border-bottom: 3px solid #1e3a8a;
+            color: #1e3a8a;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-blue-900 tracking-tight">9号的十字路口</span>
+                    <span class="ml-3 text-xs sm:text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded hidden sm:inline-block">案例研究：多米尼克·卡 meaningful-勒温 (DCL)</span>
+                </div>
+                <!-- Mobile Menu Button (implied functionality for simplicity in this view) -->
+                <div class="text-sm text-gray-500 italic hidden sm:block">英格兰次顶级球员生涯透视</div>
+            </div>
+            
+            <!-- Navigation -->
+            <nav class="flex space-x-8 overflow-x-auto no-scrollbar" aria-label="Tabs">
+                <button onclick="switchTab('profile')" id="nav-profile" class="nav-btn nav-active whitespace-nowrap py-3 px-1 text-sm font-medium transition-colors hover:text-blue-800">
+                    📊 生涯履历
+                </button>
+                <button onclick="switchTab('dilemma')" id="nav-dilemma" class="nav-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-gray-500 transition-colors hover:text-blue-800">
+                    ⚖️ 豪门与忠诚
+                </button>
+                <button onclick="switchTab('market')" id="nav-market" class="nav-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-gray-500 transition-colors hover:text-blue-800">
+                    💰 收入与荣誉
+                </button>
+                <button onclick="switchTab('simulation')" id="nav-simulation" class="nav-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-gray-500 transition-colors hover:text-blue-800">
+                    🔮 梦想模拟器
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+        <!-- SECTION 1: PROFILE & TRAJECTORY -->
+        <section id="section-profile" class="space-y-6">
+            <div class="bg-white rounded-lg p-6 shadow-sm border-l-4 border-blue-900">
+                <h2 class="text-xl font-bold text-gray-900 mb-2">案例背景：埃弗顿的“蓝”色忧郁</h2>
+                <p class="text-gray-600 leading-relaxed">
+                    本部分旨在通过数据分析多米尼克·卡勒温（DCL）的职业生涯轨迹。作为英格兰本土典型的中锋，他在埃弗顿（Everton）度过了职业生涯的关键成长期。通过观察他的进球数据与伤病历史，我们可以理解为什么他在“豪门猎物”与“伤病隐患”这两个标签之间徘徊，这也是许多“英格兰次顶级”球员面临的共同困境：<strong>在这一步之遥的距离，是爆发还是沉寂？</strong>
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Stats Chart -->
+                <div class="flex flex-col">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3">📈 进球与出场：伤病的转折点</h3>
+                    <div class="chart-container chart-standard mx-auto">
+                        <canvas id="careerChart"></canvas>
+                    </div>
+                    <div class="mt-3 text-sm text-gray-500 bg-gray-50 p-3 rounded">
+                        <span class="font-bold text-blue-900">分析：</span> 2020/21赛季是DCL的巅峰，单赛季英超16球让他引起了阿森纳等豪门的注意。然而，随后的连续伤病（21/22, 22/23）严重阻碍了他的上升通道，导致出场时间碎片化。
+                    </div>
+                </div>
+
+                <!-- Attribute Radar -->
+                <div class="flex flex-col">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3">🎯 球员画像：为何中游球队离不开他？</h3>
+                    <div class="chart-container chart-standard mx-auto">
+                        <canvas id="attributesChart"></canvas>
+                    </div>
+                    <div class="mt-3 text-sm text-gray-500 bg-gray-50 p-3 rounded">
+                        <span class="font-bold text-blue-900">战术价值：</span> 极强的<strong>制空能力</strong>和<strong>支点作用</strong>使他成为中游球队（往往依赖反击和长传）的完美核心。但在讲究地面传控的顶级豪门，他的技术细腻度可能成为短板。
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: THE DILEMMA (Loyalty vs Big Club) -->
+        <section id="section-dilemma" class="hidden space-y-6">
+            <div class="bg-white rounded-lg p-6 shadow-sm border-l-4 border-yellow-600">
+                <h2 class="text-xl font-bold text-gray-900 mb-2">抉择的核心：鸡头还是凤尾？</h2>
+                <p class="text-gray-600 leading-relaxed">
+                    对于像DCL这样的球员，“去豪门”并不总是唯一的正确答案。本板块探讨了转会背后的复杂博弈。留在中游球队（如埃弗顿）意味着绝对的主力位置和战术倾斜，而去往“Top 6”则面临轮换风险。这种<strong>“宁为鸡头，不为凤尾”</strong>的心理斗争，构成了他们职业生涯选择的主旋律。
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Argument: Go to Big Club -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                    <div class="bg-gradient-to-r from-gray-800 to-gray-900 p-4">
+                        <h3 class="text-white font-bold flex items-center">
+                            <span class="text-2xl mr-2">🏰</span> 奔赴豪门 (The Dream)
+                        </h3>
+                    </div>
+                    <div class="p-5 space-y-4">
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <span class="text-green-500 font-bold mr-2">✓</span>
+                                <span class="text-gray-700 text-sm"><strong>欧冠资格：</strong> 只有在Top 4球队才能体验欧洲最高舞台。</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-green-500 font-bold mr-2">✓</span>
+                                <span class="text-gray-700 text-sm"><strong>顶薪诱惑：</strong> 即使是轮换球员，周薪也可能突破15万英镑。</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-green-500 font-bold mr-2">✓</span>
+                                <span class="text-gray-700 text-sm"><strong>荣誉室：</strong> 奖杯是退役后评价历史地位的关键。</span>
+                            </li>
+                        </ul>
+                        <div class="border-t pt-3">
+                            <p class="text-xs text-red-500 font-semibold">⚠️ 风险：卡尔温·菲利普斯效应——转会曼城后彻底失去出场时间。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Argument: Stay Loyal -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                    <div class="bg-gradient-to-r from-blue-700 to-blue-800 p-4">
+                        <h3 class="text-white font-bold flex items-center">
+                            <span class="text-2xl mr-2">🛡️</span> 坚守中游 (The Reality)
+                        </h3>
+                    </div>
+                    <div class="p-5 space-y-4">
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <span class="text-blue-500 font-bold mr-2">✓</span>
+                                <span class="text-gray-700 text-sm"><strong>绝对核心：</strong> 球队围绕你制定战术，数据更有保障。</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-blue-500 font-bold mr-2">✓</span>
+                                <span class="text-gray-700 text-sm"><strong>国家队机会：</strong> 索斯盖特更看重稳定的首发时间，而非豪门板凳。</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-blue-500 font-bold mr-2">✓</span>
+                                <span class="text-gray-700 text-sm"><strong>球迷崇拜：</strong> 成为古迪逊公园的传奇，而非斯坦福桥的过客。</span>
+                            </li>
+                        </ul>
+                        <div class="border-t pt-3">
+                            <p class="text-xs text-yellow-600 font-semibold">⚠️ 风险：俱乐部陷入保级泥潭，甚至降级，导致身价暴跌。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Comparison Toggle -->
+            <div class="bg-gray-50 rounded-lg p-6 text-center">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">如果是你，你会怎么选？</h3>
+                <div class="flex justify-center space-x-4">
+                    <button onclick="updateScenario('stay')" class="px-6 py-2 bg-blue-100 text-blue-800 rounded-full hover:bg-blue-200 transition font-medium">留在埃弗顿</button>
+                    <button onclick="updateScenario('leave')" class="px-6 py-2 bg-gray-200 text-gray-800 rounded-full hover:bg-gray-300 transition font-medium">转会阿森纳/切尔西</button>
+                    <button onclick="updateScenario('mid')" class="px-6 py-2 bg-yellow-100 text-yellow-800 rounded-full hover:bg-yellow-200 transition font-medium">去纽卡斯尔 (新贵)</button>
+                </div>
+                <div id="scenario-result" class="mt-4 p-4 border rounded bg-white text-gray-700 text-sm min-h-[80px] flex items-center justify-center">
+                    点击上方按钮查看潜在的职业生涯后果...
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: MARKET LANDSCAPE (Income vs Honors) -->
+        <section id="section-market" class="hidden space-y-6">
+            <div class="bg-white rounded-lg p-6 shadow-sm border-l-4 border-green-600">
+                <h2 class="text-xl font-bold text-gray-900 mb-2">数据透视：收入与荣誉的坐标系</h2>
+                <p class="text-gray-600 leading-relaxed">
+                    在英格兰足坛，并非所有优秀前锋都能获得奖杯。此图表展示了当前英格兰主要前锋的分布情况。横轴代表<strong>估计周薪</strong>（经济回报），纵轴代表<strong>主要奖杯数</strong>（职业荣誉）。DCL目前处于高薪但无荣誉的区域，这也是大多数英超中游球星的真实写照：虽然没有奖杯，但英超的巨大商业价值保障了他们的经济利益，从而降低了“为了冠军去小联赛豪门”的动力。
+                </p>
+            </div>
+
+            <div class="flex flex-col">
+                <div class="flex justify-between items-center mb-3 px-2">
+                    <h3 class="text-lg font-semibold text-gray-800">📊 英格兰前锋：薪资 vs 荣誉分布</h3>
+                    <div class="text-xs text-gray-400">数据仅供模拟参考</div>
+                </div>
+                <div class="chart-container chart-large mx-auto">
+                    <canvas id="marketChart"></canvas>
+                </div>
+                <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-gray-600">
+                    <div class="bg-white p-3 rounded border">
+                        <strong class="text-green-700">💰 淘金区：</strong> 薪资极高但荣誉较少。多为处于重建期豪门或富裕中游球队的球星。
+                    </div>
+                    <div class="bg-white p-3 rounded border">
+                        <strong class="text-purple-700">🏆 传奇区：</strong> 薪资与荣誉双丰收（如：凯恩转会拜仁后的预期路径，或曼城球员）。
+                    </div>
+                    <div class="bg-white p-3 rounded border">
+                        <strong class="text-blue-700">🌱 潜力/挣扎区：</strong> 薪资中等，渴望突破。DCL正处于此区域向淘金区边缘移动。
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: SIMULATION & DREAMS -->
+        <section id="section-simulation" class="hidden space-y-6">
+            <div class="bg-white rounded-lg p-6 shadow-sm border-l-4 border-purple-600">
+                <h2 class="text-xl font-bold text-gray-900 mb-2">梦想模拟器：定义你的职业生涯</h2>
+                <p class="text-gray-600 leading-relaxed">
+                    职业生涯没有标准答案。在这里，你作为球员经纪人，需要为你的客户（一位处于巅峰期的英格兰中锋）设定优先级。通过调整下方的滑块，系统将为你匹配最合适的职业路径。这揭示了为什么有些球员选择“忠诚”，而有些选择“流浪”。
+                </p>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-6 max-w-2xl mx-auto">
+                <h3 class="text-lg font-bold text-gray-800 mb-6 border-b pb-2">设置你的优先级 (0-100)</h3>
+                
+                <div class="space-y-6">
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <label class="font-medium text-gray-700">💰 薪资要求 (Money)</label>
+                            <span id="val-money" class="text-blue-600 font-bold">50</span>
+                        </div>
+                        <input type="range" id="slider-money" min="0" max="100" value="50" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <label class="font-medium text-gray-700">⏱️ 出场时间保障 (Playing Time)</label>
+                            <span id="val-time" class="text-green-600 font-bold">50</span>
+                        </div>
+                        <input type="range" id="slider-time" min="0" max="100" value="50" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-green-600">
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <label class="font-medium text-gray-700">🏆 冠军渴望度 (Trophies)</label>
+                            <span id="val-trophies" class="text-yellow-600 font-bold">50</span>
+                        </div>
+                        <input type="range" id="slider-trophies" min="0" max="100" value="50" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-yellow-500">
+                    </div>
+
+                    <button onclick="calculatePath()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg shadow transition-transform transform active:scale-95">
+                        生成职业规划建议
+                    </button>
+                </div>
+
+                <div id="simulation-result" class="mt-6 p-4 bg-indigo-50 rounded-lg border border-indigo-100 hidden">
+                    <h4 class="font-bold text-indigo-900 text-lg mb-2" id="sim-title">结果标题</h4>
+                    <p class="text-gray-700 text-sm" id="sim-desc">结果描述...</p>
+                    <div class="mt-3 flex items-center text-xs text-gray-500">
+                        <span class="mr-2">类似球员模板:</span>
+                        <span class="font-mono bg-white px-2 py-1 rounded border" id="sim-player">Player Name</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t mt-auto py-6">
+        <div class="max-w-7xl mx-auto px-4 text-center text-gray-400 text-xs">
+            <p>© 2024 英格兰足球观察 | 基于 Dominic Calvert-Lewin 及同类球员生涯数据生成的互动分析报告</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- State Management ---
+        const state = {
+            currentTab: 'profile',
+            charts: {}
+        };
+
+        // --- Navigation Logic ---
+        function switchTab(tabId) {
+            // Update Text styles
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('nav-active', 'text-blue-800');
+                btn.classList.add('text-gray-500');
+            });
+            const activeBtn = document.getElementById(`nav-${tabId}`);
+            activeBtn.classList.add('nav-active', 'text-blue-800');
+            activeBtn.classList.remove('text-gray-500');
+
+            // Hide all sections
+            ['profile', 'dilemma', 'market', 'simulation'].forEach(section => {
+                document.getElementById(`section-${section}`).classList.add('hidden');
+            });
+
+            // Show selected section
+            const targetSection = document.getElementById(`section-${tabId}`);
+            targetSection.classList.remove('hidden');
+            
+            // Trigger animation or resize for charts if needed
+            if(tabId === 'profile' && state.charts.career) state.charts.career.update();
+            if(tabId === 'market' && state.charts.market) state.charts.market.update();
+        }
+
+        // --- Data & Visualizations ---
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initCareerChart();
+            initAttributesChart();
+            initMarketChart();
+            initSliders();
+        });
+
+        // 1. Line Chart: Career Stats
+        function initCareerChart() {
+            const ctx = document.getElementById('careerChart').getContext('2d');
+            state.charts.career = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['16/17', '17/18', '18/19', '19/20', '20/21', '21/22', '22/23', '23/24'],
+                    datasets: [{
+                        label: '英超进球数 (Goals)',
+                        data: [1, 4, 6, 13, 16, 5, 2, 7],
+                        borderColor: '#1e3a8a',
+                        backgroundColor: 'rgba(30, 58, 138, 0.1)',
+                        tension: 0.3,
+                        fill: true,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#1e3a8a',
+                        pointRadius: 5
+                    }, {
+                        label: '联赛首发次数 (Starts)',
+                        data: [11, 18, 19, 30, 32, 15, 15, 26],
+                        borderColor: '#9ca3af',
+                        borderDash: [5, 5],
+                        tension: 0.1,
+                        pointRadius: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                footer: (items) => {
+                                    if(items[0].label === '20/21') return '巅峰赛季：入选国家队';
+                                    if(items[0].label === '21/22') return '伤病困扰：股四头肌伤势';
+                                    if(items[0].label === '22/23') return '保级挣扎：出场时间受限';
+                                    return '';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: '数量' } }
+                    }
+                }
+            });
+        }
+
+        // 2. Radar Chart: Player Attributes
+        function initAttributesChart() {
+            const ctx = document.getElementById('attributesChart').getContext('2d');
+            state.charts.attributes = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['空中对抗', '终结能力', '速度/爆发力', '传球/策应', '防守贡献', '持球盘带'],
+                    datasets: [{
+                        label: 'DCL (埃弗顿角色)',
+                        data: [95, 75, 85, 60, 80, 50],
+                        fill: true,
+                        backgroundColor: 'rgba(30, 58, 138, 0.2)',
+                        borderColor: '#1e3a8a',
+                        pointBackgroundColor: '#1e3a8a'
+                    }, {
+                        label: '豪门前锋平均要求',
+                        data: [70, 90, 80, 85, 60, 80],
+                        fill: true,
+                        backgroundColor: 'rgba(217, 119, 6, 0.2)',
+                        borderColor: '#d97706',
+                        pointBackgroundColor: '#d97706'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    elements: { line: { borderWidth: 2 } },
+                    scales: {
+                        r: {
+                            angleLines: { display: true },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            ticks: { display: false } // Hide numbers for cleaner look
+                        }
+                    },
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        }
+
+        // 3. Scatter Plot: Wages vs Honors
+        function initMarketChart() {
+            const ctx = document.getElementById('marketChart').getContext('2d');
+            
+            // Mock Data for Narrative
+            const players = [
+                { x: 100, y: 0, name: 'DCL (埃弗顿)', status: '中游核心' },
+                { x: 130, y: 0, name: '伊万·托尼 (布伦特福德)', status: '中游核心' },
+                { x: 150, y: 0, name: '奥利·沃特金斯 (维拉)', status: '欧战竞争者' },
+                { x: 85,  y: 0, name: '索兰克 (伯恩茅斯)', status: '中游' },
+                { x: 110, y: 0, name: '威尔逊 (纽卡)', status: '新贵轮换' },
+                { x: 300, y: 1, name: '哈里·凯恩 (拜仁*)', status: '顶级巨星' }, // Added for contrast
+                { x: 200, y: 4, name: '热苏斯 (阿森纳)', status: '豪门主力' },
+                { x: 180, y: 0, name: '里查利森 (热刺)', status: '豪门轮换' }
+            ];
+
+            state.charts.market = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: '英格兰前锋分布',
+                        data: players,
+                        backgroundColor: (ctx) => {
+                            const val = ctx.raw;
+                            if(!val) return '#ccc';
+                            if(val.y > 2) return '#7e22ce'; // High Honor
+                            if(val.x > 140 && val.y === 0) return '#15803d'; // High Pay No Trophy
+                            return '#1e3a8a'; // DCL zone
+                        },
+                        pointRadius: 8,
+                        pointHoverRadius: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => {
+                                    const p = ctx.raw;
+                                    return `${p.name}: 周薪约£${p.x}k, 奖杯数:${p.y}`;
+                                }
+                            }
+                        },
+                        legend: { display: false },
+                        annotation: {
+                            // Annotation logic handled by colors/text block in HTML for simplicity
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: { display: true, text: '周薪估算 (千英镑/周)' },
+                            min: 50,
+                            max: 350
+                        },
+                        y: {
+                            title: { display: true, text: '主要奖杯数 (近5年)' },
+                            min: -1,
+                            max: 6,
+                            ticks: { stepSize: 1 }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- Interaction Logic ---
+
+        function updateScenario(choice) {
+            const resBox = document.getElementById('scenario-result');
+            let text = '';
+            let colorClass = '';
+
+            if (choice === 'stay') {
+                text = "<strong>结局：古迪逊传奇。</strong> 你成为了俱乐部队史射手榜前列。虽然终身无冠，但你在默西塞德郡拥有极高的社会地位，退役后成为俱乐部大使。收入稳定，但从未在欧冠赛场证明自己。";
+                colorClass = "bg-blue-50 border-blue-200 text-blue-900";
+            } else if (choice === 'leave') {
+                text = "<strong>结局：豪门过客/轮换奇兵。</strong> 你的周薪翻倍了，也随队拿到了一个足总杯冠军。但你大部分时间在替补席度过，由于缺乏连续出场，你逐渐失去了国家队的位置。30岁时被租借回中游球队。";
+                colorClass = "bg-gray-100 border-gray-300 text-gray-800";
+            } else if (choice === 'mid') {
+                text = "<strong>结局：新贵的赌注。</strong> 你加入了一支有钱但根基未稳的球队（如纽卡斯尔或维拉）。这是一场赌博：如果球队成功打入欧冠，你就是名利双收的功臣；如果球队引援失败，你将面临激烈的队内竞争。";
+                colorClass = "bg-yellow-50 border-yellow-200 text-yellow-900";
+            }
+
+            resBox.className = `mt-4 p-4 border rounded text-sm min-h-[80px] flex items-center justify-center transition-all duration-300 ${colorClass}`;
+            resBox.innerHTML = text;
+        }
+
+        // --- Simulation Logic ---
+
+        function initSliders() {
+            ['money', 'time', 'trophies'].forEach(id => {
+                const slider = document.getElementById(`slider-${id}`);
+                const display = document.getElementById(`val-${id}`);
+                slider.addEventListener('input', (e) => {
+                    display.innerText = e.target.value;
+                });
+            });
+        }
+
+        function calculatePath() {
+            const money = parseInt(document.getElementById('slider-money').value);
+            const time = parseInt(document.getElementById('slider-time').value);
+            const trophies = parseInt(document.getElementById('slider-trophies').value);
+
+            const resultDiv = document.getElementById('simulation-result');
+            const title = document.getElementById('sim-title');
+            const desc = document.getElementById('sim-desc');
+            const player = document.getElementById('sim-player');
+
+            resultDiv.classList.remove('hidden');
+
+            // Simple Logic Tree
+            if (time > 80 && trophies < 40) {
+                // High play time, low trophy need -> Stay Mid-table
+                title.innerText = "建议路径：坚守一方 (The Local Hero)";
+                desc.innerText = "你最看重的是每周都能踢上比赛的感觉。豪门的板凳不适合你。留在埃弗顿、水晶宫或西汉姆联这样的球队，你会成为核心，虽然奖杯遥不可及，但足球的纯粹乐趣得以保留。";
+                player.innerText = "杰米·瓦尔迪 (莱斯特城)";
+            } else if (trophies > 80 && money > 60) {
+                // High trophies, High money -> Force Move to Elite
+                title.innerText = "建议路径：豪门雇佣兵 (The Bench Warmer Risk)";
+                desc.innerText = "你的野心很大。为了奖杯，你愿意牺牲出场时间。建议强行转会曼城、阿森纳或利物浦。警告：你可能会像菲利普斯一样，虽然拿着奖牌，但几乎没有贡献。";
+                player.innerText = "卡尔温·菲利普斯 (曼城时期)";
+            } else if (money > 90) {
+                // Pure Money
+                title.innerText = "建议路径：金钱至上 (The Contract Chaser)";
+                desc.innerText = "利用自由身免签优势，前往提供最高签字费的球队，不论是沙特联赛还是急需户口本的英超豪门。";
+                player.innerText = "亨德森 (沙特时期)";
+            } else if (trophies > 50 && time > 50) {
+                // Balanced -> Emerging Power
+                title.innerText = "建议路径：加盟新贵 (The Project Player)";
+                desc.innerText = "去阿斯顿维拉或纽卡斯尔。这既有欧战的希望，又能保证一定的出场时间。这是目前DCL、沃特金斯们最理想的跳板。";
+                player.innerText = "奥利·沃特金斯 (阿斯顿维拉)";
+            } else {
+                // Default
+                title.innerText = "建议路径：稳中求进";
+                desc.innerText = "续约，但在合同中加入解约金条款。等待世界杯或欧洲杯后的机会。";
+                player.innerText = "伊万·托尼 (布伦特福德)";
+            }
+        }
+    </script>
+</body>
+</html>
