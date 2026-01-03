@@ -4,11 +4,10 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>樱兰学院咖啡谷</title>
-
   <style>
     :root{
       --dock-gap: 12px;
-      --dock-h: 96px;
+      --dock-h: 92px;
       --dock-margin: 12px;
       --filter-gap: 8px;
     }
@@ -16,13 +15,11 @@
     *{ box-sizing:border-box; }
 
     body{
-      font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,"Noto Sans",sans-serif;
-      margin:16px;
-      line-height:1.5;
-      padding-bottom: calc(var(--dock-h) + var(--dock-margin) * 2 + 20px);
-      color:#111;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,"Noto Sans",sans-serif;
+      margin:16px;line-height:1.5;
+      padding-bottom: calc(var(--dock-h) + var(--dock-margin) * 2 + 16px);
+      overflow-x:hidden; /* 防止偶发横向溢出 */
     }
-
     h1{font-size:22px;margin:0 0 8px;font-weight:900}
     .hint{color:#555;font-size:13px;margin:0 0 16px}
 
@@ -34,10 +31,11 @@
     .imgbtn:focus{outline:2px solid #999;outline-offset:3px;border-radius:12px}
     img.goodsimg{width:180px;max-width:100%;height:auto;border-radius:12px;border:1px solid #eee;display:block}
 
-    .zh{font-size:16px;font-weight:900;word-break:break-word}
-    .ja{color:#666;font-size:12px;margin-top:2px;word-break:break-word}
-    .meta{color:#666;font-size:12px;margin-top:6px;word-break:break-word}
+    .zh{font-size:16px;font-weight:900;word-break:break-word;overflow-wrap:anywhere}
+    .ja{color:#666;font-size:12px;margin-top:2px;word-break:break-word;overflow-wrap:anywhere}
+    .meta{color:#666;font-size:12px;margin-top:6px;word-break:break-word;overflow-wrap:anywhere}
 
+    /* ✅ 票数提示：必须可换行、不撑宽 */
     .needTicket{
       margin-top:8px;
       font-size:12px;
@@ -47,12 +45,13 @@
       padding:6px 8px;
       border-radius:10px;
       display:none;
+
       max-width:100%;
       white-space:normal;
       word-break:break-word;
       overflow-wrap:anywhere;
     }
-    .needTicket.show{display:block}
+    .needTicket.show{display:block;}
 
     .num{width:96px}
     .right{text-align:right;white-space:nowrap}
@@ -65,17 +64,17 @@
     .label{display:none;color:#666;font-size:12px;margin-right:8px}
     .unit{color:#666;font-size:12px;margin-left:6px}
 
-    /* ===== 移动端：卡片布局（关键修复：minmax(0,1fr) + 允许换行，防止变宽/显示不全） ===== */
+    /* ====== 移动端：卡片布局 ====== */
     @media (max-width: 720px){
-      :root{ --dock-h: 126px; }
+      :root{ --dock-h: 118px; }
       body{margin:12px}
-
       table{border:0}
       thead{display:none}
       tbody{display:block}
 
       tr{
         display:grid;
+        /* ✅ 关键修复：第二列必须 minmax(0,1fr)，否则长文本会撑宽 */
         grid-template-columns: 132px minmax(0, 1fr);
         grid-template-areas:
           "img name"
@@ -88,10 +87,10 @@
         overflow:hidden;
         background:#fff;
       }
-
+      /* ✅ 关键修复：td 允许收缩 */
       td{border:0;padding:10px;min-width:0}
       td:nth-child(1){grid-area:img;border-right:1px solid #eee;display:flex;align-items:center;justify-content:center}
-      td:nth-child(2){grid-area:name;min-width:0}
+      td:nth-child(2){grid-area:name}
       td:nth-child(5){grid-area:price}
       td:nth-child(6){grid-area:qty}
       td:nth-child(7){grid-area:sub}
@@ -100,14 +99,15 @@
       td:nth-child(3), td:nth-child(4){display:none}
 
       img.goodsimg{width:110px}
-
-      .right{ text-align:left; white-space:normal; }
+      /* ✅ 关键修复：移动端不要 nowrap，不然会截断/撑宽 */
+      .right{text-align:left;white-space:normal}
       .label{display:inline-block}
       .num{width:120px;font-size:16px}
+
       .needTicket{font-size:11px;padding:5px 6px}
     }
 
-    /* ===== 图片放大 Lightbox ===== */
+    /* ====== 图片放大 ====== */
     .lightbox{position:fixed;inset:0;display:none;z-index:9999;}
     .lightbox.open{display:block}
     .lb-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.72);}
@@ -129,7 +129,7 @@
       text-align:center;text-shadow:0 2px 10px rgba(0,0,0,.8);opacity:.9;pointer-events:none;
     }
 
-    /* ===== 底部悬浮 Dock ===== */
+    /* ====== 底部悬浮 Dock ====== */
     .dock{
       position:fixed;
       left:var(--dock-margin);
@@ -148,7 +148,9 @@
       box-shadow:0 10px 28px rgba(0,0,0,.10);
       backdrop-filter: blur(6px);
     }
-    .dock .left, .dock .right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+    .dock .left, .dock .right{
+      display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    }
     .dock .right{margin-left:auto;justify-content:flex-end}
     .tickets{font-size:14px;font-weight:900;color:#222}
     .total{font-size:18px;font-weight:900}
@@ -157,13 +159,13 @@
       .total{font-size:16px}
     }
 
-    /* ===== 右侧悬浮筛选（放到 Dock 上方） ===== */
+    /* ====== 右侧悬浮筛选（上移避免挡住 Dock） ====== */
     .filterbar{
       position:fixed;
       right:12px;
       bottom: calc(var(--dock-margin) + var(--dock-h) + 12px);
       z-index:9997;
-      display:flex;flex-direction:column;gap:8px;
+      display:flex;flex-direction:column;gap:var(--filter-gap);
     }
     .fbtn{
       border:1px solid #ccc;background:#fff;border-radius:14px;
@@ -175,10 +177,10 @@
     .fnote{
       position:fixed;
       right:12px;
-      bottom: calc(var(--dock-margin) + var(--dock-h) + 12px + 3 * (44px + 8px) + 8px);
+      bottom: calc(var(--dock-margin) + var(--dock-h) + 12px + 3 * (44px + var(--filter-gap)) + 8px);
       z-index:9997;
       font-size:12px;color:#666;background:#fff;border:1px solid #eee;
-      padding:8px 10px;border-radius:12px;max-width:190px;
+      padding:8px 10px;border-radius:12px;max-width:170px;
       box-shadow:0 6px 18px rgba(0,0,0,.06);
     }
     @media (max-width:720px){
@@ -186,7 +188,7 @@
       .fnote{display:none;}
     }
 
-    /* ===== 提交订单 Modal ===== */
+    /* ====== 提交订单 Modal ====== */
     .modal{position:fixed;inset:0;display:none;z-index:10000;}
     .modal.open{display:block}
     .modal .backdrop{position:absolute;inset:0;background:rgba(0,0,0,.55);}
@@ -215,7 +217,6 @@
     .field input:focus{border-color:#333}
     .err{display:none;color:#b00020;font-size:12px;margin-top:2px}
     .err.show{display:block}
-
     .okTip{
       display:none;margin-top:10px;
       background:#ecfff2;border:1px solid #b8f2c7;color:#1a4d2e;
@@ -228,17 +229,13 @@
       background:#111;color:#fff;padding:10px 12px;border-radius:14px;
       display:inline-block;margin:10px 0;
     }
-
     .summaryTable{width:100%;border-collapse:collapse;margin-top:10px}
     .summaryTable th,.summaryTable td{border:1px solid #e6e6e6;padding:8px 10px;vertical-align:top}
     .summaryTable th{background:#fafafa;text-align:left;white-space:nowrap}
 
-    /* 蜜罐字段 */
+    /* 隐藏的蜜罐字段 */
     .hpWrap{position:absolute;left:-9999px;top:-9999px;opacity:0}
   </style>
-
-  <!-- 商品数据（强烈建议独立文件，避免再次“表格空白”） -->
-  <script src="./items.js"></script>
 </head>
 
 <body>
@@ -268,12 +265,13 @@
     <button class="fbtn" data-filter="single" type="button">单领</button>
   </div>
 
-  <!-- 底部 Dock -->
+  <!-- 底部悬浮 Dock -->
   <div class="dock" role="region" aria-label="结算栏">
     <div class="left">
       <button class="btn" id="resetBtn" type="button">清空数量</button>
       <button class="btn primary" id="submitBtn" type="button">提交订单</button>
     </div>
+
     <div class="right">
       <div class="tickets">全单至少需要票数：<span id="ticketsNeeded">0</span></div>
       <div class="total">总价：<span id="grandTotal">¥0</span></div>
@@ -313,6 +311,7 @@
           <div class="err" id="emailErr2"></div>
         </div>
 
+        <!-- honeypot -->
         <div class="hpWrap">
           <label>website</label>
           <input id="hp" type="text" />
@@ -336,7 +335,9 @@
           <button class="btn primary" id="closeBtn" type="button">关闭</button>
         </div>
 
-        <div class="muted" style="margin-top:8px;">提示：微信内更推荐截图保存。</div>
+        <div class="muted" style="margin-top:8px;">
+          提示：微信内更推荐截图保存；若复制失败，可长按截图里的订单号转发。
+        </div>
 
         <table class="summaryTable" id="summaryTable">
           <thead>
@@ -357,11 +358,86 @@
   </div>
 
 <script>
-  // === 你的 Worker 地址（不要以 / 结尾）===
+  // ✅ 你的 Worker 域名
   const WORKER_BASE = "https://ouran-order.danew16012.workers.dev";
 
-  // === 商品数据从 items.js 来（window.ITEMS）===
-  const items = Array.isArray(window.ITEMS) ? window.ITEMS : [];
+  const IMG_BASE = "../assets/images/tokyo/goods/";
+  const yen = (n)=> new Intl.NumberFormat("ja-JP").format(n);
+
+  const items = [
+    // 单领：立牌（按角色拆分）
+    {id:"stand_haruhi", img:"goods-20251224-1.png", zh:"亚克力立牌｜藤冈春日", ja:"アクリルスタンド｜藤岡 ハルヒ", cat:"single", limitPiecesPerTicket:3, limitDisplay:"3个", price:1650, groupId:null, unitsPerQty:1, inputUnit:"个"},
+    {id:"stand_tamaki", img:"goods-20251224-1.png", zh:"亚克力立牌｜须王环",   ja:"アクリルスタンド｜須王 環",     cat:"single", limitPiecesPerTicket:3, limitDisplay:"3个", price:1650, groupId:null, unitsPerQty:1, inputUnit:"个"},
+    {id:"stand_kyoya",  img:"goods-20251224-1.png", zh:"亚克力立牌｜凤镜夜",   ja:"アクリルスタンド｜鳳 鏡夜",     cat:"single", limitPiecesPerTicket:3, limitDisplay:"3个", price:1650, groupId:null, unitsPerQty:1, inputUnit:"个"},
+    {id:"stand_hikaru", img:"goods-20251224-1.png", zh:"亚克力立牌｜常陆院光", ja:"アクリルスタンド｜常陸院 光",   cat:"single", limitPiecesPerTicket:3, limitDisplay:"3个", price:1650, groupId:null, unitsPerQty:1, inputUnit:"个"},
+    {id:"stand_kaoru",  img:"goods-20251224-1.png", zh:"亚克力立牌｜常陆院馨", ja:"アクリルスタンド｜常陸院 馨",   cat:"single", limitPiecesPerTicket:3, limitDisplay:"3个", price:1650, groupId:null, unitsPerQty:1, inputUnit:"个"},
+    {id:"stand_honey",  img:"goods-20251224-1.png", zh:"亚克力立牌｜埴之冢光邦（Honey）", ja:"アクリルスタンド｜埴之塚 光邦", cat:"single", limitPiecesPerTicket:3, limitDisplay:"3个", price:1650, groupId:null, unitsPerQty:1, inputUnit:"个"},
+    {id:"stand_mori",   img:"goods-20251224-1.png", zh:"亚克力立牌｜铦之冢崇（Mori）",   ja:"アクリルスタンド｜銛之塚 崇",   cat:"single", limitPiecesPerTicket:3, limitDisplay:"3个", price:1650, groupId:null, unitsPerQty:1, inputUnit:"个"},
+
+    // 盲抽：标记钥匙扣（累计）
+    {id:"mejirushi_single", img:"goods-20251224-2.png", zh:"盲抽 标记亚克力钥匙扣（单抽）", ja:"トレーディングめじるしアクキー（単品）", cat:"blind",
+      limitPiecesPerTicket:20, limitDisplay:"20个", price:660,  groupId:"mejirushi", unitsPerQty:1,  inputUnit:"个"},
+    {id:"mejirushi_set",    img:"goods-20251224-2.png", zh:"盲抽 标记亚克力钥匙扣（整套）", ja:"トレーディングめじるしアクキー（コンプリートセット）", cat:"blind",
+      limitPiecesPerTicket:20, limitDisplay:"2套",  price:6600, groupId:"mejirushi", unitsPerQty:10, inputUnit:"套"},
+
+    // 盲抽：镭射徽章（累计）
+    {id:"badge_single", img:"goods-20251224-3.png", zh:"盲抽 镭射徽章（单抽）", ja:"トレーディングホログラム缶バッジ（単品）", cat:"blind",
+      limitPiecesPerTicket:14, limitDisplay:"14个", price:550,  groupId:"badge", unitsPerQty:1, inputUnit:"个"},
+    {id:"badge_set",    img:"goods-20251224-3.png", zh:"盲抽 镭射徽章（整套）", ja:"トレーディングホログラム缶バッジ（コンプリートセット）", cat:"blind",
+      limitPiecesPerTicket:14, limitDisplay:"2盒",  price:3850, groupId:"badge", unitsPerQty:7, inputUnit:"盒"},
+
+    // 盲抽：亚克力杯垫（累计）
+    {id:"coaster_single", img:"goods-20251224-4.png", zh:"盲抽 亚克力杯垫（单抽）", ja:"トレーディングアクリルコースター（単品）", cat:"blind",
+      limitPiecesPerTicket:30, limitDisplay:"30个", price:770,   groupId:"coaster", unitsPerQty:1,  inputUnit:"个"},
+    {id:"coaster_set",    img:"goods-20251224-4.png", zh:"盲抽 亚克力杯垫（整套）", ja:"トレーディングアクリルコースター（コンプリートセット）", cat:"blind",
+      limitPiecesPerTicket:30, limitDisplay:"2盒",  price:11550, groupId:"coaster", unitsPerQty:15, inputUnit:"盒"},
+
+    // 单领
+    {id:"file2", img:"goods-20251224-5.png", zh:"透明文件夹 2枚套装", ja:"クリアファイル2枚セット", cat:"single",
+      limitPiecesPerTicket:3, limitDisplay:"3套", price:880, groupId:null, unitsPerQty:1, inputUnit:"套"},
+
+    {id:"slide_a", img:"goods-20251224-6.png", zh:"滑动亚克力钥匙扣 A（春日&环）", ja:"スライドアクキー A（ハルヒ&環）", cat:"single",
+      limitPiecesPerTicket:3, limitDisplay:"3个", price:1100, groupId:null, unitsPerQty:1, inputUnit:"个"},
+    {id:"slide_b", img:"goods-20251224-6.png", zh:"滑动亚克力钥匙扣 B（环&镜夜）", ja:"スライドアクキー B（環&鏡夜）", cat:"single",
+      limitPiecesPerTicket:3, limitDisplay:"3个", price:1100, groupId:null, unitsPerQty:1, inputUnit:"个"},
+    {id:"slide_c", img:"goods-20251224-6.png", zh:"滑动亚克力钥匙扣 C（光&馨）", ja:"スライドアクキー C（光&馨）", cat:"single",
+      limitPiecesPerTicket:3, limitDisplay:"3个", price:1100, groupId:null, unitsPerQty:1, inputUnit:"个"},
+    {id:"slide_d", img:"goods-20251224-6.png", zh:"滑动亚克力钥匙扣 D（Honey&Mori）",ja:"スライドアクキー D（ハニー&モリ）", cat:"single",
+      limitPiecesPerTicket:3, limitDisplay:"3个", price:1100, groupId:null, unitsPerQty:1, inputUnit:"个"},
+
+    // 盲抽：亚克力卡（累计）
+    {id:"acard_single", img:"goods-20251224-7.png", zh:"盲抽 亚克力卡（单抽）", ja:"トレーディングアクリルカード（単品）", cat:"blind",
+      limitPiecesPerTicket:14, limitDisplay:"14个", price:660,  groupId:"acard", unitsPerQty:1, inputUnit:"个"},
+    {id:"acard_set",    img:"goods-20251224-7.png", zh:"盲抽 亚克力卡（整套）", ja:"トレーディングアクリルカード（コンプリートセット）", cat:"blind",
+      limitPiecesPerTicket:14, limitDisplay:"2盒",  price:4620, groupId:"acard", unitsPerQty:7, inputUnit:"盒"},
+
+    // 单领
+    {id:"pouch", img:"goods-20251224-8.png", zh:"抽绳束口袋", ja:"巾着", cat:"single",
+      limitPiecesPerTicket:3, limitDisplay:"3个", price:1650, groupId:null, unitsPerQty:1, inputUnit:"个"},
+
+    // 盲抽：透明卡（累计）
+    {id:"ccard_single", img:"goods-20251224-9.png", zh:"盲抽 透明卡收藏（单抽）", ja:"トレーディングクリアカードコレクション（単品）", cat:"blind",
+      limitPiecesPerTicket:24, limitDisplay:"24个", price:660,  groupId:"ccard", unitsPerQty:1,  inputUnit:"个"},
+    {id:"ccard_set",    img:"goods-20251224-9.png", zh:"盲抽 透明卡收藏（整套）", ja:"トレーディングクリアカードコレクション（コンプリートセット）", cat:"blind",
+      limitPiecesPerTicket:24, limitDisplay:"2盒",  price:7920, groupId:"ccard", unitsPerQty:12, inputUnit:"盒"},
+
+    // 单领
+    {id:"postcard", img:"goods-20251224-10.png", zh:"明信片套装（12张）", ja:"ポストカードセット", cat:"single",
+      limitPiecesPerTicket:3, limitDisplay:"3套", price:1540, groupId:null, unitsPerQty:1, inputUnit:"套"},
+    {id:"shikishi", img:"goods-20251224-11.png", zh:"亚克力迷你色纸板", ja:"アクリルミニ色紙", cat:"single",
+      limitPiecesPerTicket:3, limitDisplay:"3个", price:2200, groupId:null, unitsPerQty:1, inputUnit:"个"},
+    {id:"sticker",  img:"goods-20251224-12.png", zh:"证件照贴纸", ja:"証明写真シール", cat:"single",
+      limitPiecesPerTicket:3, limitDisplay:"3份", price:880, groupId:null, unitsPerQty:1, inputUnit:"份"},
+
+    {id:"photo_a", img:"goods-20251224-13.png", zh:"亚克力相片夹 A（钥匙扣款）", ja:"アクリルフォトケース A（キーホルダー）", cat:"single",
+      limitPiecesPerTicket:3, limitDisplay:"3个", price:1210, groupId:null, unitsPerQty:1, inputUnit:"个"},
+    {id:"photo_b", img:"goods-20251224-13.png", zh:"亚克力相片夹 B（支架款）",   ja:"アクリルフォトケース B（スタンド）",     cat:"single",
+      limitPiecesPerTicket:3, limitDisplay:"3个", price:2310, groupId:null, unitsPerQty:1, inputUnit:"个"},
+
+    // 盲抽：扭蛋
+    {id:"gacha", img:"goods-20251224-15.png", zh:"盲抽 亚克力旅馆钥匙牌钥匙扣（扭蛋）", ja:"アクリルモーテルキーホルダー（カプセルトイ）", cat:"blind",
+      limitPiecesPerTicket:3, limitDisplay:"3回", price:660, groupId:null, unitsPerQty:1, inputUnit:"回"},
+  ];
 
   const tbody = document.querySelector("#goodsTable tbody");
   const grandTotalEl = document.getElementById("grandTotal");
@@ -373,8 +449,6 @@
   const lbCap = document.getElementById("lbCap");
   const lbBackdrop = document.getElementById("lbBackdrop");
   const lbClose = document.getElementById("lbClose");
-
-  function yen(n){ return new Intl.NumberFormat("ja-JP").format(Number(n||0)); }
 
   function openLightbox(src, cap){
     lbImg.src = src;
@@ -431,12 +505,163 @@
     if(e.key === "Escape" && orderModal.classList.contains("open")) closeModal();
   });
 
-  function setErr(el, msg){
-    el.textContent = msg || "";
-    el.classList.toggle("show", !!msg);
+  function render(){
+    tbody.innerHTML = "";
+    items.forEach((it)=>{
+      const imgSrc = IMG_BASE + it.img;
+      const tr = document.createElement("tr");
+      tr.dataset.id = it.id;
+      tr.dataset.cat = it.cat;
+
+      const groupNote = it.groupId ? "（与同系列单抽/整套合计限购）" : "";
+
+      tr.innerHTML = `
+        <td>
+          <button class="imgbtn" type="button" aria-label="点击放大图片">
+            <img class="goodsimg" src="${imgSrc}" alt="${it.zh}">
+          </button>
+        </td>
+        <td>
+          <div class="zh">${it.zh}</div>
+          <div class="ja">${it.ja}</div>
+          <div class="meta">每张票限购：${it.limitDisplay} ${groupNote}</div>
+        </td>
+        <td>${it.cat === "blind" ? "盲抽" : "单领"}</td>
+        <td class="right">${it.limitDisplay}</td>
+        <td class="right"><span class="label">单价</span>¥${yen(it.price)}</td>
+        <td class="right">
+          <span class="label">数量</span>
+          <input class="num" type="number" min="0" step="1" value="0" inputmode="numeric" />
+          <span class="unit">${it.inputUnit || ""}</span>
+          <div class="needTicket" data-need-for="${it.id}"></div>
+        </td>
+        <td class="right"><span class="label">小计</span><span class="subtotal">¥0</span></td>
+      `;
+
+      tr.querySelector(".imgbtn").addEventListener("click", ()=> openLightbox(imgSrc, it.zh));
+
+      const input = tr.querySelector("input");
+      const subtotalEl = tr.querySelector(".subtotal");
+
+      function recalcRow(){
+        let qty = parseInt(input.value || "0", 10);
+        if (Number.isNaN(qty) || qty < 0) qty = 0;
+        input.value = qty;
+
+        subtotalEl.textContent = "¥" + yen(qty * it.price);
+        recalcAll();
+      }
+
+      input.addEventListener("input", recalcRow);
+      input.addEventListener("change", recalcRow);
+
+      tbody.appendChild(tr);
+    });
+
+    recalcAll();
   }
 
-  // 邮箱校验（按你规则）
+  function getQtyById(id){
+    const tr = tbody.querySelector(`tr[data-id="${CSS.escape(id)}"]`);
+    if(!tr) return 0;
+    const v = parseInt(tr.querySelector("input").value || "0", 10);
+    return Number.isNaN(v) ? 0 : Math.max(0, v);
+  }
+
+  function clearNeedTickets(){
+    tbody.querySelectorAll(".needTicket").forEach(el=>{
+      el.textContent = "";
+      el.classList.remove("show");
+    });
+  }
+  function setNeedTicketsForIds(ids, msg){
+    ids.forEach(id=>{
+      const tr = tbody.querySelector(`tr[data-id="${CSS.escape(id)}"]`);
+      if(!tr) return;
+      const el = tr.querySelector(`.needTicket[data-need-for="${CSS.escape(id)}"]`);
+      if(!el) return;
+      el.textContent = msg;
+      el.classList.add("show");
+    });
+  }
+
+  function buildConstraints(){
+    const constraints = new Map(); // key -> {limitPieces,pieces,rowIds}
+    items.forEach(it=>{
+      const qty = getQtyById(it.id);
+      const pieces = qty * (it.unitsPerQty || 1);
+      const key = it.groupId ? `group:${it.groupId}` : `item:${it.id}`;
+      if(!constraints.has(key)){
+        constraints.set(key, {limitPieces: it.limitPiecesPerTicket, pieces: 0, rowIds: []});
+      }
+      const c = constraints.get(key);
+      c.pieces += pieces;
+      c.rowIds.push(it.id);
+      c.limitPieces = Math.max(c.limitPieces, it.limitPiecesPerTicket);
+    });
+    return constraints;
+  }
+
+  function computeTicketsNeeded(constraints){
+    let t = 0;
+    constraints.forEach(c=>{
+      if(c.pieces <= 0) return;
+      t = Math.max(t, Math.ceil(c.pieces / c.limitPieces));
+    });
+    return t;
+  }
+
+  function computeTotal(){
+    let total = 0;
+    items.forEach(it=>{
+      const qty = getQtyById(it.id);
+      total += qty * it.price;
+    });
+    return total;
+  }
+
+  function recalcAll(){
+    // 总价
+    const total = computeTotal();
+    grandTotalEl.textContent = "¥" + yen(total);
+
+    // 约束：用于每项提示 & 全单票数
+    const constraints = buildConstraints();
+
+    clearNeedTickets();
+    constraints.forEach(c=>{
+      if(c.pieces <= 0) return;
+      const need = Math.ceil(c.pieces / c.limitPieces);
+      setNeedTicketsForIds(c.rowIds, `该商品至少需要 ${need} 张票`);
+    });
+
+    const tickets = computeTicketsNeeded(constraints);
+    ticketsNeededEl.textContent = String(tickets);
+  }
+
+  // 清空
+  document.getElementById("resetBtn").addEventListener("click", ()=>{
+    tbody.querySelectorAll("input").forEach(i=> i.value = 0);
+    tbody.querySelectorAll(".subtotal").forEach(s=> s.textContent = "¥0");
+    recalcAll();
+  });
+
+  // 筛选：不重绘，只隐藏/显示行 => 不丢数量
+  function setFilter(filter){
+    document.querySelectorAll(".fbtn").forEach(b=> b.classList.toggle("active", b.dataset.filter === filter));
+    tbody.querySelectorAll("tr").forEach(tr=>{
+      const cat = tr.dataset.cat;
+      tr.style.display =
+        (filter === "all") ? "" :
+        (filter === "blind" && cat === "blind") ? "" :
+        (filter === "single" && cat === "single") ? "" : "none";
+    });
+  }
+  document.querySelectorAll(".fbtn").forEach(btn=>{
+    btn.addEventListener("click", ()=> setFilter(btn.dataset.filter));
+  });
+
+  // ===== 邮箱校验（前端同规则）=====
   function validateEmailLocal(email){
     const s = (email || "").trim();
     const at = s.indexOf("@");
@@ -464,6 +689,11 @@
     return {ok:true, reason:""};
   }
 
+  function setErr(el, msg){
+    el.textContent = msg || "";
+    el.classList.toggle("show", !!msg);
+  }
+
   function resetModal(){
     stepEmail.style.display = "";
     stepResult.style.display = "none";
@@ -477,177 +707,7 @@
     document.getElementById("modalTitle").textContent = "提交订单";
   }
 
-  function render(){
-    // 防止“表格空白但你不知道原因”
-    if (!Array.isArray(items) || items.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="7" style="padding:16px;color:#b00020;">
-        商品数据未加载：请确认 tokyo/items.js 中已正确设置 window.ITEMS = [...]
-      </td></tr>`;
-      return;
-    }
-
-    tbody.innerHTML = "";
-    items.forEach((it)=>{
-      const tr = document.createElement("tr");
-      tr.dataset.id = it.id;
-      tr.dataset.cat = it.cat;
-
-      // 显示用：限购必须按“盒/个”原样展示（不换算）
-      const limitDisplay = it.limitDisplay || "";
-      const limitHint = it.limitHint ? `（${it.limitHint}）` : "";
-      const typeLabel = it.cat === "blind" ? "盲抽" : "单领";
-
-      tr.innerHTML = `
-        <td>
-          <button class="imgbtn" type="button" aria-label="点击放大图片">
-            <img class="goodsimg" src="${it.img}" alt="${it.zh}">
-          </button>
-        </td>
-        <td>
-          <div class="zh">${it.zh}</div>
-          <div class="ja">${it.ja || ""}</div>
-          <div class="meta">每张票限购：${limitDisplay} ${limitHint}</div>
-        </td>
-        <td>${typeLabel}</td>
-        <td class="right">${limitDisplay}</td>
-        <td class="right"><span class="label">单价</span>¥${yen(it.price)}</td>
-        <td class="right">
-          <span class="label">数量</span>
-          <input class="num" type="number" min="0" step="1" value="0" inputmode="numeric" />
-          <span class="unit">${it.inputUnit || ""}</span>
-          <div class="needTicket" data-need-for="${it.id}"></div>
-        </td>
-        <td class="right"><span class="label">小计</span><span class="subtotal">¥0</span></td>
-      `;
-
-      tr.querySelector(".imgbtn").addEventListener("click", ()=> openLightbox(it.img, it.zh));
-
-      const input = tr.querySelector("input");
-      const subtotalEl = tr.querySelector(".subtotal");
-
-      function recalcRow(){
-        let qty = parseInt(input.value || "0", 10);
-        if (Number.isNaN(qty) || qty < 0) qty = 0;
-        input.value = qty;
-        subtotalEl.textContent = "¥" + yen(qty * it.price);
-        recalcAll();
-      }
-
-      input.addEventListener("input", recalcRow);
-      input.addEventListener("change", recalcRow);
-
-      tbody.appendChild(tr);
-    });
-
-    recalcAll();
-  }
-
-  function getQtyById(id){
-    const tr = tbody.querySelector(`tr[data-id="${CSS.escape(id)}"]`);
-    if(!tr) return 0;
-    const v = parseInt(tr.querySelector("input").value || "0", 10);
-    return Number.isNaN(v) ? 0 : Math.max(0, v);
-  }
-
-  function clearNeedTickets(){
-    tbody.querySelectorAll(".needTicket").forEach(el=>{
-      el.textContent = "";
-      el.classList.remove("show");
-    });
-  }
-
-  function setNeedTicketsForIds(ids, msg){
-    ids.forEach(id=>{
-      const tr = tbody.querySelector(`tr[data-id="${CSS.escape(id)}"]`);
-      if(!tr) return;
-      const el = tr.querySelector(`.needTicket[data-need-for="${CSS.escape(id)}"]`);
-      if(!el) return;
-      el.textContent = msg;
-      el.classList.add("show");
-    });
-  }
-
-  // 约束：同 groupId 的“整套+单抽”合并计算票数需求；display 不换算
-  function buildConstraints(){
-    const constraints = new Map();
-
-    items.forEach(it=>{
-      const qty = getQtyById(it.id);
-
-      const unitsPerQty = Number.isFinite(it.unitsPerQty) ? it.unitsPerQty : 1; // 盒->个的折算（仅用于计算）
-      const pieces = qty * unitsPerQty;
-
-      const limitPiecesPerTicket = Number(it.limitPiecesPerTicket || 0); // 每票最多“最小单位”件数
-      if (!Number.isFinite(limitPiecesPerTicket) || limitPiecesPerTicket <= 0) return;
-
-      const key = it.groupId ? `group:${it.groupId}` : `item:${it.id}`;
-      if(!constraints.has(key)){
-        constraints.set(key, {limitPieces: limitPiecesPerTicket, pieces: 0, rowIds: []});
-      }
-      const c = constraints.get(key);
-      c.pieces += pieces;
-      c.rowIds.push(it.id);
-      c.limitPieces = Math.max(c.limitPieces, limitPiecesPerTicket);
-    });
-
-    return constraints;
-  }
-
-  function computeTicketsNeeded(constraints){
-    let t = 0;
-    constraints.forEach(c=>{
-      if(c.pieces <= 0) return;
-      t = Math.max(t, Math.ceil(c.pieces / c.limitPieces));
-    });
-    return t;
-  }
-
-  function computeTotal(){
-    let total = 0;
-    items.forEach(it=>{
-      const qty = getQtyById(it.id);
-      total += qty * Number(it.price || 0);
-    });
-    return total;
-  }
-
-  function recalcAll(){
-    grandTotalEl.textContent = "¥" + yen(computeTotal());
-
-    const constraints = buildConstraints();
-
-    clearNeedTickets();
-    constraints.forEach(c=>{
-      if(c.pieces <= 0) return;
-      const need = Math.ceil(c.pieces / c.limitPieces);
-      setNeedTicketsForIds(c.rowIds, `该商品至少需要 ${need} 张票`);
-    });
-
-    ticketsNeededEl.textContent = String(computeTicketsNeeded(constraints));
-  }
-
-  // 清空
-  document.getElementById("resetBtn").addEventListener("click", ()=>{
-    tbody.querySelectorAll("input").forEach(i=> i.value = 0);
-    tbody.querySelectorAll(".subtotal").forEach(s=> s.textContent = "¥0");
-    recalcAll();
-  });
-
-  // 筛选：不丢数量
-  function setFilter(filter){
-    document.querySelectorAll(".fbtn").forEach(b=> b.classList.toggle("active", b.dataset.filter === filter));
-    tbody.querySelectorAll("tr").forEach(tr=>{
-      const cat = tr.dataset.cat;
-      tr.style.display =
-        (filter === "all") ? "" :
-        (filter === "blind" && cat === "blind") ? "" :
-        (filter === "single" && cat === "single") ? "" : "none";
-    });
-  }
-  document.querySelectorAll(".fbtn").forEach(btn=>{
-    btn.addEventListener("click", ()=> setFilter(btn.dataset.filter));
-  });
-
+  // ===== 生成订单清单（用于弹窗展示/复制/提交）=====
   function pickedItems(){
     return items
       .map(it => ({ it, qty: getQtyById(it.id) }))
@@ -657,14 +717,13 @@
   function buildSummaryTable(){
     summaryTbody.innerHTML = "";
     const picked = pickedItems();
-
     picked.forEach(x=>{
-      const sub = x.qty * Number(x.it.price || 0);
+      const sub = x.qty * x.it.price;
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td>${x.it.cat==="blind" ? "盲抽" : "单领"}</td>
-        <td><strong>${x.it.zh}</strong><div class="muted">${x.it.ja || ""}</div></td>
-        <td class="right">${x.qty}${x.it.inputUnit || ""}</td>
+        <td><strong>${x.it.zh}</strong><div class="muted">${x.it.ja}</div></td>
+        <td class="right">${x.qty}${x.it.inputUnit}</td>
         <td class="right">¥${yen(x.it.price)}</td>
         <td class="right">¥${yen(sub)}</td>
       `;
@@ -675,31 +734,68 @@
     const tickets = computeTicketsNeeded(constraints);
     const total = computeTotal();
     summaryMeta.textContent = `全单至少需要票数：${tickets}    总价：¥${yen(total)}`;
-    return { tickets, total, picked };
+    return { tickets, total, constraints, picked };
+  }
+
+  function makePlainText(orderId, email){
+    const { tickets, total, picked } = buildSummaryTable();
+    const lines = [];
+    lines.push("樱兰学院咖啡谷 订单");
+    if (orderId) lines.push(`订单号：${orderId}`);
+    if (email) lines.push(`邮箱：${email}`);
+    lines.push(`全单至少需要票数：${tickets}`);
+    lines.push(`总价：¥${yen(total)}`);
+    lines.push("");
+
+    const blind = picked.filter(x=>x.it.cat==="blind");
+    const single = picked.filter(x=>x.it.cat==="single");
+
+    if (blind.length){
+      lines.push("【盲抽】");
+      blind.forEach(x=>{
+        lines.push(`- ${x.it.zh} x ${x.qty}${x.it.inputUnit}  ¥${yen(x.it.price)}  小计¥${yen(x.qty*x.it.price)}`);
+      });
+      lines.push("");
+    }
+    if (single.length){
+      lines.push("【单领】");
+      single.forEach(x=>{
+        lines.push(`- ${x.it.zh} x ${x.qty}${x.it.inputUnit}  ¥${yen(x.it.price)}  小计¥${yen(x.qty*x.it.price)}`);
+      });
+      lines.push("");
+    }
+    return lines.join("\n");
   }
 
   async function copyText(text){
-    try{ await navigator.clipboard.writeText(text); return true; }
-    catch{ return false; }
+    try{
+      await navigator.clipboard.writeText(text);
+      return true;
+    }catch(e){
+      return false;
+    }
   }
 
   async function submitToWorker(email){
-    const { tickets, total, picked } = buildSummaryTable();
+    const picked = pickedItems();
+    const constraints = buildConstraints();
+    const tickets = computeTicketsNeeded(constraints);
+    const total = computeTotal();
 
     const payload = {
       source: location.href,
       email,
       tickets_needed: tickets,
       total_jpy: total,
-      hp: (hp.value || "").trim(),
+      hp: (hp.value || "").trim(), // honeypot
       items: picked.map(x => ({
         cat: x.it.cat === "blind" ? "盲抽" : "单领",
         name_zh: x.it.zh,
-        name_ja: x.it.ja || "",
+        name_ja: x.it.ja,
         qty: x.qty,
-        unit: x.it.inputUnit || "",
-        unit_price_jpy: Number(x.it.price || 0),
-        subtotal_jpy: x.qty * Number(x.it.price || 0),
+        unit: x.it.inputUnit,
+        unit_price_jpy: x.it.price,
+        subtotal_jpy: x.qty * x.it.price,
       })),
     };
 
@@ -714,9 +810,10 @@
     return data.order_id;
   }
 
-  // 提交按钮
+  // 点击“提交订单”：先弹出邮箱输入
   document.getElementById("submitBtn").addEventListener("click", ()=>{
-    if (!pickedItems().length){
+    const picked = pickedItems();
+    if (!picked.length){
       alert("请先填写希望数量后再提交。");
       return;
     }
@@ -733,8 +830,14 @@
     const e2 = (email2.value || "").trim();
 
     const v1 = validateEmailLocal(e1);
-    if (!v1.ok){ setErr(emailErr1, v1.reason); return; }
-    if (e1 !== e2){ setErr(emailErr2, "两次输入的邮箱不一致"); return; }
+    if (!v1.ok){
+      setErr(emailErr1, v1.reason);
+      return;
+    }
+    if (e1 !== e2){
+      setErr(emailErr2, "两次输入的邮箱不一致");
+      return;
+    }
 
     confirmSubmitBtn.disabled = true;
     confirmSubmitBtn.textContent = "提交中...";
@@ -747,30 +850,7 @@
       stepResult.style.display = "";
       orderIdBig.textContent = orderId;
 
-      const makePlainText = ()=>{
-        const { tickets, total, picked } = buildSummaryTable();
-        const lines = [];
-        lines.push("樱兰学院咖啡谷 订单");
-        lines.push(`订单号：${orderId}`);
-        lines.push(`邮箱：${e1}`);
-        lines.push(`全单至少需要票数：${tickets}`);
-        lines.push(`总价：¥${yen(total)}`);
-        lines.push("");
-        const blind = picked.filter(x=>x.it.cat==="blind");
-        const single = picked.filter(x=>x.it.cat==="single");
-
-        if (blind.length){
-          lines.push("【盲抽】");
-          blind.forEach(x=> lines.push(`- ${x.it.zh} x ${x.qty}${x.it.inputUnit||""}  ¥${yen(x.it.price)}  小计¥${yen(x.qty*x.it.price)}`));
-          lines.push("");
-        }
-        if (single.length){
-          lines.push("【单领】");
-          single.forEach(x=> lines.push(`- ${x.it.zh} x ${x.qty}${x.it.inputUnit||""}  ¥${yen(x.it.price)}  小计¥${yen(x.qty*x.it.price)}`));
-          lines.push("");
-        }
-        return lines.join("\n");
-      };
+      buildSummaryTable();
 
       copyIdBtn.onclick = async ()=>{
         const ok = await copyText(orderId);
@@ -779,7 +859,8 @@
       };
 
       copyTextBtn.onclick = async ()=>{
-        const ok = await copyText(makePlainText());
+        const text = makePlainText(orderId, e1);
+        const ok = await copyText(text);
         copyTextBtn.textContent = ok ? "已复制" : "复制失败";
         setTimeout(()=> copyTextBtn.textContent="复制订单清单", 900);
       };
@@ -791,7 +872,7 @@
     }
   });
 
-  // 初始化
+  // 初始渲染
   render();
   setFilter("all");
 </script>
