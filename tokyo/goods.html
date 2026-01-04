@@ -252,6 +252,9 @@
     .summaryTable th,.summaryTable td{border:1px solid #e6e6e6;padding:8px 10px;vertical-align:top}
     .summaryTable th{background:#fafafa;text-align:left;white-space:nowrap}
 
+    /* 成功页数量更醒目 */
+    .qtyStrong{font-weight:900;font-size:15px}
+
     /* 隐藏的蜜罐字段 */
     .hpWrap{position:absolute;left:-9999px;top:-9999px;opacity:0}
   </style>
@@ -358,14 +361,13 @@
           提示：微信内更推荐截图保存；若复制失败，可长按截图里的订单号转发。
         </div>
 
+        <!-- ✅ 成功页清单：只显示数量，不显示金额 -->
         <table class="summaryTable" id="summaryTable">
           <thead>
             <tr>
               <th>类型</th>
               <th>商品</th>
               <th class="right">数量</th>
-              <th class="right">单价</th>
-              <th class="right">小计</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -377,8 +379,8 @@
   </div>
 
 <script>
-  // ✅ 你的 Worker 域名
-  const WORKER_BASE = location.origin; // 在你的页面里就是 https://cf.zhanlala.com
+  // ✅ 改成同域：配合你已经配置好的 Route：cf.zhanlala.com/api/*
+  const WORKER_BASE = location.origin;
 
   const IMG_BASE = "../assets/images/tokyo/goods/";
   const yen = (n)=> new Intl.NumberFormat("ja-JP").format(n);
@@ -643,7 +645,7 @@
   }
 
   function recalcAll(){
-    // 总价
+    // 总价（主页面仍保留）
     const total = computeTotal();
     grandTotalEl.textContent = "¥" + yen(total);
 
@@ -739,34 +741,34 @@
   function buildSummaryTable(){
     summaryTbody.innerHTML = "";
     const picked = pickedItems();
+
     picked.forEach(x=>{
-      const sub = x.qty * x.it.price;
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td>${x.it.cat==="blind" ? "盲抽" : "单领"}</td>
         <td><strong>${x.it.zh}</strong><div class="muted">${x.it.ja}</div></td>
-        <td class="right">${x.qty}${x.it.inputUnit}</td>
-        <td class="right">¥${yen(x.it.price)}</td>
-        <td class="right">¥${yen(sub)}</td>
+        <td class="right qtyStrong">${x.qty}${x.it.inputUnit}</td>
       `;
       summaryTbody.appendChild(tr);
     });
 
     const constraints = buildConstraints();
     const tickets = computeTicketsNeeded(constraints);
-    const total = computeTotal();
-    summaryMeta.textContent = `全单至少需要票数：${tickets}    总价：¥${yen(total)}`;
-    return { tickets, total, constraints, picked };
+    const totalQty = picked.reduce((s, x)=> s + x.qty, 0);
+
+    // ✅ 成功页 meta：强调票数 & 件数（不强调金额）
+    summaryMeta.textContent = `全单至少需要票数：${tickets}    合计件数：${totalQty}`;
+    return { tickets, totalQty, constraints, picked };
   }
 
   function makePlainText(orderId, email){
-    const { tickets, total, picked } = buildSummaryTable();
+    const { tickets, totalQty, picked } = buildSummaryTable();
     const lines = [];
     lines.push("樱兰学院咖啡谷 订单");
     if (orderId) lines.push(`订单号：${orderId}`);
     if (email) lines.push(`邮箱：${email}`);
     lines.push(`全单至少需要票数：${tickets}`);
-    lines.push(`总价：¥${yen(total)}`);
+    lines.push(`合计件数：${totalQty}`);
     lines.push("");
 
     const blind = picked.filter(x=>x.it.cat==="blind");
@@ -775,14 +777,14 @@
     if (blind.length){
       lines.push("【盲抽】");
       blind.forEach(x=>{
-        lines.push(`- ${x.it.zh} x ${x.qty}${x.it.inputUnit}  ¥${yen(x.it.price)}  小计¥${yen(x.qty*x.it.price)}`);
+        lines.push(`- ${x.it.zh} x ${x.qty}${x.it.inputUnit}`);
       });
       lines.push("");
     }
     if (single.length){
       lines.push("【单领】");
       single.forEach(x=>{
-        lines.push(`- ${x.it.zh} x ${x.qty}${x.it.inputUnit}  ¥${yen(x.it.price)}  小计¥${yen(x.qty*x.it.price)}`);
+        lines.push(`- ${x.it.zh} x ${x.qty}${x.it.inputUnit}`);
       });
       lines.push("");
     }
