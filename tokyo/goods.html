@@ -378,7 +378,7 @@
 
 <script>
   // ✅ 你的 Worker 域名
-  const WORKER_BASE = "https://ouran-order.danew16012.workers.dev";
+  const WORKER_BASE = location.origin; // 在你的页面里就是 https://cf.zhanlala.com
 
   const IMG_BASE = "../assets/images/tokyo/goods/";
   const yen = (n)=> new Intl.NumberFormat("ja-JP").format(n);
