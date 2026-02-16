@@ -1,466 +1,787 @@
-<!DOCTYPE html>
-<html lang="ja">
+<!doctype html>
+<html lang="ja" class="__variable_eb2d8a __variable_50e27d __variable_13a635">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>BASE SHOP 入店予約</title>
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
-    background: #1a2a5e;
-    color: #ffffff;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-  }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>BASE SHOP 入店予約</title>
 
-  .page {
-    width: 100%;
-    max-width: 430px;
-    background: #1a2a5e;
-    position: relative;
-  }
+  <!-- 参照ソースの Next.js CSS（ハッシュは将来変わる可能性あり） -->
+  <link rel="stylesheet" href="https://onepiece-base.com/_next/static/css/bd4ff51da397be00.css" />
+  <link rel="stylesheet" href="https://onepiece-base.com/_next/static/css/444482e722f2e8c7.css" />
+  <link rel="stylesheet" href="https://onepiece-base.com/_next/static/css/7ab0c73b53cb7a0c.css" />
+  <link rel="stylesheet" href="https://onepiece-base.com/_next/static/css/addf112194d61a21.css" />
+  <link rel="stylesheet" href="https://onepiece-base.com/_next/static/css/d0c2c80e21b58655.css" />
 
-  /* Header */
-  .header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 14px 16px;
-    position: relative;
-    border-bottom: 1px solid rgba(255,255,255,0.15);
-    background: #1a2a5e;
-  }
-  .header .back {
-    position: absolute;
-    left: 16px;
-    font-size: 22px;
-    color: #fff;
-    text-decoration: none;
-    cursor: pointer;
-  }
-  .header h1 {
-    font-size: 16px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-  }
+  <style>
+    :root{
+      --bg-blue:#00529E;
+      --card-blue:#06427F;
+      --value-yellow:#F8B800;
+      --warn-yellow:#F8B800;
+      --hl-bg:#FFC01E;
+      --hl-red:#FF1203;
+      --label:#B9C7D6;
+      --white:#fff;
+      --qr-box: min(59.6vw, 410px);
+    }
 
-  /* Reservation Card */
-  .card {
-    margin: 20px 16px;
-    background: #ffffff;
-    border-radius: 8px;
-    color: #1a1a1a;
-    overflow: hidden;
-  }
-  .card-title {
-    padding: 14px 16px;
-    font-size: 14px;
-    font-weight: 500;
-    text-align: center;
-    border-bottom: 1px solid #e0e0e0;
-    color: #333;
-  }
-  .card-body {
-    padding: 16px 20px;
-  }
-  .card-row {
-    display: flex;
-    align-items: center;
-    padding: 8px 0;
-  }
-  .card-label {
-    font-size: 13px;
-    color: #666;
-    min-width: 80px;
-  }
-  .card-value {
-    font-size: 15px;
-    font-weight: 700;
-    color: #1a1a1a;
-    margin-left: 16px;
-  }
-  .card-value.red {
-    color: #e53935;
-  }
-  .card-value.blue {
-    color: #1565c0;
-  }
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      background:var(--bg-blue);
+      color:var(--white);
+      -webkit-text-size-adjust:100%;
+      text-rendering:optimizeLegibility;
+    }
 
-  /* Location Info */
-  .location-info {
-    margin: 20px 16px;
-    font-size: 14px;
-    line-height: 1.9;
-  }
-  .location-info .highlight {
-    background: #ffc107;
-    color: #1a1a1a;
-    padding: 1px 4px;
-    font-weight: 700;
-    border-radius: 2px;
-  }
-  .location-info a {
-    color: #64b5f6;
-    text-decoration: underline;
-  }
+    .appFrame{
+      width:100%;
+      max-width:437px;
+      margin:0 auto;
+      min-height:100vh;
+      background:var(--bg-blue);
+    }
 
-  /* QR Code Section */
-  .qr-section {
-    margin: 24px 16px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .qr-container {
-    width: 260px;
-    height: 260px;
-    background: #ffffff;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    position: relative;
-  }
-  .qr-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-  .qr-placeholder {
-    color: #999;
-    font-size: 13px;
-    text-align: center;
-    line-height: 1.6;
-    padding: 20px;
-  }
+    .header_header__3thtE{
+      position:sticky;
+      top:0;
+      z-index:10;
+      height:52px;
+      background:#000;
+      display:flex;
+      align-items:center;
+    }
+    .header_inner__n4yDv{
+      width:100%;
+      padding:0 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .header_back__lyJxz{ width:36px; display:flex; justify-content:flex-start; }
+    .header_back_btn__CbNb2{
+      appearance:none;
+      border:0;
+      background:transparent;
+      padding:6px;
+      margin:0;
+      border-radius:999px;
+      cursor:pointer;
+    }
+    .header_title__wUiVZ{
+      margin:0;
+      font-size:14px;
+      font-weight:700;
+      letter-spacing:1px;
+      color:#fff;
+    }
+    .header_content__9vWc9{ width:36px; }
 
-  /* Countdown Timer */
-  .countdown {
-    margin-top: 20px;
-    font-size: 36px;
-    font-weight: 300;
-    letter-spacing: 8px;
-    font-variant-numeric: tabular-nums;
-  }
+    .header_back_icon__w7rx0{
+      display:block;
+      width:18px;
+      height:18px;
+      position:relative;
+    }
+    .header_back_icon__w7rx0:before{
+      content:"";
+      position:absolute;
+      inset:0;
+      margin:auto;
+      width:10px;
+      height:10px;
+      border-left:2px solid #fff;
+      border-bottom:2px solid #fff;
+      transform:rotate(45deg);
+      left:4px;
+    }
 
-  /* Refresh Button */
-  .refresh-btn {
-    margin: 20px auto;
-    display: block;
-    padding: 12px 40px;
-    background: transparent;
-    color: #ffffff;
-    border: 1.5px solid rgba(255,255,255,0.6);
-    border-radius: 25px;
-    font-size: 15px;
-    cursor: pointer;
-    font-family: inherit;
-    letter-spacing: 0.5px;
-    transition: background 0.2s;
-  }
-  .refresh-btn:active {
-    background: rgba(255,255,255,0.1);
-  }
+    .section{ padding:14px 18px 0 18px; }
 
-  /* Warning Text */
-  .warning {
-    margin: 20px 16px;
-    padding: 0;
-    font-size: 13px;
-    line-height: 1.8;
-    color: #ff8a80;
-    font-weight: 500;
-  }
-  .warning .note {
-    color: rgba(255,255,255,0.8);
-    font-weight: 400;
-    font-size: 12.5px;
-  }
+    .banner{
+      background:#fff;
+      color:#000;
+      font-size:13px;
+      font-weight:700;
+      text-align:center;
+      padding:11px 10px;
+      border-radius:2px;
+      margin-top:8px;
+      margin-bottom:12px;
+    }
 
-  /* Section Title */
-  .section-title {
-    text-align: center;
-    font-size: 14px;
-    font-weight: 600;
-    margin: 28px 16px 12px;
-    letter-spacing: 1px;
-  }
+    .card{
+      background:var(--card-blue);
+      border-radius:8px;
+      padding:14px 16px;
+    }
 
-  /* Notes Section */
-  .notes {
-    margin: 0 16px 16px;
-    font-size: 12px;
-    line-height: 1.9;
-    color: rgba(255,255,255,0.85);
-  }
-  .notes p {
-    margin-bottom: 2px;
-    text-indent: -1em;
-    padding-left: 1em;
-  }
+    .cardRow{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      padding:10px 0;
+    }
 
-  /* Today Info */
-  .today-title {
-    margin: 20px 16px 8px;
-    font-size: 13px;
-    font-weight: 600;
-    color: #fff;
-  }
-  .today-title::before {
-    content: "■";
-    margin-right: 4px;
-  }
-  .today-notes {
-    margin: 0 16px 24px;
-    font-size: 12px;
-    line-height: 1.9;
-    color: rgba(255,255,255,0.85);
-  }
-  .today-notes p {
-    text-indent: -1em;
-    padding-left: 1em;
-    margin-bottom: 2px;
-  }
+    .label{
+      font-size:12px;
+      color:var(--label);
+      line-height:1.25;
+      padding-top:2px;
+      white-space:nowrap;
+    }
+    .value{
+      font-size:15px;
+      font-weight:800;
+      color:var(--value-yellow);
+      text-align:right;
+      line-height:1.15;
+      letter-spacing:0.2px;
+    }
+    .value.small{ font-size:14px; }
 
-  /* Cancel Button */
-  .cancel-section {
-    margin: 16px 16px 40px;
-    display: flex;
-    justify-content: center;
-  }
-  .cancel-btn {
-    width: 100%;
-    padding: 14px;
-    background: #ffffff;
-    color: #1a2a5e;
-    border: none;
-    border-radius: 6px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: inherit;
-    letter-spacing: 0.5px;
-  }
-  .cancel-btn:active {
-    background: #e0e0e0;
-  }
+    .infoText{
+      margin-top:14px;
+      line-height:1.65;
+      font-size:14px;
+    }
+    .infoText a{
+      color:#fff;
+      text-decoration:underline;
+      font-weight:800;
+    }
+    .hl{
+      display:inline-block;
+      background:var(--hl-bg);
+      color:var(--hl-red);
+      font-weight:900;
+      padding:1px 4px;
+      border-radius:1px;
+      margin:0 2px;
+    }
 
-  /* QR Upload */
-  .qr-upload {
-    margin-top: 12px;
-  }
-  .qr-upload label {
-    display: inline-block;
-    padding: 8px 20px;
-    background: rgba(255,255,255,0.15);
-    color: #fff;
-    border-radius: 20px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: background 0.2s;
-    border: 1px dashed rgba(255,255,255,0.4);
-  }
-  .qr-upload label:hover {
-    background: rgba(255,255,255,0.25);
-  }
-  .qr-upload input {
-    display: none;
-  }
+    .qrWrap{ padding:18px 0 0 0; text-align:center; }
 
-  /* Divider */
-  .divider {
-    height: 1px;
-    background: rgba(255,255,255,0.15);
-    margin: 4px 16px;
-  }
+    .qrBox{
+      width:var(--qr-box);
+      aspect-ratio:1/1;
+      margin:10px auto 0 auto;
+      background:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+      overflow:hidden;
+    }
+    .qrInner{
+      width:100%;
+      height:100%;
+      padding:16px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    #qrImg{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      display:none;
+    }
+    #qrPlaceholder{
+      color:#000;
+      font-size:14px;
+      line-height:1.35;
+      text-align:left;
+    }
 
-  /* Priority Notes */
-  .priority-section {
-    margin: 16px 16px 0;
-  }
-  .priority-label {
-    font-size: 12.5px;
-    color: rgba(255,255,255,0.7);
-    margin-bottom: 4px;
-  }
-</style>
+    .timer{
+      margin-top:16px;
+      font-size:26px;
+      letter-spacing:2px;
+      display:none;
+    }
+
+    .btnOutline{
+      width:calc(100% - 44px);
+      height:54px;
+      margin:18px auto 0 auto;
+      border:2px solid rgba(255,255,255,0.85);
+      border-radius:999px;
+      background:transparent;
+      color:#fff;
+      font-size:15px;
+      font-weight:700;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+    }
+
+    .warn{
+      margin-top:18px;
+      color:var(--warn-yellow);
+      font-weight:800;
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    .notes{
+      margin-top:14px;
+      font-size:12.5px;
+      line-height:1.55;
+    }
+    .notes p{ margin:8px 0; }
+
+    .dividerTitle{
+      margin-top:18px;
+      font-weight:800;
+      font-size:13px;
+      padding-bottom:8px;
+      border-bottom:1px solid rgba(255,255,255,0.7);
+      display:inline-block;
+      width:100%;
+    }
+
+    .bullets{ margin-top:12px; padding-left:0; list-style:none; }
+    .bullets li{ margin:8px 0; white-space:pre-wrap; }
+    .bullets li::before{ content:"・"; }
+    .bullets .nobullet::before{ content:""; }
+    .bullets .star::before{ content:"※"; }
+
+    .cancelBtn{
+      width:calc(100% - 36px);
+      height:58px;
+      margin:26px auto 28px auto;
+      border:2px solid rgba(255,255,255,0.85);
+      border-radius:6px;
+      background:transparent;
+      color:#fff;
+      font-size:15px;
+      font-weight:800;
+      cursor:pointer;
+    }
+
+    /* state control */
+    .state-wait .timer{ display:none; }
+    .state-qr .timer{ display:block; }
+    .state-qr #qrImg{ display:block; }
+    .state-qr #qrPlaceholder{ display:none; }
+
+    /* ====== Secret config (invisible hot-corner) ====== */
+    #secretConfigBtn{
+      position:fixed;
+      top:0;
+      right:0;
+      width:52px;
+      height:52px;
+      z-index:9999;
+      border:0;
+      background:transparent;
+      opacity:0.01; /* almost invisible but clickable */
+      cursor:pointer;
+      padding:0;
+      margin:0;
+    }
+    #secretConfigBtn:focus{ outline:none; }
+
+    /* Config modal */
+    .cfgMask{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.55);
+      z-index:10000;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+    }
+    .cfgMask.open{ display:flex; }
+    .cfgPanel{
+      width:min(520px, 100%);
+      background:#fff;
+      color:#111;
+      border-radius:12px;
+      box-shadow:0 18px 60px rgba(0,0,0,0.35);
+      overflow:hidden;
+    }
+    .cfgHeader{
+      padding:12px 14px;
+      background:#111;
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .cfgHeader .title{
+      font-weight:800;
+      font-size:14px;
+      letter-spacing:0.5px;
+    }
+    .cfgHeader button{
+      border:0;
+      background:transparent;
+      color:#fff;
+      font-size:18px;
+      cursor:pointer;
+      padding:4px 8px;
+      border-radius:8px;
+    }
+    .cfgBody{
+      padding:14px;
+      max-height:min(72vh, 640px);
+      overflow:auto;
+    }
+    .cfgGrid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px 12px;
+    }
+    .cfgRow{ display:flex; flex-direction:column; gap:6px; }
+    .cfgRow.full{ grid-column:1 / -1; }
+    .cfgRow label{
+      font-size:12px;
+      font-weight:700;
+      color:#222;
+    }
+    .cfgRow input, .cfgRow select, .cfgRow textarea{
+      width:100%;
+      border:1px solid #D6D6D6;
+      border-radius:10px;
+      padding:10px 10px;
+      font-size:13px;
+      outline:none;
+    }
+    .cfgRow textarea{ min-height:72px; resize:vertical; }
+    .cfgHint{
+      font-size:12px;
+      color:#555;
+      margin-top:6px;
+      line-height:1.35;
+    }
+    .cfgFooter{
+      padding:12px 14px;
+      display:flex;
+      gap:10px;
+      justify-content:flex-end;
+      border-top:1px solid #EEE;
+      background:#FAFAFA;
+    }
+    .cfgFooter button{
+      border:0;
+      border-radius:10px;
+      padding:10px 12px;
+      font-weight:800;
+      cursor:pointer;
+      font-size:13px;
+    }
+    .btnPrimary{ background:#00529E; color:#fff; }
+    .btnGhost{ background:#EDEDED; color:#111; }
+    .btnDanger{ background:#F03A3A; color:#fff; }
+  </style>
 </head>
+
 <body>
+  <!-- Invisible hot-corner: click the top-right area to open config -->
+  <button id="secretConfigBtn" type="button" aria-label="open config"></button>
 
-<div class="page">
+  <div class="appFrame">
+    <header class="header_header__3thtE">
+      <div class="header_inner__n4yDv">
+        <div class="header_back__lyJxz">
+          <button class="header_back_btn__CbNb2" type="button" onclick="history.back()">
+            <i class="header_back_icon__w7rx0" aria-hidden="true"></i>
+          </button>
+        </div>
+        <h2 class="header_title__wUiVZ">BASE SHOP 入店予約</h2>
+        <div class="header_content__9vWc9"></div>
+      </div>
+    </header>
 
-  <!-- Header -->
-  <div class="header">
-    <a class="back">＜</a>
-    <h1>BASE SHOP 入店予約</h1>
+    <main id="page" class="section state-wait">
+      <div class="banner">以下で入店予約されています</div>
+
+      <section class="card" aria-label="予約情報">
+        <div class="cardRow">
+          <div class="label">チケット種別</div>
+          <div class="value" id="vTicketType">通常入店チケット</div>
+        </div>
+        <div class="cardRow">
+          <div class="label">予約日</div>
+          <div class="value" id="vReserveDate">02月17日(火曜日)</div>
+        </div>
+        <div class="cardRow">
+          <div class="label">予約時間</div>
+          <div class="value small" id="vReserveTime">17:30</div>
+        </div>
+        <div class="cardRow">
+          <div class="label">集合時間</div>
+          <div class="value small" id="vMeetTime">17:20</div>
+        </div>
+        <div class="cardRow">
+          <div class="label">同行者</div>
+          <div class="value small" id="vCompanion">有り</div>
+        </div>
+      </section>
+
+      <div class="infoText" aria-label="集合場所">
+        <div>受付場所は新宿マルイ本館1階です。</div>
+        <div>集合場所は新宿マルイ本館1階<span class="hl">（屋外）</span>です。</div>
+        <div>詳しくは<a href="javascript:void(0)">こちら</a>をご確認ください。</div>
+      </div>
+
+      <section class="qrWrap" aria-label="二次元コード">
+        <div class="qrBox">
+          <div class="qrInner">
+            <img id="qrImg" alt="QR Code"/>
+            <div id="qrPlaceholder">入店予約の２時間前になると<br/>こちらに二次元コードが<br/>表示されます。</div>
+          </div>
+        </div>
+
+        <div id="timer" class="timer">05:00</div>
+
+        <button id="refreshBtn" class="btnOutline" type="button">二次元コードを再表示</button>
+      </section>
+
+      <div class="warn">※予約時間を過ぎた場合はご入店いただけません。ご来店は予約時間にあわせてお越しください。</div>
+
+      <div class="notes">
+        <p>※入店時に上記二次元コードを読み取り機に読み取らせて入店してください。</p>
+        <p>※二次元コードは画面に表示後数分間有効となります。<br/>入店前に再表示を行ってから読み取らせてください。</p>
+
+        <div class="dividerTitle">注意事項</div>
+        <ul class="bullets">
+          <li>同行者有りを選択した当選者1名につき追加で中学生以上の方1名まで同行者も商品購入が可能です</li>
+          <li>代表者様1名につき小学生以下のお子様1名まで入店可能となります（小学生以下のお子様は商品の購入はできません）</li>
+          <li>より多くのお客様にお買い物をお楽しみいただけますよう、お1人様1日1会計までとさせていただきます</li>
+          <li>商品の購入は、並びにONE PIECE BASE SHOP くじの購入ができるのは中学生以上となります</li>
+          <li>予約のチケットの譲渡・転売・複製・偽造が禁止です。不正に入手したものは無効となります</li>
+          <li>入店時に本人確認を実施する場合がございます。本⼈確認ができない場合は、入店をお断りする場合がございます</li>
+          <li>本人確認ができる顔写真つきの公的身分証明書（学生証・免許証・マイナンバーカードなど）をお持ちください</li>
+          <li>同行者の本人確認も実施する場合がございます。同行者も必ず「本人確認ができる顔写真つきの公的身分証明書」をお持ちください</li>
+          <li>チケットお申し込みの際、必ず「有効な顔写真つき公的身分証明書」に記載と同じ名前でお申し込みください</li>
+
+          <li class="nobullet">〈免責事項〉</li>
+          <li class="star">本予約は入店を予約するものであり、商品の・景品の在庫や店内の特別な体験などを確約するものではありません</li>
+          <li class="star">店内の混雑状況により、別途整理券を配布する場合がございます</li>
+          <li class="star">いかなる場合でも、予約チケットの再発行は一切取りかねます</li>
+          <li class="star">状況により開店時間や営業時間、実施内容の変更、また中止となる場合がございます。来店前に公式サイトをご確認ください</li>
+          <li class="star">法令違反、公序良俗に反する行為、他のお客様やスタッフへの迷惑行為（誹謗中傷・暴言・無断撮影など）を行った場合、入店拒否・退店措置を行う可能性がございます</li>
+        </ul>
+
+        <div class="dividerTitle">当日のご入店について</div>
+        <ul class="bullets">
+          <li>予約画面に記載された集合時間までに、新宿マルイ本館までお越しください</li>
+          <li>予約時間を過ぎた場合はご入店いただけません。ご来店は予約時間にあわせてお越しください</li>
+          <li>同行者、お付き添いのお子様が揃いの上でお越しください</li>
+          <li>当日は、電子チケットが提示可能なスマートフォンをお持ちください</li>
+          <li>商品購入は入店会計あたりの購入点数を設けております</li>
+          <li>ご予約完了後の日程変更は承っておりません</li>
+          <li>指定された期間中の有効なチケットです</li>
+          <li>入店時にチケットが表示できない、著しく読み取り・認証操作が困難と判断された場合は入店できません</li>
+        </ul>
+      </div>
+
+      <button class="cancelBtn" type="button">予約をキャンセルする</button>
+    </main>
   </div>
 
-  <!-- Reservation Card -->
-  <div class="card">
-    <div class="card-title">以下で入店予約されています</div>
-    <div class="card-body">
-      <div class="card-row">
-        <span class="card-label">チケット種別</span>
-        <span class="card-value">通常入店チケット</span>
+  <!-- Config Modal -->
+  <div id="cfgMask" class="cfgMask" role="dialog" aria-modal="true" aria-label="config">
+    <div class="cfgPanel">
+      <div class="cfgHeader">
+        <div class="title">予約表示の設定</div>
+        <button id="cfgCloseBtn" type="button" aria-label="close">✕</button>
       </div>
-      <div class="card-row">
-        <span class="card-label">予約日</span>
-        <span class="card-value">02月17日（火曜日）</span>
+
+      <div class="cfgBody">
+        <div class="cfgGrid">
+          <div class="cfgRow">
+            <label>チケット種別</label>
+            <input id="cfgTicketType" type="text" value="通常入店チケット" />
+          </div>
+
+          <div class="cfgRow">
+            <label>同行者</label>
+            <select id="cfgCompanion">
+              <option value="有り" selected>有り</option>
+              <option value="無し">無し</option>
+            </select>
+          </div>
+
+          <div class="cfgRow">
+            <label>予約日（表示文字列）</label>
+            <input id="cfgReserveDate" type="text" value="02月17日(火曜日)" />
+          </div>
+
+          <div class="cfgRow">
+            <label>予約時間</label>
+            <input id="cfgReserveTime" type="text" value="17:30" />
+          </div>
+
+          <div class="cfgRow">
+            <label>集合時間</label>
+            <input id="cfgMeetTime" type="text" value="17:20" />
+          </div>
+
+          <div class="cfgRow full">
+            <label>二维码（图片 URL / dataURL / base64 data:image...）</label>
+            <textarea id="cfgQrSrc" placeholder="例如：https://example.com/qr.png 或 data:image/png;base64,...."></textarea>
+            <div class="cfgHint">留空=显示占位提示（两小时前才显示）。点击“应用”后会自动重置倒计时到 05:00。</div>
+          </div>
+
+          <div class="cfgRow full">
+            <label>上传二维码图片（会自动转成 dataURL）</label>
+            <input id="cfgQrFile" type="file" accept="image/*" />
+          </div>
+        </div>
       </div>
-      <div class="card-row">
-        <span class="card-label">予約時間</span>
-        <span class="card-value red">17:30</span>
-      </div>
-      <div class="card-row">
-        <span class="card-label">集合時間</span>
-        <span class="card-value red">17:20</span>
-      </div>
-      <div class="card-row">
-        <span class="card-label">同行者</span>
-        <span class="card-value blue">有り</span>
+
+      <div class="cfgFooter">
+        <button id="cfgClearBtn" class="btnGhost" type="button">清空二维码</button>
+        <button id="cfgResetBtn" class="btnGhost" type="button">重置为默认</button>
+        <button id="cfgApplyBtn" class="btnPrimary" type="button">应用</button>
       </div>
     </div>
   </div>
 
-  <!-- Location Info -->
-  <div class="location-info">
-    受付場所は新宿マルイ本館1階です。<br>
-    集合場所は新宿マルイ本館1階<span class="highlight">（屋外）</span>です。<br>
-    詳しくは<a href="#">こちら</a>をご確認ください。
-  </div>
+  <script>
+    (function(){
+      const page = document.getElementById('page');
+      const qrImg = document.getElementById('qrImg');
+      const timerEl = document.getElementById('timer');
+      const refreshBtn = document.getElementById('refreshBtn');
 
-  <!-- QR Code Section -->
-  <div class="qr-section">
-    <div class="qr-container" id="qrContainer">
-      <div class="qr-placeholder" id="qrPlaceholder">
-        ここにQRコード画像を<br>アップロードしてください
-      </div>
-      <img id="qrImage" style="display:none;" alt="QR Code">
-    </div>
+      const DEFAULT_SECONDS = 5 * 60; // 05:00
+      let remaining = DEFAULT_SECONDS;
+      let tickHandle = null;
 
-    <!-- Countdown Timer -->
-    <div class="countdown" id="countdown">05:00</div>
+      function fmt(sec){
+        sec = Math.max(0, sec|0);
+        const m = Math.floor(sec / 60);
+        const s = sec % 60;
+        return String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+      }
 
-    <!-- Upload QR -->
-    <div class="qr-upload">
-      <label for="qrInput">QRコード画像を選択</label>
-      <input type="file" id="qrInput" accept="image/*">
-    </div>
-  </div>
+      function setState(mode){
+        page.classList.remove('state-wait','state-qr');
+        page.classList.add(mode === 'qr' ? 'state-qr' : 'state-wait');
+      }
 
-  <!-- Refresh Button -->
-  <button class="refresh-btn" onclick="refreshQR()">二次元コードを再表示</button>
+      function startTimer(){
+        stopTimer();
+        timerEl.textContent = fmt(remaining);
+        tickHandle = setInterval(()=>{
+          remaining -= 1;
+          timerEl.textContent = fmt(remaining);
+          if(remaining <= 0){
+            remaining = 0;
+            stopTimer();
+          }
+        }, 1000);
+      }
 
-  <!-- Warning -->
-  <div class="warning">
-    ※予約時間を過ぎた場合はご入店いただけません。ご来店は予約時間にあわせてお越しください。<br><br>
-    <span class="note">
-      ※ 入店時に上記二次元コードを読み取り機に読み取らせて入店してください。<br>
-      ※ 二次元コードは画面に表示後数分間有効となります。<br>
-      　入店前に再表示を行ってから読み取らせてください。
-    </span>
-  </div>
+      function stopTimer(){
+        if(tickHandle){
+          clearInterval(tickHandle);
+          tickHandle = null;
+        }
+      }
 
-  <!-- 注意事項 -->
-  <div class="section-title">注意事項</div>
-  <div class="notes">
-    <p>・同行者有りを選択した当選者1名につき追加で中学生以上の方1名まで同行可能です（同行者も商品の購入が可能です）</p>
-    <p>・保護者様1名につき小学生以下のお子様1名で入店可能となります（小学生以下のお子様は商品の購入はできません）</p>
-    <p>・より多くのお客様にお買い物をお楽しみいただけますよう、お1人様1日1会計までとさせていただきます</p>
-    <p>・商品の購入並びにONE PIECE BASE SHOP くじの購入ができるのは中学生以上となります</p>
-    <p>・予約チケットの譲渡・転売・複製・偽造は禁止です。不正に入手したものは無効となります</p>
-    <p>・入店時に本人確認を実施する場合がございます。本人確認ができない場合は、入店をお断りする場合がございます</p>
-    <p>・本人確認ができる顔写真つきの公的身分証明書（学生証・免許証・マイナンバーカードなど）をお持ちください</p>
-    <p>・同行者の本人確認も実施する場合がございます。同行者も必ず「本人確認ができる顔写真つきの公的身分証明書」をお持ちください</p>
-    <p>・チケットのお申し込みの際、必ず有効な顔写真つきの公的身分証明書＞に記載と同じお名前でお申し込みください</p>
-  </div>
+      function resetCountdown(){
+        remaining = DEFAULT_SECONDS;
+        timerEl.textContent = fmt(remaining);
+        if(page.classList.contains('state-qr')){
+          startTimer();
+        }else{
+          stopTimer();
+        }
+      }
 
-  <div class="divider"></div>
-
-  <div class="priority-section">
-    <div class="priority-label">（先着事項）</div>
-  </div>
-  <div class="notes">
-    <p>・本予約は入店を予約するものであり、商品・景品の在庫や店内の特別な体験などを確約するものではありません</p>
-    <p>・店内の混雑状況により、別途整理券を配付する場合がございます</p>
-    <p>・いかなる場合でも、予約チケットの再発行は一切致しかねます</p>
-    <p>・状況により開催時間や営業時間、施設内容の変更、まれに中止となる場合がございます。来場前に公式サイトをご確認ください</p>
-    <p>・法令違反、公序良俗に反する行為、他のお客様やスタッフへの迷惑行為（排隊中隊・暴言・無断撮影など）を行った場合、入場拒否、退場措置を行う可能性がございます</p>
-  </div>
-
-  <!-- 当日のご入店について -->
-  <div class="today-title">当日のご入店について</div>
-  <div class="today-notes">
-    <p>・予約画面に記載された集合時間までに、新宿マルイ本館までお越しください</p>
-    <p>・予約時間を過ぎた場合はご入店いただけません。ご来店は予約時間にあわせてお越しください</p>
-    <p>・同行者、お付き添いのお子様がお揃いの上でお越しください</p>
-    <p>・当日は、電子チケットが提示可能なスマートフォンをお持ちください</p>
-    <p>・商品ごとに1会計あたりの購入制限を設けております</p>
-    <p>・ご予約完了後の日程変更は承っておりません</p>
-    <p>・指定された期間中のみ有効なチケットです</p>
-    <p>・入場時にチケットが表示できない、著しく読み取り・認証操作が困難と判断された場合には入店できません</p>
-  </div>
-
-  <!-- Cancel Button -->
-  <div class="cancel-section">
-    <button class="cancel-btn">予約をキャンセルする</button>
-  </div>
-
-</div>
-
-<script>
-  // Countdown Timer - starts at 05:00 every time page loads
-  let totalSeconds = 5 * 60; // 5 minutes
-  const countdownEl = document.getElementById('countdown');
-
-  function updateCountdown() {
-    const min = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
-    const sec = (totalSeconds % 60).toString().padStart(2, '0');
-    countdownEl.textContent = min + ':' + sec;
-    
-    if (totalSeconds <= 0) {
-      clearInterval(timer);
-      countdownEl.textContent = '00:00';
-      countdownEl.style.color = '#ff5252';
-    } else {
-      totalSeconds--;
-    }
-  }
-
-  updateCountdown();
-  let timer = setInterval(updateCountdown, 1000);
-
-  // Refresh QR - resets countdown
-  function refreshQR() {
-    totalSeconds = 5 * 60;
-    countdownEl.style.color = '#ffffff';
-    clearInterval(timer);
-    updateCountdown();
-    timer = setInterval(updateCountdown, 1000);
-  }
-
-  // QR Code Image Upload
-  const qrInput = document.getElementById('qrInput');
-  const qrImage = document.getElementById('qrImage');
-  const qrPlaceholder = document.getElementById('qrPlaceholder');
-
-  qrInput.addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function(ev) {
-        qrImage.src = ev.target.result;
-        qrImage.style.display = 'block';
-        qrPlaceholder.style.display = 'none';
+      // Public APIs
+      window.setQrImage = function(src){
+        if(!src){ return; }
+        qrImg.src = src;
+        setState('qr');
+        resetCountdown();
       };
-      reader.readAsDataURL(file);
-    }
-  });
-</script>
 
+      window.clearQr = function(){
+        qrImg.removeAttribute('src');
+        setState('wait');
+        stopTimer();
+        remaining = DEFAULT_SECONDS;
+        timerEl.textContent = fmt(remaining);
+      };
+
+      // Always start from 05:00 each open (no timer persistence)
+      remaining = DEFAULT_SECONDS;
+      timerEl.textContent = fmt(remaining);
+
+      // ======= Config modal logic =======
+      const cfgMask = document.getElementById('cfgMask');
+      const openBtn = document.getElementById('secretConfigBtn');
+      const closeBtn = document.getElementById('cfgCloseBtn');
+
+      const elTicketType = document.getElementById('vTicketType');
+      const elReserveDate = document.getElementById('vReserveDate');
+      const elReserveTime = document.getElementById('vReserveTime');
+      const elMeetTime = document.getElementById('vMeetTime');
+      const elCompanion = document.getElementById('vCompanion');
+
+      const cfgTicketType = document.getElementById('cfgTicketType');
+      const cfgReserveDate = document.getElementById('cfgReserveDate');
+      const cfgReserveTime = document.getElementById('cfgReserveTime');
+      const cfgMeetTime = document.getElementById('cfgMeetTime');
+      const cfgCompanion = document.getElementById('cfgCompanion');
+      const cfgQrSrc = document.getElementById('cfgQrSrc');
+      const cfgQrFile = document.getElementById('cfgQrFile');
+
+      const cfgApplyBtn = document.getElementById('cfgApplyBtn');
+      const cfgResetBtn = document.getElementById('cfgResetBtn');
+      const cfgClearBtn = document.getElementById('cfgClearBtn');
+
+      const LS_KEY = "baseshop_mock_cfg_v1";
+
+      function openCfg(){ cfgMask.classList.add('open'); }
+      function closeCfg(){ cfgMask.classList.remove('open'); }
+
+      openBtn.addEventListener('click', openCfg);
+      closeBtn.addEventListener('click', closeCfg);
+      cfgMask.addEventListener('click', (e)=>{ if(e.target === cfgMask) closeCfg(); });
+
+      function readCfgFromUI(){
+        return {
+          ticketType: (cfgTicketType.value || "").trim(),
+          reserveDate: (cfgReserveDate.value || "").trim(),
+          reserveTime: (cfgReserveTime.value || "").trim(),
+          meetTime: (cfgMeetTime.value || "").trim(),
+          companion: (cfgCompanion.value || "").trim(),
+          qrSrc: (cfgQrSrc.value || "").trim()
+        };
+      }
+
+      function writeCfgToUI(cfg){
+        cfgTicketType.value = cfg.ticketType ?? "通常入店チケット";
+        cfgReserveDate.value = cfg.reserveDate ?? "02月17日(火曜日)";
+        cfgReserveTime.value = cfg.reserveTime ?? "17:30";
+        cfgMeetTime.value = cfg.meetTime ?? "17:20";
+        cfgCompanion.value = cfg.companion ?? "有り";
+        cfgQrSrc.value = cfg.qrSrc ?? "";
+      }
+
+      function applyCfg(cfg, {save=true} = {}){
+        // apply texts
+        elTicketType.textContent = cfg.ticketType || "通常入店チケット";
+        elReserveDate.textContent = cfg.reserveDate || "02月17日(火曜日)";
+        elReserveTime.textContent = cfg.reserveTime || "17:30";
+        elMeetTime.textContent = cfg.meetTime || "17:20";
+        elCompanion.textContent = cfg.companion || "有り";
+
+        // apply QR
+        if(cfg.qrSrc){
+          window.setQrImage(cfg.qrSrc);
+        }else{
+          window.clearQr();
+        }
+
+        // save configuration but not timer
+        if(save){
+          try{ localStorage.setItem(LS_KEY, JSON.stringify(cfg)); }catch(e){}
+        }
+      }
+
+      function loadCfg(){
+        // 1) query param overrides
+        const params = new URLSearchParams(location.search);
+        const qpQr = params.get('qr_image');
+        const qpState = (params.get('state') || '').toLowerCase();
+        if(qpQr){
+          const cfg = readCfgFromUI();
+          cfg.qrSrc = qpQr;
+          applyCfg(cfg, {save:false});
+          return;
+        }
+        if(qpState === 'qr'){
+          setState('qr');
+          resetCountdown();
+          return;
+        }
+
+        // 2) localStorage
+        try{
+          const raw = localStorage.getItem(LS_KEY);
+          if(raw){
+            const cfg = JSON.parse(raw);
+            writeCfgToUI(cfg);
+            applyCfg(cfg, {save:false});
+            return;
+          }
+        }catch(e){}
+
+        // 3) default
+        window.clearQr();
+      }
+
+      cfgApplyBtn.addEventListener('click', ()=>{
+        const cfg = readCfgFromUI();
+        applyCfg(cfg, {save:true});
+        closeCfg();
+      });
+
+      cfgResetBtn.addEventListener('click', ()=>{
+        const cfg = {
+          ticketType: "通常入店チケット",
+          reserveDate: "02月17日(火曜日)",
+          reserveTime: "17:30",
+          meetTime: "17:20",
+          companion: "有り",
+          qrSrc: ""
+        };
+        writeCfgToUI(cfg);
+        applyCfg(cfg, {save:true});
+      });
+
+      cfgClearBtn.addEventListener('click', ()=>{
+        cfgQrSrc.value = "";
+        cfgQrFile.value = "";
+        const cfg = readCfgFromUI();
+        applyCfg(cfg, {save:true});
+      });
+
+      cfgQrFile.addEventListener('change', ()=>{
+        const f = cfgQrFile.files && cfgQrFile.files[0];
+        if(!f) return;
+        const reader = new FileReader();
+        reader.onload = ()=>{
+          const src = String(reader.result || "");
+          cfgQrSrc.value = src;
+        };
+        reader.readAsDataURL(f);
+      });
+
+      // Re-display button: reset countdown, optional host hook
+      refreshBtn.addEventListener('click', ()=>{
+        resetCountdown();
+        if(typeof window.onQrRefresh === 'function'){
+          try{ window.onQrRefresh(); }catch(e){}
+        }
+      });
+
+      // init
+      loadCfg();
+
+      // expose config helpers if needed
+      window.openConfig = openCfg;
+      window.applyConfig = function(cfg){
+        // cfg: {ticketType,reserveDate,reserveTime,meetTime,companion,qrSrc}
+        const merged = Object.assign(readCfgFromUI(), cfg || {});
+        writeCfgToUI(merged);
+        applyCfg(merged, {save:true});
+      };
+    })();
+  </script>
 </body>
 </html>
