@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>BASE SHOP 入店予約</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+    background: #1a2a5e;
+    color: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+  }
+
+  .page {
+    width: 100%;
+    max-width: 430px;
+    background: #1a2a5e;
+    position: relative;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 16px;
+    position: relative;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    background: #1a2a5e;
+  }
+  .header .back {
+    position: absolute;
+    left: 16px;
+    font-size: 22px;
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .header h1 {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  /* Reservation Card */
+  .card {
+    margin: 20px 16px;
+    background: #ffffff;
+    border-radius: 8px;
+    color: #1a1a1a;
+    overflow: hidden;
+  }
+  .card-title {
+    padding: 14px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    border-bottom: 1px solid #e0e0e0;
+    color: #333;
+  }
+  .card-body {
+    padding: 16px 20px;
+  }
+  .card-row {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+  }
+  .card-label {
+    font-size: 13px;
+    color: #666;
+    min-width: 80px;
+  }
+  .card-value {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-left: 16px;
+  }
+  .card-value.red {
+    color: #e53935;
+  }
+  .card-value.blue {
+    color: #1565c0;
+  }
+
+  /* Location Info */
+  .location-info {
+    margin: 20px 16px;
+    font-size: 14px;
+    line-height: 1.9;
+  }
+  .location-info .highlight {
+    background: #ffc107;
+    color: #1a1a1a;
+    padding: 1px 4px;
+    font-weight: 700;
+    border-radius: 2px;
+  }
+  .location-info a {
+    color: #64b5f6;
+    text-decoration: underline;
+  }
+
+  /* QR Code Section */
+  .qr-section {
+    margin: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .qr-container {
+    width: 260px;
+    height: 260px;
+    background: #ffffff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+  .qr-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .qr-placeholder {
+    color: #999;
+    font-size: 13px;
+    text-align: center;
+    line-height: 1.6;
+    padding: 20px;
+  }
+
+  /* Countdown Timer */
+  .countdown {
+    margin-top: 20px;
+    font-size: 36px;
+    font-weight: 300;
+    letter-spacing: 8px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Refresh Button */
+  .refresh-btn {
+    margin: 20px auto;
+    display: block;
+    padding: 12px 40px;
+    background: transparent;
+    color: #ffffff;
+    border: 1.5px solid rgba(255,255,255,0.6);
+    border-radius: 25px;
+    font-size: 15px;
+    cursor: pointer;
+    font-family: inherit;
+    letter-spacing: 0.5px;
+    transition: background 0.2s;
+  }
+  .refresh-btn:active {
+    background: rgba(255,255,255,0.1);
+  }
+
+  /* Warning Text */
+  .warning {
+    margin: 20px 16px;
+    padding: 0;
+    font-size: 13px;
+    line-height: 1.8;
+    color: #ff8a80;
+    font-weight: 500;
+  }
+  .warning .note {
+    color: rgba(255,255,255,0.8);
+    font-weight: 400;
+    font-size: 12.5px;
+  }
+
+  /* Section Title */
+  .section-title {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 28px 16px 12px;
+    letter-spacing: 1px;
+  }
+
+  /* Notes Section */
+  .notes {
+    margin: 0 16px 16px;
+    font-size: 12px;
+    line-height: 1.9;
+    color: rgba(255,255,255,0.85);
+  }
+  .notes p {
+    margin-bottom: 2px;
+    text-indent: -1em;
+    padding-left: 1em;
+  }
+
+  /* Today Info */
+  .today-title {
+    margin: 20px 16px 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+  }
+  .today-title::before {
+    content: "■";
+    margin-right: 4px;
+  }
+  .today-notes {
+    margin: 0 16px 24px;
+    font-size: 12px;
+    line-height: 1.9;
+    color: rgba(255,255,255,0.85);
+  }
+  .today-notes p {
+    text-indent: -1em;
+    padding-left: 1em;
+    margin-bottom: 2px;
+  }
+
+  /* Cancel Button */
+  .cancel-section {
+    margin: 16px 16px 40px;
+    display: flex;
+    justify-content: center;
+  }
+  .cancel-btn {
+    width: 100%;
+    padding: 14px;
+    background: #ffffff;
+    color: #1a2a5e;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    letter-spacing: 0.5px;
+  }
+  .cancel-btn:active {
+    background: #e0e0e0;
+  }
+
+  /* QR Upload */
+  .qr-upload {
+    margin-top: 12px;
+  }
+  .qr-upload label {
+    display: inline-block;
+    padding: 8px 20px;
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border: 1px dashed rgba(255,255,255,0.4);
+  }
+  .qr-upload label:hover {
+    background: rgba(255,255,255,0.25);
+  }
+  .qr-upload input {
+    display: none;
+  }
+
+  /* Divider */
+  .divider {
+    height: 1px;
+    background: rgba(255,255,255,0.15);
+    margin: 4px 16px;
+  }
+
+  /* Priority Notes */
+  .priority-section {
+    margin: 16px 16px 0;
+  }
+  .priority-label {
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 4px;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <a class="back">＜</a>
+    <h1>BASE SHOP 入店予約</h1>
+  </div>
+
+  <!-- Reservation Card -->
+  <div class="card">
+    <div class="card-title">以下で入店予約されています</div>
+    <div class="card-body">
+      <div class="card-row">
+        <span class="card-label">チケット種別</span>
+        <span class="card-value">通常入店チケット</span>
+      </div>
+      <div class="card-row">
+        <span class="card-label">予約日</span>
+        <span class="card-value">02月17日（火曜日）</span>
+      </div>
+      <div class="card-row">
+        <span class="card-label">予約時間</span>
+        <span class="card-value red">17:30</span>
+      </div>
+      <div class="card-row">
+        <span class="card-label">集合時間</span>
+        <span class="card-value red">17:20</span>
+      </div>
+      <div class="card-row">
+        <span class="card-label">同行者</span>
+        <span class="card-value blue">有り</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Location Info -->
+  <div class="location-info">
+    受付場所は新宿マルイ本館1階です。<br>
+    集合場所は新宿マルイ本館1階<span class="highlight">（屋外）</span>です。<br>
+    詳しくは<a href="#">こちら</a>をご確認ください。
+  </div>
+
+  <!-- QR Code Section -->
+  <div class="qr-section">
+    <div class="qr-container" id="qrContainer">
+      <div class="qr-placeholder" id="qrPlaceholder">
+        ここにQRコード画像を<br>アップロードしてください
+      </div>
+      <img id="qrImage" style="display:none;" alt="QR Code">
+    </div>
+
+    <!-- Countdown Timer -->
+    <div class="countdown" id="countdown">05:00</div>
+
+    <!-- Upload QR -->
+    <div class="qr-upload">
+      <label for="qrInput">QRコード画像を選択</label>
+      <input type="file" id="qrInput" accept="image/*">
+    </div>
+  </div>
+
+  <!-- Refresh Button -->
+  <button class="refresh-btn" onclick="refreshQR()">二次元コードを再表示</button>
+
+  <!-- Warning -->
+  <div class="warning">
+    ※予約時間を過ぎた場合はご入店いただけません。ご来店は予約時間にあわせてお越しください。<br><br>
+    <span class="note">
+      ※ 入店時に上記二次元コードを読み取り機に読み取らせて入店してください。<br>
+      ※ 二次元コードは画面に表示後数分間有効となります。<br>
+      　入店前に再表示を行ってから読み取らせてください。
+    </span>
+  </div>
+
+  <!-- 注意事項 -->
+  <div class="section-title">注意事項</div>
+  <div class="notes">
+    <p>・同行者有りを選択した当選者1名につき追加で中学生以上の方1名まで同行可能です（同行者も商品の購入が可能です）</p>
+    <p>・保護者様1名につき小学生以下のお子様1名で入店可能となります（小学生以下のお子様は商品の購入はできません）</p>
+    <p>・より多くのお客様にお買い物をお楽しみいただけますよう、お1人様1日1会計までとさせていただきます</p>
+    <p>・商品の購入並びにONE PIECE BASE SHOP くじの購入ができるのは中学生以上となります</p>
+    <p>・予約チケットの譲渡・転売・複製・偽造は禁止です。不正に入手したものは無効となります</p>
+    <p>・入店時に本人確認を実施する場合がございます。本人確認ができない場合は、入店をお断りする場合がございます</p>
+    <p>・本人確認ができる顔写真つきの公的身分証明書（学生証・免許証・マイナンバーカードなど）をお持ちください</p>
+    <p>・同行者の本人確認も実施する場合がございます。同行者も必ず「本人確認ができる顔写真つきの公的身分証明書」をお持ちください</p>
+    <p>・チケットのお申し込みの際、必ず有効な顔写真つきの公的身分証明書＞に記載と同じお名前でお申し込みください</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="priority-section">
+    <div class="priority-label">（先着事項）</div>
+  </div>
+  <div class="notes">
+    <p>・本予約は入店を予約するものであり、商品・景品の在庫や店内の特別な体験などを確約するものではありません</p>
+    <p>・店内の混雑状況により、別途整理券を配付する場合がございます</p>
+    <p>・いかなる場合でも、予約チケットの再発行は一切致しかねます</p>
+    <p>・状況により開催時間や営業時間、施設内容の変更、まれに中止となる場合がございます。来場前に公式サイトをご確認ください</p>
+    <p>・法令違反、公序良俗に反する行為、他のお客様やスタッフへの迷惑行為（排隊中隊・暴言・無断撮影など）を行った場合、入場拒否、退場措置を行う可能性がございます</p>
+  </div>
+
+  <!-- 当日のご入店について -->
+  <div class="today-title">当日のご入店について</div>
+  <div class="today-notes">
+    <p>・予約画面に記載された集合時間までに、新宿マルイ本館までお越しください</p>
+    <p>・予約時間を過ぎた場合はご入店いただけません。ご来店は予約時間にあわせてお越しください</p>
+    <p>・同行者、お付き添いのお子様がお揃いの上でお越しください</p>
+    <p>・当日は、電子チケットが提示可能なスマートフォンをお持ちください</p>
+    <p>・商品ごとに1会計あたりの購入制限を設けております</p>
+    <p>・ご予約完了後の日程変更は承っておりません</p>
+    <p>・指定された期間中のみ有効なチケットです</p>
+    <p>・入場時にチケットが表示できない、著しく読み取り・認証操作が困難と判断された場合には入店できません</p>
+  </div>
+
+  <!-- Cancel Button -->
+  <div class="cancel-section">
+    <button class="cancel-btn">予約をキャンセルする</button>
+  </div>
+
+</div>
+
+<script>
+  // Countdown Timer - starts at 05:00 every time page loads
+  let totalSeconds = 5 * 60; // 5 minutes
+  const countdownEl = document.getElementById('countdown');
+
+  function updateCountdown() {
+    const min = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+    const sec = (totalSeconds % 60).toString().padStart(2, '0');
+    countdownEl.textContent = min + ':' + sec;
+    
+    if (totalSeconds <= 0) {
+      clearInterval(timer);
+      countdownEl.textContent = '00:00';
+      countdownEl.style.color = '#ff5252';
+    } else {
+      totalSeconds--;
+    }
+  }
+
+  updateCountdown();
+  let timer = setInterval(updateCountdown, 1000);
+
+  // Refresh QR - resets countdown
+  function refreshQR() {
+    totalSeconds = 5 * 60;
+    countdownEl.style.color = '#ffffff';
+    clearInterval(timer);
+    updateCountdown();
+    timer = setInterval(updateCountdown, 1000);
+  }
+
+  // QR Code Image Upload
+  const qrInput = document.getElementById('qrInput');
+  const qrImage = document.getElementById('qrImage');
+  const qrPlaceholder = document.getElementById('qrPlaceholder');
+
+  qrInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        qrImage.src = ev.target.result;
+        qrImage.style.display = 'block';
+        qrPlaceholder.style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+</script>
+
+</body>
+</html>
