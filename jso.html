@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>JUMP SHOP 采购清单</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#f5f5f0;--card:#fff;--accent:#c0392b;--dk:#2c3e50;--muted:#999;--hunter:#27ae60;--haikyu:#2980b9;--op:#e67e22;--saka:#8e44ad;--jj:#c0392b}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:#222;padding:16px}
+  .hd{text-align:center;padding:18px 0 10px}
+  .hd h1{font-size:24px;font-weight:900;color:var(--dk);letter-spacing:2px}
+  .hd .sub{font-size:11px;color:var(--muted);margin-top:3px}
+  .bar{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:10px 0 14px}
+  .sc{background:var(--card);border-radius:8px;padding:8px 18px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.06);min-width:110px}
+  .sc .lb{font-size:9px;color:var(--muted);letter-spacing:1px}
+  .sc .vl{font-size:19px;font-weight:900;color:var(--dk);margin-top:1px}
+  .sc .vl.r{color:var(--accent)}.sc .vl.g{color:var(--hunter)}
+  .tbar{display:flex;justify-content:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:5px;padding:9px 20px;border:none;border-radius:7px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s}
+  .bp{background:var(--dk);color:#fff}.bp:hover{background:#1a252f;transform:translateY(-1px);box-shadow:0 4px 10px rgba(0,0,0,.12)}
+  .bo{background:#e67e22;color:#fff}.bo:hover{background:#cf6d17;transform:translateY(-1px)}
+  .bd{background:#e74c3c;color:#fff;opacity:.7;font-size:11px;padding:7px 14px}.bd:hover{opacity:1}
+  .tw{background:var(--card);border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.05);overflow-x:auto;margin-bottom:14px}
+  table{width:100%;border-collapse:collapse}
+  thead th{background:var(--dk);color:#fff;font-weight:700;font-size:10px;letter-spacing:.5px;padding:10px 6px;text-align:center;position:sticky;top:0;z-index:2;white-space:nowrap}
+  thead th.ot{background:#7a6312;min-width:82px;position:relative}
+  thead th.ot .x{position:absolute;top:2px;right:3px;background:rgba(255,255,255,.2);border:none;color:#fff;width:16px;height:16px;border-radius:50%;cursor:pointer;font-size:10px;line-height:16px;text-align:center;opacity:.6;transition:opacity .15s}
+  thead th.ot .x:hover{opacity:1;background:rgba(255,0,0,.5)}
+  tbody tr{border-bottom:1px solid #f0f0f0;transition:background .1s}tbody tr:hover{background:#fafaf5}
+  td{padding:7px 6px;vertical-align:middle;font-size:12px}td.c{text-align:center}td.r{text-align:right}
+  .pc{display:flex;align-items:center;gap:8px;min-width:240px}
+  .pi{width:52px;height:52px;border-radius:6px;object-fit:cover;border:1px solid #eee;flex-shrink:0;background:#f8f8f8}
+  .pf{flex:1;min-width:0}
+  .pn{font-weight:700;font-size:11.5px;color:var(--dk);line-height:1.3}
+  .pj{font-size:9.5px;color:#c0c0c0;margin-top:1px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px}
+  .tag{display:inline-block;padding:1px 7px;border-radius:20px;font-size:9px;font-weight:700;color:#fff;white-space:nowrap}
+  .t1{background:var(--hunter)}.t2{background:var(--haikyu)}.t3{background:var(--op)}.t4{background:var(--saka)}.t5{background:var(--jj)}
+  .pr{font-weight:700;white-space:nowrap}
+  input.qi{width:50px;text-align:center;border:2px solid #e0c200;border-radius:5px;padding:4px 1px;font-size:13px;font-weight:700;color:#0055cc;background:#fffde7;outline:none;font-family:inherit;transition:border-color .2s}
+  input.qi:focus{border-color:#f39c12;box-shadow:0 0 0 3px rgba(243,156,18,.1)}
+  .bt{font-weight:900;font-size:13px;color:var(--dk)}
+  .dp{font-weight:900;font-size:13px;color:var(--accent)}.d0{color:var(--hunter)}
+  tfoot td{background:#f0f0ea!important;font-weight:900;font-size:12px;padding:10px 6px;border-top:2px solid var(--dk)}
+  .ft-order{background:#fff8e1!important;text-align:center;line-height:1.6}
+  .ft-order .qty{font-size:12px;color:#555}.ft-order .amt{font-size:13px;font-weight:900;color:#7a6312}
+  .notes{background:var(--card);border-radius:8px;padding:12px 16px;font-size:11px;color:var(--muted);line-height:1.7;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  .notes strong{color:var(--accent)}
+
+  /* ===== Modal ===== */
+  .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;justify-content:center;align-items:flex-start;padding:30px 16px;overflow-y:auto}
+  .overlay.show{display:flex}
+  .modal{background:#fff;border-radius:14px;width:100%;max-width:680px;box-shadow:0 20px 60px rgba(0,0,0,.25);overflow:hidden;animation:slideUp .25s ease}
+  @keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+  .modal-hd{background:var(--dk);color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center}
+  .modal-hd h2{font-size:16px;font-weight:900;letter-spacing:1px}
+  .modal-hd .close{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;opacity:.7;transition:opacity .15s;line-height:1}
+  .modal-hd .close:hover{opacity:1}
+  .modal-body{padding:16px 20px;max-height:60vh;overflow-y:auto}
+  .modal-ft{padding:14px 20px;border-top:1px solid #eee;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+  .modal-ft .total{font-size:14px;font-weight:900;color:var(--dk)}
+  .modal-ft .total span{color:var(--accent);font-size:18px}
+
+  .pick-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f5f5f5}
+  .pick-row:last-child{border-bottom:none}
+  .pick-cb{width:20px;height:20px;accent-color:var(--dk);cursor:pointer;flex-shrink:0}
+  .pick-img{width:44px;height:44px;border-radius:6px;object-fit:cover;border:1px solid #eee;flex-shrink:0}
+  .pick-info{flex:1;min-width:0}
+  .pick-name{font-weight:700;font-size:12px;color:var(--dk);line-height:1.3}
+  .pick-meta{font-size:10px;color:var(--muted);margin-top:1px}
+  .pick-meta .ptag{padding:0 5px;border-radius:10px;color:#fff;font-size:9px;font-weight:700;margin-right:4px}
+  .pick-diff{font-size:10px;color:var(--accent);font-weight:700;margin-left:4px}
+  .pick-diff.done{color:var(--hunter)}
+  .pick-qty-wrap{display:flex;align-items:center;gap:6px;flex-shrink:0}
+  .pick-qty{width:52px;text-align:center;border:2px solid #ddd;border-radius:6px;padding:5px 2px;font-size:14px;font-weight:700;color:var(--dk);outline:none;font-family:inherit;transition:border-color .2s}
+  .pick-qty:focus{border-color:var(--op);box-shadow:0 0 0 3px rgba(230,126,34,.12)}
+  .pick-qty:disabled{background:#f5f5f5;color:#ccc;border-color:#eee}
+  .pick-price{font-size:11px;color:var(--muted);font-weight:700;white-space:nowrap;width:65px;text-align:right;flex-shrink:0}
+  .pick-row.disabled{opacity:.4}
+  .pick-actions{display:flex;gap:8px;margin-bottom:12px}
+  .pick-actions button{padding:5px 12px;border:1px solid #ddd;border-radius:5px;background:#fff;font-family:inherit;font-size:11px;cursor:pointer;transition:all .12s;font-weight:600}
+  .pick-actions button:hover{background:#f0f0f0}
+
+  /* Print sheet */
+  .print-btn{background:var(--hunter);color:#fff;padding:9px 24px;border:none;border-radius:7px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s}
+  .print-btn:hover{background:#1e8e50;transform:translateY(-1px)}
+
+  /* ===== Print-only styles ===== */
+  @media print{
+    body>*:not(#printArea){display:none!important}
+    #printArea{display:block!important;padding:0}
+    .no-print{display:none!important}
+    @page{size:A4 portrait;margin:12mm}
+  }
+  #printArea{display:none;font-family:'Noto Sans SC',sans-serif}
+  #printArea .pr-hd{text-align:center;padding:10px 0;border-bottom:2px solid #222;margin-bottom:12px}
+  #printArea .pr-hd h2{font-size:18px;font-weight:900;color:#222}
+  #printArea .pr-hd .pr-sub{font-size:10px;color:#888;margin-top:2px}
+  #printArea table{width:100%;border-collapse:collapse;font-size:11px}
+  #printArea thead th{background:#222;color:#fff;padding:8px 6px;font-size:10px;text-align:center;font-weight:700}
+  #printArea tbody td{padding:7px 6px;border-bottom:1px solid #ddd;vertical-align:middle}
+  #printArea .pr-img{width:40px;height:40px;border-radius:4px;object-fit:cover;border:1px solid #ddd}
+  #printArea .pr-pc{display:flex;align-items:center;gap:8px}
+  #printArea .pr-pn{font-weight:700;font-size:11px;line-height:1.3}
+  #printArea .pr-pj{font-size:9px;color:#aaa;margin-top:1px}
+  #printArea .pr-tag{display:inline-block;padding:1px 6px;border-radius:10px;font-size:8px;font-weight:700;color:#fff}
+  #printArea tfoot td{border-top:2px solid #222;font-weight:900;padding:10px 6px;font-size:12px}
+  #printArea .pr-note{margin-top:16px;font-size:10px;color:#888;line-height:1.6}
+  #printArea .pr-cb{display:inline-block;width:14px;height:14px;border:2px solid #555;border-radius:3px;vertical-align:middle;margin-right:6px}
+</style>
+</head>
+<body>
+<div class="hd">
+  <h1>🛒 JUMP SHOP 采购清单</h1>
+  <div class="sub">jumpshop-online.com ｜ 每笔订单每商品限购10个 ｜ 多单累加 ｜ JPY</div>
+</div>
+<div class="bar">
+  <div class="sc"><div class="lb">计划总数</div><div class="vl" id="sP">130</div></div>
+  <div class="sc"><div class="lb">已购总数</div><div class="vl g" id="sB">0</div></div>
+  <div class="sc"><div class="lb">待购差额</div><div class="vl r" id="sD">130</div></div>
+  <div class="sc"><div class="lb">已下订单</div><div class="vl" id="sO">0</div></div>
+  <div class="sc"><div class="lb">累计花费</div><div class="vl r" id="sA">¥0</div></div>
+</div>
+<div class="tbar">
+  <button class="btn bp" onclick="addOrder()">＋ 新增一笔订单</button>
+  <button class="btn bo" onclick="openPick()">🖨️ 准备下一单 & 打印</button>
+  <button class="btn bd" onclick="resetAll()">清空全部</button>
+</div>
+<div class="tw">
+<table><thead id="th"></thead><tbody id="tb"></tbody><tfoot id="tf"></tfoot></table>
+</div>
+<div class="notes">
+  <strong>📌 操作：</strong>① 点「新增一笔订单」记录每笔已购 ② 点「准备下一单 & 打印」→ 勾选商品、填数量 → 打印PDF带去采购 → 回来后点新增订单录入实际购买数。<br>
+  <strong>⚠️ 注意：</strong>每笔订单每商品上限10个。差额归零即采购完成。
+</div>
+
+<!-- ===== Pick & Print Modal ===== -->
+<div class="overlay" id="pickOverlay">
+<div class="modal">
+  <div class="modal-hd">
+    <h2>📋 准备下一笔订单</h2>
+    <button class="close" onclick="closePick()">&times;</button>
+  </div>
+  <div class="modal-body">
+    <div class="pick-actions">
+      <button onclick="pickAllRemaining()">✅ 全选待购商品</button>
+      <button onclick="pickNone()">取消全选</button>
+      <button onclick="fillRemaining()">自动填满差额</button>
+      <button onclick="fillMax()">全部填10</button>
+    </div>
+    <div id="pickList"></div>
+  </div>
+  <div class="modal-ft">
+    <div class="total">本单：<span id="pickQty">0</span> 件 ｜ 预估 <span id="pickAmt">¥0</span></div>
+    <button class="print-btn" onclick="doPrint()">🖨️ 生成并打印 PDF</button>
+  </div>
+</div>
+</div>
+
+<!-- ===== Print Area (hidden, shown only during print) ===== -->
+<div id="printArea"></div>
+
+<script>
+const I=[
+{ip:'猎人',tc:'t1',bg:'#27ae60',cn:'猎人×猎人｜奇犽徽章4件套 EMOTIONS',jp:'『HUNTER×HUNTER』缶バッジ4個セット EMOTIONS キルア＝ゾルディック',im:'//jumpshop-online.com/cdn/shop/files/4530430547159.jpg?v=1772173751',p:2640,q:10},
+{ip:'排球',tc:'t2',bg:'#2980b9',cn:'排球少年｜黑尾铁朗徽章4件套 EMOTIONS',jp:'『ハイキュー!!』缶バッジ4個セット EMOTIONS 黒尾鉄朗',im:'//jumpshop-online.com/cdn/shop/files/4530430547173.jpg?v=1772173808',p:2640,q:10},
+{ip:'排球',tc:'t2',bg:'#2980b9',cn:'排球少年｜孤爪研磨徽章4件套 EMOTIONS',jp:'『ハイキュー!!』缶バッジ4個セット EMOTIONS 孤爪研磨',im:'//jumpshop-online.com/cdn/shop/files/4530430547166.jpg?v=1772173775',p:2640,q:10},
+{ip:'排球',tc:'t2',bg:'#2980b9',cn:'排球少年｜纪念收藏卡 第2弹（全32种/随机2种）',jp:'『ハイキュー!!』メモリアルコレクション 第2弾',im:'//jumpshop-online.com/cdn/shop/files/4530430547531_01.jpg?v=1772516813',p:550,q:10},
+{ip:'猎人',tc:'t1',bg:'#27ae60',cn:'猎人×猎人｜角色收藏卡3张 第1弹（全7组/随机1组）',jp:'『HUNTER×HUNTER』キャラクターズコレクションカード 3枚入り 第1弾',im:'//jumpshop-online.com/cdn/shop/files/4530430548866_01.jpg?v=1772505626',p:660,q:10},
+{ip:'猎人',tc:'t1',bg:'#27ae60',cn:'猎人×猎人｜装饰徽章(R) 第2弹 幻影旅团（全13种/随机1种）',jp:'『HUNTER×HUNTER』デコレクション缶バッジ(R) 第2弾 幻影旅団',im:'//jumpshop-online.com/cdn/shop/files/4530430547548.jpg?v=1772442198',p:715,q:10},
+{ip:'海贼王',tc:'t3',bg:'#e67e22',cn:'海贼王｜白色亚克力钥匙扣 第1弹（全10种/随机1种）',jp:'『ONE PIECE』ホワイトアクリルキーホルダーコレクション 第1弾',im:'//jumpshop-online.com/cdn/shop/files/4530430547555.jpg?v=1772085331',p:880,q:10},
+{ip:'坂本',tc:'t4',bg:'#8e44ad',cn:'坂本日常｜光栅卡收藏 第1弹（全18种/随机1种）',jp:'『SAKAMOTO DAYS』レンチキュラーカードコレクション 第1弾',im:'//jumpshop-online.com/cdn/shop/files/4530430547609.jpg?v=1772515067',p:880,q:10},
+{ip:'咒术',tc:'t5',bg:'#c0392b',cn:'咒术回战｜亚克力异形磁贴 第1弹（全13种/随机1种）',jp:'『呪術廻戦』アクリルオリジナルカットマグネット 第1弾',im:'//jumpshop-online.com/cdn/shop/files/4530430547562.jpg?v=1772008799',p:880,q:10},
+{ip:'排球',tc:'t2',bg:'#2980b9',cn:'排球少年｜多功能桌垫',jp:'『ハイキュー!!』マルチマット',im:'//jumpshop-online.com/cdn/shop/files/4530430547593_01.jpg?v=1772004071',p:3300,q:10},
+{ip:'海贼王',tc:'t3',bg:'#e67e22',cn:'海贼王｜多功能桌垫',jp:'『ONE PIECE』マルチマット',im:'//jumpshop-online.com/cdn/shop/files/4530430547579_01.jpg?v=1772000776',p:3300,q:10},
+{ip:'海贼王',tc:'t3',bg:'#e67e22',cn:'海贼王｜烫金亚克力卡 第1弹（全11种/随机1种）',jp:'『ONE PIECE』箔入りアクリルカードコレクション 第1弾',im:'//jumpshop-online.com/cdn/shop/files/4530430548194_717f9b10-0988-4fc1-acb1-a57932fafb11.jpg?v=1772702603',p:880,q:10},
+{ip:'猎人',tc:'t1',bg:'#27ae60',cn:'猎人×猎人｜方形贴纸 第1弹（全40种/随机4种）',jp:'『HUNTER×HUNTER』スクエアステッカーコレクション 第1弾',im:'//jumpshop-online.com/cdn/shop/files/4530430547647.jpg?v=1772530580',p:880,q:10}
+];
+
+let O=[];
+let pickQtys=new Array(I.length).fill(0);
+let pickChecked=new Array(I.length).fill(false);
+
+function getDiff(i){let b=0;O.forEach(o=>{b+=(o[i]||0)});return I[i].q-b}
+function getBought(i){let b=0;O.forEach(o=>{b+=(o[i]||0)});return b}
+
+// ===== Main table =====
+function render(){
+  let h=`<tr><th>#</th><th>IP</th><th style="text-align:left;min-width:240px">商品</th><th style="width:72px">单价</th><th style="width:50px">计划</th>`;
+  O.forEach((_,i)=>{h+=`<th class="ot">第${i+1}单<button class="x" onclick="delO(${i})">✕</button></th>`});
+  h+=`<th style="background:#1a6e3a;width:62px">已购</th><th style="background:#922;width:62px">差额</th></tr>`;
+  document.getElementById('th').innerHTML=h;
+  let b='',tP=0,tB=0,tD=0,oT=O.map(()=>({q:0,a:0}));
+  I.forEach((it,i)=>{
+    let bought=getBought(i);const diff=it.q-bought;
+    tP+=it.q;tB+=bought;tD+=diff;
+    b+=`<tr><td class="c" style="font-weight:700;color:#ccc">${i+1}</td>
+    <td class="c"><span class="tag ${it.tc}">${it.ip}</span></td>
+    <td><div class="pc"><img class="pi" src="https:${it.im}" loading="lazy"><div class="pf"><div class="pn">${it.cn}</div><div class="pj">${it.jp}</div></div></div></td>
+    <td class="r pr">¥${it.p.toLocaleString()}</td><td class="c" style="font-weight:700">${it.q}</td>`;
+    O.forEach((o,oi)=>{
+      b+=`<td class="c" style="background:#fffde7"><input class="qi" type="number" min="0" max="10" value="${o[i]||0}" data-o="${oi}" data-i="${i}" onchange="upd(this)" oninput="upd(this)"></td>`;
+      oT[oi].q+=(o[i]||0);oT[oi].a+=(o[i]||0)*it.p;
+    });
+    b+=`<td class="c bt">${bought}</td><td class="c ${diff>0?'dp':'dp d0'}">${diff}</td></tr>`;
+  });
+  document.getElementById('tb').innerHTML=b;
+  let gA=0;
+  let f=`<tr><td colspan="3" class="c" style="font-size:13px">合 计</td><td></td><td class="c">${tP}</td>`;
+  O.forEach((o,oi)=>{gA+=oT[oi].a;f+=`<td class="ft-order"><div class="qty">${oT[oi].q} 件</div><div class="amt">¥${oT[oi].a.toLocaleString()}</div></td>`});
+  f+=`<td class="c" style="color:var(--hunter);font-size:14px">${tB}</td><td class="c" style="color:var(--accent);font-size:14px">${tD}</td></tr>`;
+  document.getElementById('tf').innerHTML=f;
+  document.getElementById('sP').textContent=tP;
+  document.getElementById('sB').textContent=tB;
+  document.getElementById('sD').textContent=tD;
+  document.getElementById('sO').textContent=O.length;
+  document.getElementById('sA').textContent='¥'+gA.toLocaleString();
+}
+function addOrder(){O.push(new Array(I.length).fill(0));render();document.querySelector('.tw').scrollLeft=99999}
+function delO(i){if(!confirm(`删除第${i+1}单？`))return;O.splice(i,1);render()}
+function upd(el){let v=parseInt(el.value)||0;if(v<0)v=0;if(v>10)v=10;el.value=v;const oi=+el.dataset.o,ii=+el.dataset.i;O[oi][ii]=v;render();setTimeout(()=>{const e=document.querySelector(`input[data-o="${oi}"][data-i="${ii}"]`);if(e){e.focus();e.select()}},15)}
+function resetAll(){if(!O.length)return;if(!confirm('清空全部订单？'))return;O=[];render()}
+
+// ===== Pick & Print =====
+function openPick(){
+  pickQtys=new Array(I.length).fill(0);
+  pickChecked=I.map((_,i)=>getDiff(i)>0);
+  pickQtys=I.map((_,i)=>Math.min(getDiff(i),10));
+  renderPick();
+  document.getElementById('pickOverlay').classList.add('show');
+}
+function closePick(){document.getElementById('pickOverlay').classList.remove('show')}
+
+function renderPick(){
+  let html='';
+  I.forEach((it,i)=>{
+    const diff=getDiff(i);
+    const bought=getBought(i);
+    const done=diff<=0;
+    const checked=pickChecked[i]&&!done;
+    const q=checked?pickQtys[i]:0;
+    html+=`<div class="pick-row ${done?'disabled':''}">
+      <input type="checkbox" class="pick-cb" ${checked?'checked':''} ${done?'disabled':''} onchange="togglePick(${i},this.checked)">
+      <img class="pick-img" src="https:${it.im}" loading="lazy">
+      <div class="pick-info">
+        <div class="pick-name">${it.cn}</div>
+        <div class="pick-meta">
+          <span class="ptag" style="background:${it.bg}">${it.ip}</span>
+          ¥${it.p.toLocaleString()}
+          <span class="pick-diff ${done?'done':''}">｜已购${bought} / 计划${it.q}，${done?'✅ 已完成':`待购 ${diff}`}</span>
+        </div>
+      </div>
+      <div class="pick-qty-wrap">
+        <input type="number" class="pick-qty" min="0" max="${Math.min(diff,10)}" value="${q}" ${(!checked||done)?'disabled':''} data-pi="${i}" onchange="updPick(${i},this)" oninput="updPick(${i},this)">
+        <div class="pick-price">${checked&&!done?'¥'+(q*it.p).toLocaleString():''}</div>
+      </div>
+    </div>`;
+  });
+  document.getElementById('pickList').innerHTML=html;
+  updPickTotal();
+}
+function togglePick(i,v){pickChecked[i]=v;if(v){const d=getDiff(i);pickQtys[i]=Math.min(d,10)}else{pickQtys[i]=0}renderPick()}
+function updPick(i,el){let v=parseInt(el.value)||0;const mx=Math.min(getDiff(i),10);if(v<0)v=0;if(v>mx)v=mx;el.value=v;pickQtys[i]=v;renderPick()}
+function updPickTotal(){
+  let tq=0,ta=0;
+  I.forEach((it,i)=>{if(pickChecked[i]&&getDiff(i)>0){tq+=pickQtys[i];ta+=pickQtys[i]*it.p}});
+  document.getElementById('pickQty').textContent=tq;
+  document.getElementById('pickAmt').textContent='¥'+ta.toLocaleString();
+}
+function pickAllRemaining(){I.forEach((_,i)=>{if(getDiff(i)>0){pickChecked[i]=true;pickQtys[i]=Math.min(getDiff(i),10)}});renderPick()}
+function pickNone(){pickChecked.fill(false);pickQtys.fill(0);renderPick()}
+function fillRemaining(){I.forEach((_,i)=>{if(pickChecked[i]&&getDiff(i)>0)pickQtys[i]=Math.min(getDiff(i),10)});renderPick()}
+function fillMax(){I.forEach((_,i)=>{if(pickChecked[i]&&getDiff(i)>0)pickQtys[i]=Math.min(10,getDiff(i))});renderPick()}
+
+function doPrint(){
+  const selected=[];
+  let tq=0,ta=0;
+  I.forEach((it,i)=>{
+    if(pickChecked[i]&&getDiff(i)>0&&pickQtys[i]>0){
+      selected.push({...it,idx:i,qty:pickQtys[i],amt:pickQtys[i]*it.p,diff:getDiff(i),bought:getBought(i)});
+      tq+=pickQtys[i];ta+=pickQtys[i]*it.p;
+    }
+  });
+  if(!selected.length){alert('请至少选择一个商品');return}
+
+  const orderNum=O.length+1;
+  const now=new Date();
+  const ts=`${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+  let html=`
+  <div class="pr-hd">
+    <h2>JUMP SHOP 采购单 — 第 ${orderNum} 单</h2>
+    <div class="pr-sub">生成时间：${ts} ｜ jumpshop-online.com ｜ 共 ${selected.length} 种 ${tq} 件 ｜ 预估总价 ¥${ta.toLocaleString()}</div>
+  </div>
+  <table>
+  <thead><tr>
+    <th style="width:30px">✓</th>
+    <th style="width:50px">IP</th>
+    <th style="text-align:left">商品名称</th>
+    <th style="width:68px">单价</th>
+    <th style="width:52px">数量</th>
+    <th style="width:80px">金额</th>
+  </tr></thead>
+  <tbody>`;
+
+  selected.forEach((s,i)=>{
+    html+=`<tr>
+      <td style="text-align:center"><span class="pr-cb"></span></td>
+      <td style="text-align:center"><span class="pr-tag" style="background:${s.bg}">${s.ip}</span></td>
+      <td>
+        <div class="pr-pc">
+          <img class="pr-img" src="https:${s.im}">
+          <div><div class="pr-pn">${s.cn}</div><div class="pr-pj">${s.jp}</div></div>
+        </div>
+      </td>
+      <td style="text-align:right;font-weight:700">¥${s.p.toLocaleString()}</td>
+      <td style="text-align:center;font-weight:900;font-size:14px">${s.qty}</td>
+      <td style="text-align:right;font-weight:700">¥${s.amt.toLocaleString()}</td>
+    </tr>`;
+  });
+
+  html+=`</tbody><tfoot><tr>
+    <td colspan="3" style="text-align:center;font-size:13px">本单合计</td>
+    <td></td>
+    <td style="text-align:center;font-size:14px">${tq} 件</td>
+    <td style="text-align:right;font-size:14px;color:#c0392b">¥${ta.toLocaleString()}</td>
+  </tr></tfoot></table>
+  <div class="pr-note">
+    ✓ 列用于手动勾选确认已购买 ｜ 采购完成后请在主表中点「新增一笔订单」录入实际购买数量<br>
+    每商品每单限购10个 ｜ 请核对金额后再提交付款
+  </div>`;
+
+  document.getElementById('printArea').innerHTML=html;
+  closePick();
+
+  setTimeout(()=>{
+    document.getElementById('printArea').style.display='block';
+    window.print();
+    setTimeout(()=>{document.getElementById('printArea').style.display='none'},500);
+  },100);
+}
+
+render();
+</script>
+</body>
+</html>
