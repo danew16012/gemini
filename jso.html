@@ -16,11 +16,23 @@
   .sc .lb{font-size:9px;color:var(--muted);letter-spacing:1px;font-family:'Noto Sans SC',sans-serif}
   .sc .vl{font-size:19px;font-weight:900;color:var(--dk);margin-top:1px}
   .sc .vl.r{color:var(--accent)}.sc .vl.g{color:var(--hunter)}
-  .tbar{display:flex;justify-content:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
-  .btn{display:inline-flex;align-items:center;gap:5px;padding:9px 20px;border:none;border-radius:7px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s}
+
+  /* Save status */
+  .save-status{text-align:center;font-size:10px;color:#aaa;margin-bottom:8px;height:16px;transition:color .3s}
+  .save-status.saved{color:var(--hunter)}
+  .save-status.warning{color:var(--accent)}
+
+  .tbar{display:flex;justify-content:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:5px;padding:9px 18px;border:none;border-radius:7px;font-family:'Noto Sans SC',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s}
   .bp{background:var(--dk);color:#fff}.bp:hover{background:#1a252f;transform:translateY(-1px);box-shadow:0 4px 10px rgba(0,0,0,.12)}
   .bo{background:#e67e22;color:#fff}.bo:hover{background:#cf6d17;transform:translateY(-1px)}
-  .bd{background:#e74c3c;color:#fff;opacity:.7;font-size:11px;padding:7px 14px}.bd:hover{opacity:1}
+  .bg{background:var(--hunter);color:#fff}.bg:hover{background:#1e8e50;transform:translateY(-1px)}
+  .bbl{background:#3498db;color:#fff}.bbl:hover{background:#2980b9;transform:translateY(-1px)}
+  .bd{background:#e74c3c;color:#fff;opacity:.7;font-size:11px;padding:7px 12px}.bd:hover{opacity:1}
+  .bsm{font-size:11px;padding:7px 14px}
+
+  .tbar2{display:flex;justify-content:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+
   .tw{background:var(--card);border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.05);overflow-x:auto;margin-bottom:14px}
   table{width:100%;border-collapse:collapse}
   thead th{background:var(--dk);color:#fff;font-weight:700;font-size:10px;letter-spacing:.5px;padding:10px 6px;text-align:center;position:sticky;top:0;z-index:2;white-space:nowrap}
@@ -63,7 +75,6 @@
   .pick-actions{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;font-family:'Noto Sans SC',sans-serif}
   .pick-actions button{padding:5px 12px;border:1px solid #ddd;border-radius:5px;background:#fff;font-family:'Noto Sans SC',sans-serif;font-size:11px;cursor:pointer;transition:all .12s;font-weight:600}
   .pick-actions button:hover{background:#f0f0f0}
-
   .pick-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f5f5f5}
   .pick-row:last-child{border-bottom:none}
   .pick-cb{width:20px;height:20px;accent-color:var(--dk);cursor:pointer;flex-shrink:0}
@@ -82,6 +93,15 @@
   .pick-row.disabled{opacity:.35}
   .print-btn{background:var(--hunter);color:#fff;padding:9px 24px;border:none;border-radius:7px;font-family:'Noto Sans SC',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s}
   .print-btn:hover{background:#1e8e50;transform:translateY(-1px)}
+
+  /* Toast */
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#333;color:#fff;padding:10px 24px;border-radius:8px;font-size:13px;font-weight:700;z-index:999;transition:transform .3s ease,opacity .3s;opacity:0;pointer-events:none;font-family:'Noto Sans SC',sans-serif}
+  .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+  .toast.ok{background:var(--hunter)}
+  .toast.err{background:var(--accent)}
+
+  /* Hidden file input */
+  #fileIn{display:none}
 
   /* Print */
   @media print{
@@ -109,8 +129,9 @@
 <body>
 <div class="hd">
   <h1>🛒 JUMP SHOP 采购清单</h1>
-  <div class="sub">jumpshop-online.com ｜ 每笔订单每商品限购10個 ｜ 多单累加 ｜ JPY</div>
+  <div class="sub">jumpshop-online.com ｜ 每笔订单每商品限购10個 ｜ 自动保存 ｜ JPY</div>
 </div>
+<div class="save-status" id="saveStatus">—</div>
 <div class="bar">
   <div class="sc"><div class="lb">计划总数</div><div class="vl" id="sP">130</div></div>
   <div class="sc"><div class="lb">已购总数</div><div class="vl g" id="sB">0</div></div>
@@ -118,17 +139,31 @@
   <div class="sc"><div class="lb">已下订单</div><div class="vl" id="sO">0</div></div>
   <div class="sc"><div class="lb">累计花费</div><div class="vl r" id="sA">¥0</div></div>
 </div>
+
+<!-- Row 1: Main actions -->
 <div class="tbar">
   <button class="btn bp" onclick="addOrder()">＋ 新增一笔订单</button>
   <button class="btn bo" onclick="openPick()">🖨️ 准备下一单 & 打印</button>
   <button class="btn bd" onclick="resetAll()">清空全部</button>
 </div>
+<!-- Row 2: Data management -->
+<div class="tbar2">
+  <button class="btn bg bsm" onclick="exportJSON()">💾 导出存档</button>
+  <button class="btn bbl bsm" onclick="document.getElementById('fileIn').click()">📂 导入存档</button>
+  <button class="btn bbl bsm" style="background:#7f8c8d" onclick="exportCSV()">📊 导出CSV表格</button>
+  <input type="file" id="fileIn" accept=".json" onchange="importJSON(this)">
+</div>
+
 <div class="tw">
 <table><thead id="th"></thead><tbody id="tb"></tbody><tfoot id="tf"></tfoot></table>
 </div>
 <div class="notes">
-  <strong>📌 操作：</strong>① 点「准备下一单 & 打印」→ 勾选商品填数量 → 打印PDF带去下单 ② 下单完成后点「新增一笔订单」录入实际购买数量 → 差额归零即完成。
+  <strong>💾 自动保存：</strong>每次操作后数据自动保存到浏览器本地，刷新页面不会丢失（同一浏览器、同一文件路径）。<br>
+  <strong>📦 导出/导入：</strong>「导出存档」生成 .json 文件可备份或传给其他设备 →「导入存档」一键恢复。「导出CSV」生成表格可用Excel打开。<br>
+  <strong>📌 采购流程：</strong>「准备下一单」→ 勾选商品填数量 → 打印PDF去下单 → 回来「新增一笔订单」录入实际数量 → 差额归零即完成。
 </div>
+
+<div class="toast" id="toast"></div>
 
 <!-- Modal -->
 <div class="overlay" id="pickOverlay">
@@ -155,6 +190,8 @@
 <div id="printArea"></div>
 
 <script>
+const SAVE_KEY='jumpshop_procurement_v2';
+
 const I=[
 {ip:'猎人',tc:'t1',bg:'#27ae60',cn:'猎人×猎人｜奇犽徽章4件套',jp:'『HUNTER×HUNTER』缶バッジ4個セット　EMOTIONS　キルア＝ゾルディック',im:'//jumpshop-online.com/cdn/shop/files/4530430547159.jpg?v=1772173751',p:2640,q:9},
 {ip:'排球',tc:'t2',bg:'#2980b9',cn:'排球少年｜黑尾铁朗徽章4件套',jp:'『ハイキュー!!』缶バッジ4個セット　EMOTIONS　黒尾鉄朗',im:'//jumpshop-online.com/cdn/shop/files/4530430547173.jpg?v=1772173808',p:2640,q:1},
@@ -170,10 +207,112 @@ const I=[
 {ip:'海贼王',tc:'t3',bg:'#e67e22',cn:'海贼王｜烫金亚克力卡第1弹',jp:'『ONE PIECE』箔入りアクリルカードコレクション　第1弾（全11種／ランダム1種入り）',im:'//jumpshop-online.com/cdn/shop/files/4530430548194_717f9b10-0988-4fc1-acb1-a57932fafb11.jpg?v=1772702603',p:880,q:110},
 {ip:'猎人',tc:'t1',bg:'#27ae60',cn:'猎人×猎人｜方形贴纸第1弹',jp:'『HUNTER×HUNTER』スクエアステッカーコレクション　第1弾（全40種／ランダム4種入り）',im:'//jumpshop-online.com/cdn/shop/files/4530430547647.jpg?v=1772530580',p:880,q:130}
 ];
-let O=[],pQ=new Array(I.length).fill(0),pC=new Array(I.length).fill(false);
+
+let O=[];
+let pQ=new Array(I.length).fill(0),pC=new Array(I.length).fill(false);
+
+// ===== Save / Load =====
+function save(){
+  try{
+    const data={v:2,orders:O,ts:new Date().toISOString()};
+    localStorage.setItem(SAVE_KEY,JSON.stringify(data));
+    showSave('✅ 已自动保存 ('+new Date().toLocaleTimeString()+')');
+  }catch(e){showSave('⚠️ 保存失败：'+e.message,true)}
+}
+function load(){
+  try{
+    const raw=localStorage.getItem(SAVE_KEY);
+    if(!raw)return false;
+    const data=JSON.parse(raw);
+    if(data.v===2&&Array.isArray(data.orders)){
+      O=data.orders;
+      showSave('📂 已恢复上次数据 ('+new Date(data.ts).toLocaleString()+')');
+      return true;
+    }
+  }catch(e){console.error('Load failed',e)}
+  return false;
+}
+function showSave(msg,isErr){
+  const el=document.getElementById('saveStatus');
+  el.textContent=msg;
+  el.className='save-status '+(isErr?'warning':'saved');
+  clearTimeout(el._t);
+  el._t=setTimeout(()=>{el.className='save-status';el.textContent='—'},8000);
+}
+function toast(msg,ok=true){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast '+(ok?'ok':'err')+' show';
+  clearTimeout(t._t);t._t=setTimeout(()=>{t.className='toast'},2500);
+}
+
+// ===== Export JSON =====
+function exportJSON(){
+  const data={v:2,orders:O,items:I.map(it=>({jp:it.jp,cn:it.cn,ip:it.ip,price:it.p,plan:it.q})),ts:new Date().toISOString()};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  const d=new Date();
+  a.download=`JUMPSHOP采购_${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}_${String(d.getHours()).padStart(2,'0')}${String(d.getMinutes()).padStart(2,'0')}.json`;
+  a.click();URL.revokeObjectURL(a.href);
+  toast('💾 存档已导出');
+}
+
+// ===== Import JSON =====
+function importJSON(input){
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const data=JSON.parse(e.target.result);
+      if(data.v===2&&Array.isArray(data.orders)){
+        if(O.length>0&&!confirm('当前有数据，导入将覆盖。确认？'))return;
+        O=data.orders;
+        save();render();
+        toast('📂 存档已导入，共 '+O.length+' 笔订单');
+      }else{toast('文件格式不正确',false)}
+    }catch(err){toast('解析失败: '+err.message,false)}
+    input.value='';
+  };
+  reader.readAsText(file);
+}
+
+// ===== Export CSV =====
+function exportCSV(){
+  let header='序号,IP,商品名(日文),商品名(中文),单价,计划数量';
+  O.forEach((_,i)=>{header+=`,第${i+1}单`});
+  header+=',已购合计,差额\n';
+  let csv='\uFEFF'+header; // BOM for Excel
+  I.forEach((it,i)=>{
+    let bought=gB(i),diff=it.q-bought;
+    let row=`${i+1},"${it.ip}","${it.jp.replace(/"/g,'""')}","${it.cn.replace(/"/g,'""')}",${it.p},${it.q}`;
+    O.forEach(o=>{row+=`,${o[i]||0}`});
+    row+=`,${bought},${diff}\n`;
+    csv+=row;
+  });
+  // Totals row
+  let trow=`,,,,合計,${I.reduce((s,it)=>s+it.q,0)}`;
+  O.forEach((o,oi)=>{let oq=0;o.forEach(v=>oq+=(v||0));trow+=`,${oq}`});
+  trow+=`,${I.reduce((s,_,i)=>s+gB(i),0)},${I.reduce((s,it,i)=>s+(it.q-gB(i)),0)}\n`;
+  csv+=trow;
+  // Order totals
+  if(O.length){
+    let arow=`,,,,各単金額,`;
+    O.forEach((o,oi)=>{let oa=0;I.forEach((it,i)=>{oa+=(o[i]||0)*it.p});arow+=`,¥${oa.toLocaleString()}`});
+    csv+=arow+'\n';
+  }
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  const d=new Date();
+  a.download=`JUMPSHOP采购_${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}.csv`;
+  a.click();URL.revokeObjectURL(a.href);
+  toast('📊 CSV表格已导出');
+}
+
+// ===== Helpers =====
 function gD(i){let b=0;O.forEach(o=>{b+=(o[i]||0)});return I[i].q-b}
 function gB(i){let b=0;O.forEach(o=>{b+=(o[i]||0)});return b}
 
+// ===== Main table =====
 function render(){
   let h=`<tr><th>#</th><th>IP</th><th style="text-align:left;min-width:300px">商品名</th><th style="width:72px">単価</th><th style="width:50px">計画</th>`;
   O.forEach((_,i)=>{h+=`<th class="ot">第${i+1}単<button class="x" onclick="delO(${i})">✕</button></th>`});
@@ -205,12 +344,23 @@ function render(){
   document.getElementById('sD').textContent=tD;document.getElementById('sO').textContent=O.length;
   document.getElementById('sA').textContent='¥'+gA.toLocaleString();
 }
-function addOrder(){O.push(new Array(I.length).fill(0));render();document.querySelector('.tw').scrollLeft=99999}
-function delO(i){if(!confirm(`第${i+1}単を削除？`))return;O.splice(i,1);render()}
-function upd(el){let v=parseInt(el.value)||0;if(v<0)v=0;if(v>10)v=10;el.value=v;const oi=+el.dataset.o,ii=+el.dataset.i;O[oi][ii]=v;render();setTimeout(()=>{const e=document.querySelector(`input[data-o="${oi}"][data-i="${ii}"]`);if(e){e.focus();e.select()}},15)}
-function resetAll(){if(!O.length)return;if(!confirm('全注文をクリア？'))return;O=[];render()}
 
-// Pick modal
+function addOrder(){O.push(new Array(I.length).fill(0));save();render();document.querySelector('.tw').scrollLeft=99999}
+function delO(i){if(!confirm(`第${i+1}単を削除？`))return;O.splice(i,1);save();render()}
+function upd(el){
+  let v=parseInt(el.value)||0;if(v<0)v=0;if(v>10)v=10;el.value=v;
+  const oi=+el.dataset.o,ii=+el.dataset.i;O[oi][ii]=v;
+  save();render();
+  setTimeout(()=>{const e=document.querySelector(`input[data-o="${oi}"][data-i="${ii}"]`);if(e){e.focus();e.select()}},15);
+}
+function resetAll(){
+  if(!O.length)return;
+  if(!confirm('全データをクリア？此操作不可恢复。'))return;
+  O=[];localStorage.removeItem(SAVE_KEY);render();
+  showSave('🗑️ 已清空所有数据');
+}
+
+// ===== Pick & Print =====
 function openPick(){
   pQ=I.map((_,i)=>{const d=gD(i);return d>0?Math.min(d,10):0});
   pC=I.map((_,i)=>gD(i)>0);
@@ -222,7 +372,7 @@ function renderPick(){
   I.forEach((it,i)=>{
     const diff=gD(i),bought=gB(i),done=diff<=0,ck=pC[i]&&!done,q=ck?pQ[i]:0;
     h+=`<div class="pick-row ${done?'disabled':''}">
-      <input type="checkbox" class="pick-cb" ${ck?'checked':''} ${done?'disabled':''} onchange="tP(${i},this.checked)">
+      <input type="checkbox" class="pick-cb" ${ck?'checked':''} ${done?'disabled':''} onchange="tPk(${i},this.checked)">
       <img class="pick-img" src="https:${it.im}" loading="lazy">
       <div class="pick-info">
         <div class="pick-jp">${it.jp}</div>
@@ -234,15 +384,15 @@ function renderPick(){
         </div>
       </div>
       <div class="pick-qty-wrap">
-        <input type="number" class="pick-qty" min="0" max="${Math.min(diff,10)}" value="${q}" ${(!ck||done)?'disabled':''} data-pi="${i}" onchange="uP(${i},this)" oninput="uP(${i},this)">
+        <input type="number" class="pick-qty" min="0" max="${Math.min(diff,10)}" value="${q}" ${(!ck||done)?'disabled':''} data-pi="${i}" onchange="uPk(${i},this)" oninput="uPk(${i},this)">
         <div class="pick-price">${ck&&!done?'¥'+(q*it.p).toLocaleString():''}</div>
       </div>
     </div>`;
   });
   document.getElementById('pickList').innerHTML=h;uPT();
 }
-function tP(i,v){pC[i]=v;if(v){pQ[i]=Math.min(gD(i),10)}else{pQ[i]=0}renderPick()}
-function uP(i,el){let v=parseInt(el.value)||0;const mx=Math.min(gD(i),10);if(v<0)v=0;if(v>mx)v=mx;el.value=v;pQ[i]=v;renderPick()}
+function tPk(i,v){pC[i]=v;if(v){pQ[i]=Math.min(gD(i),10)}else{pQ[i]=0}renderPick()}
+function uPk(i,el){let v=parseInt(el.value)||0;const mx=Math.min(gD(i),10);if(v<0)v=0;if(v>mx)v=mx;el.value=v;pQ[i]=v;renderPick()}
 function uPT(){let tq=0,ta=0;I.forEach((it,i)=>{if(pC[i]&&gD(i)>0){tq+=pQ[i];ta+=pQ[i]*it.p}});document.getElementById('pQ').textContent=tq;document.getElementById('pA').textContent='¥'+ta.toLocaleString()}
 function pickAllR(){I.forEach((_,i)=>{if(gD(i)>0){pC[i]=true;pQ[i]=Math.min(gD(i),10)}});renderPick()}
 function pickNone(){pC.fill(false);pQ.fill(0);renderPick()}
@@ -272,10 +422,13 @@ function doPrint(){
   h+=`</tbody><tfoot><tr><td colspan="3" style="text-align:center">注文合計</td><td></td>
   <td style="text-align:center;font-size:14px">${tq}件</td>
   <td style="text-align:right;font-size:14px;color:#c0392b">¥${ta.toLocaleString()}</td></tr></tfoot></table>
-  <div class="pr-note">✓ 欄は購入確認用 ｜ 購入後は主表で「新増一笔订单」をクリックし実績を入力してください ｜ 各商品1注文あたり上限10個</div>`;
+  <div class="pr-note">✓ 欄は購入確認用 ｜ 購入後は主表で「新増一笔订单」をクリックし実績を入力 ｜ 各商品1注文あたり上限10個</div>`;
   document.getElementById('printArea').innerHTML=h;closePick();
   setTimeout(()=>{document.getElementById('printArea').style.display='block';window.print();setTimeout(()=>{document.getElementById('printArea').style.display='none'},500)},100);
 }
+
+// ===== Init =====
+load();
 render();
 </script>
 </body>
