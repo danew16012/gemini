@@ -1,166 +1,69 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>欢迎 </title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Noto+Sans+SC:wght@300;500&display=swap" rel="stylesheet">
-
-    <style>
-        /* --- CSS Reset & 基础设置 --- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body, html {
-            height: 100%;
-            font-family: 'Montserrat', 'Noto Sans SC', sans-serif;
-            background-color: #000; /* 防止图片加载前的闪白 */
-            overflow: hidden; /* 禁止滚动，保持单页冲击力 */
-        }
-
-        /* --- 核心容器 --- */
-        .welcome-section {
-            position: relative;
-            height: 100vh;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: #fff;
-        }
-
-        /* --- 背景处理 (关键点：冲击力来源) --- */
-        .bg-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            /* 替换下方 URL 为你自己的高质量照片 (建议：黑白、建筑、抽象或肖像) */
-            background-image: url('https://images.unsplash.com/photo-1492551557933-34265f7af79e?q=80&w=3840&auto=format&fit=crop&ixlib=rb-4.0.3');
-            background-size: cover;
-            background-position: center;
-            z-index: -2;
-            /* 微妙的缩放动画，增加呼吸感 */
-            animation: subtleZoom 20s infinite alternate ease-in-out;
-        }
-
-        /* 深色遮罩层，确保文字清晰可见 */
-        .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6); /* 调整透明度以改变背景亮度 */
-            z-index: -1;
-        }
-
-        /* --- 内容区域 --- */
-        .content-wrapper {
-            padding: 2rem;
-            z-index: 1;
-        }
-
-        /* --- 巨大的冲击力标题 --- */
-        .mega-title {
-            /* 使用 clamp 实现响应式巨大字体 */
-            font-size: clamp(4rem, 15vw, 12rem);
-            font-weight: 900;
-            text-transform: uppercase;
-            line-height: 0.9;
-            letter-spacing: -0.02em;
-            margin-bottom: 1rem;
-            
-            /* 镂空文字效果 (可选，不需要则注释掉下面三行) */
-            color: transparent; */
-            -webkit-text-stroke: 2px rgba(255, 255, 255, 0.8); */
-            /*color: #fff; /* 如果不用镂空，保持白色 */
-
-            /* 动画初始化状态 */
-            opacity: 0;
-            transform: translateY(30px);
-            /* 执行动画 */
-            animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-            animation-delay: 0.3s; /* 延迟出现 */
-        }
-
-        /* --- 副标题/名字 --- */
-        .sub-title {
-            font-size: clamp(1.2rem, 3vw, 2rem);
-            font-weight: 500;
-            margin-bottom: 3rem;
-            color: rgba(255, 255, 255, 0.9);
-
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-            animation-delay: 0.6s;
-        }
-
-        /* --- 行动按钮 (CTA) --- */
-        .cta-button {
-            display: inline-block;
-            padding: 1rem 3rem;
-            border: 2px solid #fff;
-            color: #fff;
-            text-decoration: none;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-            animation-delay: 0.9s;
-        }
-
-        /* 按钮悬停效果：填满白色 */
-        .cta-button:hover {
-            background-color: #fff;
-            color: #000;
-            transform: translateY(-5px); /* 轻微上浮 */
-            box-shadow: 0 10px 20px -10px rgba(255,255,255, 0.5);
-        }
-
-        /* --- 动画定义 --- */
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes subtleZoom {
-            from { transform: scale(1); }
-            to { transform: scale(1.05); }
-        }
-
-    </style>
-</head>
-<body>
-
-    <section class="welcome-section">
-        <div class="bg-image"></div>
-        <div class="overlay"></div>
-
-        <div class="content-wrapper">
-            <h1 class="mega-title">Hello.</h1>
-            <p class="sub-title">HELLO WORLD</p>
-            
-            <a href="#enter" class="cta-button">联系方式</a>
-        </div>
-    </section>
-
-</body>
-</html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><meta name="created-at" content="2026-03-22T15:16:41Z">
+<title>🎫 票务汇总 (6张)</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;background:#f0f2f5;color:#333;font-size:14px}
+.c{max-width:1100px;margin:0 auto;padding:12px}
+.tb{display:flex;justify-content:space-between;align-items:center;background:#1a73e8;color:#fff;padding:12px 16px;border-radius:8px;margin-bottom:12px}
+.tb h1{font-size:18px}.tb .mt{font-size:12px;opacity:.8}
+.ss{display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.sc{background:#fff;border-radius:8px;padding:10px 16px;flex:1;min-width:100px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.sc .n{font-size:24px;font-weight:700;color:#1a73e8}.sc .l{font-size:11px;color:#888}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+th{background:#f8f9fa;padding:10px 8px;font-size:12px;font-weight:600;color:#555;text-align:left;position:sticky;top:0;z-index:1;border-bottom:2px solid #e0e0e0}
+td{padding:8px;border-bottom:1px solid #f0f0f0;font-size:13px;vertical-align:middle}
+tr:hover td{background:#f5f8ff}
+.gr td{background:#e8f0fe;font-weight:700;font-size:13px;color:#1a56b8;padding:10px 8px;border-bottom:2px solid #c5d7f2}
+.gr .ed{float:right;font-weight:400;font-size:12px;color:#5a8ed6}
+.m{font-family:"SF Mono",Consolas,monospace;font-size:11px;letter-spacing:.5px}
+a{color:#1a73e8;text-decoration:none;font-weight:600;white-space:nowrap}a:hover{text-decoration:underline}
+.ex{text-align:center;margin-top:16px;font-size:11px;color:#999;padding-bottom:20px}
+@media(max-width:768px){th,td{padding:6px 4px;font-size:12px}.m{font-size:10px}.tb h1{font-size:15px}.sc .n{font-size:18px}}
+</style></head><body>
+<div class="c">
+<div class="tb"><h1>🎫 票务汇总</h1><div class="mt">更新: 2026-03-23 00:16:41<br>6 张票</div></div>
+<div class="ss">
+<div class="sc"><div class="n">6</div><div class="l">总票数</div></div>
+<div class="sc"><div class="n">3</div><div class="l">活动数</div></div>
+<div class="sc"><div class="n">5</div><div class="l">账户数</div></div>
+</div>
+<table><thead><tr><th>账户</th><th>姓名</th><th>票种/场次</th><th>整理番号/座席</th><th>チケット番号</th><th>料金</th><th>操作</th></tr></thead>
+<tbody>
+<tr class="gr"><td colspan="7">「銀魂×HANA・BIYORI〜銀魂日和〜」コラボグッズ販売入場整理券<span class="ed">2026年3月20日(金) 〜2026年5月6日(水)</span></td></tr>
+<tr>
+<td>cookies_dandanwang</td><td>王 丹</td>
+<td>3/20(金)グッズ販売会場入場整理券</td><td>整理番号 <b>275</b></td>
+<td class="m">YXRVIIXCKCKQ8L991QOY</td><td>¥0（税込）</td>
+<td><a href="https://cf.zhanlala.com/YXRVIIXCKCKQ8L991QOY.html" target="_blank">📱开票</a></td></tr>
+<tr class="gr"><td colspan="7">【事前入店申込・抽選】3月28日(土) JUMP SHOP池袋店<span class="ed">2026年3月28日(土)</span></td></tr>
+<tr>
+<td>cookies_jjyy6200</td><td>李 亚娟</td>
+<td>12:30入店</td><td>整理番号 <b>D11</b></td>
+<td class="m">O3MACVMVQZ4R8AYX8CVS</td><td>¥0（税込）</td>
+<td><a href="https://cf.zhanlala.com/O3MACVMVQZ4R8AYX8CVS.html" target="_blank">📱开票</a></td></tr>
+<tr class="gr"><td colspan="7">文豪ストレイドッグス 横浜廻遊 よこはまコスモワールド 入店事前抽選<span class="ed">2026年3月1日(日) 〜2026年4月12日(日)</span></td></tr>
+<tr>
+<td>cookies_kamiya1223</td><td>張小玉 ㅤ</td>
+<td>【3月1日(日)】よこはまコスモワールド入店チケット</td><td>座席番号 <b>3月1日14:00~14:30-193</b></td>
+<td class="m">TFTI8ZOBGGLQ2GQZT089</td><td>¥0（税込）</td>
+<td><a href="https://cf.zhanlala.com/TFTI8ZOBGGLQ2GQZT089.html" target="_blank">📱开票</a></td></tr>
+<tr>
+<td>cookies_jjli</td><td>李 晶晶</td>
+<td>【3月1日(日)】よこはまコスモワールド入店チケット</td><td>座席番号 <b>3月1日14:30~15:00-221</b></td>
+<td class="m">TFTI8ZOBNZHVJN3FNH5C</td><td>¥0（税込）</td>
+<td><a href="https://cf.zhanlala.com/TFTI8ZOBNZHVJN3FNH5C.html" target="_blank">📱开票</a></td></tr>
+<tr>
+<td>cookies_dandanwang</td><td>王 丹</td>
+<td>【3月1日(日)】よこはまコスモワールド入店チケット</td><td>座席番号 <b>3月1日16:00~16:30-311</b></td>
+<td class="m">TFTI8ZOBC3MZDOSPA1CR</td><td>¥0（税込）</td>
+<td><a href="https://cf.zhanlala.com/TFTI8ZOBC3MZDOSPA1CR.html" target="_blank">📱开票</a></td></tr>
+<tr>
+<td>cookies_jjdeng</td><td>トウ ショウショウ</td>
+<td>【3月1日(日)】よこはまコスモワールド入店チケット</td><td>座席番号 <b>3月1日16:30~17:00-338</b></td>
+<td class="m">TFTI8ZOBAYSPFRR2QCV2</td><td>¥0（税込）</td>
+<td><a href="https://cf.zhanlala.com/TFTI8ZOBAYSPFRR2QCV2.html" target="_blank">📱开票</a></td></tr>
+</tbody></table>
+<p class="ex">⏰ 本页及所有票页将在生成24小时后自动删除</p>
+</div></body></html>
