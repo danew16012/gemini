@@ -98,8 +98,30 @@
 <script>
 const yen=n=>new Intl.NumberFormat("ja-JP").format(n);
 const SK="aj2026_goods_v2";
-const AI="https://cdn.jsdelivr.net/gh/danew16012/gemini/aj2026_images/aniplex/";
-const AM="https://cdn.jsdelivr.net/gh/danew16012/gemini/aj2026_images/amnibus/";
+// CDN mirrors - 按国内可用性排序，失败自动切下一个
+const CDN_MIRRORS=[
+  "https://gcore.jsdelivr.net/gh/danew16012/gemini/",
+  "https://fastly.jsdelivr.net/gh/danew16012/gemini/",
+  "https://cdn.jsdelivr.net/gh/danew16012/gemini/",
+  "https://raw.githubusercontent.com/danew16012/gemini/main/"
+];
+const AI="aj2026_images/aniplex/";  // 相对路径
+const AM="aj2026_images/amnibus/";  // 相对路径
+
+// 图片CDN fallback：失败时自动尝试下一个镜像
+function imgSrc(relPath){return CDN_MIRRORS[0]+relPath}
+function imgFallback(imgEl){
+  const rel=imgEl.dataset.rel;
+  if(!rel)return;
+  let idx=parseInt(imgEl.dataset.cdnIdx||"0",10)+1;
+  if(idx<CDN_MIRRORS.length){
+    imgEl.dataset.cdnIdx=idx;
+    imgEl.src=CDN_MIRRORS[idx]+rel;
+  } else {
+    imgEl.style.opacity="0.3";
+    imgEl.alt="图片加载失败";
+  }
+}
 
 const BOOTHS=[
   {id:"aniplex",name:"ANIPLEX",rule:"各商品ごとに個別の購入制限",bonuses:[{ip:"DARK MOON",t:"DARK MOON: ¥3,000ごとにENHYPEN写真1枚(全14種)"}],after:"事後通販 3/30 12:00～4/12 23:59"},
@@ -244,8 +266,8 @@ function renderGoods(){
     const vt=d.venue==="online"?`<span class="gc-tag venue">通販限定</span>`:d.venue==="venue"?`<span class="gc-tag venue">会場限定</span>`:"";
     const gt=d.group?`<span class="gc-tag trad">单/BOX共享限购</span>`:"";
     const c=document.createElement("div");c.className="gc";c.dataset.id=d.id;c.dataset.b=d.b;c.dataset.ip=d.ip;c.dataset.cat=d.cat;
-    c.innerHTML=`<div class="gc-img"><img src="${d.img}" alt="${d.zh}" loading="lazy" onerror="this.style.display='none'"/></div><div class="gc-body"><div class="gc-zh">${d.zh}</div><div class="gc-ja">${d.ja}</div>${d.note?`<div class="gc-meta">${d.note}</div>`:""}<div class="gc-tags"><span class="gc-tag lim">限购:${d.limit}</span>${vt}${gt}</div><div class="gc-price">¥${yen(d.price)}</div><div class="gc-row"><div class="gc-qw"><button type="button" data-d="-1">−</button><input type="number" min="0" value="${q}" inputmode="numeric" data-id="${d.id}"/><button type="button" data-d="1">＋</button></div><div class="gc-sub" data-sub="${d.id}">¥${yen(q*d.price)}</div></div><div class="gc-info" data-info="${d.id}"></div></div>`;
-    c.querySelector(".gc-img").addEventListener("click",()=>{document.getElementById("lbImg").src=d.img;document.getElementById("lb").classList.add("open")});
+    c.innerHTML=`<div class="gc-img"><img src="${imgSrc(d.img)}" data-rel="${d.img}" data-cdn-idx="0" alt="${d.zh}" loading="lazy" onerror="imgFallback(this)"/></div><div class="gc-body"><div class="gc-zh">${d.zh}</div><div class="gc-ja">${d.ja}</div>${d.note?`<div class="gc-meta">${d.note}</div>`:""}<div class="gc-tags"><span class="gc-tag lim">限购:${d.limit}</span>${vt}${gt}</div><div class="gc-price">¥${yen(d.price)}</div><div class="gc-row"><div class="gc-qw"><button type="button" data-d="-1">−</button><input type="number" min="0" value="${q}" inputmode="numeric" data-id="${d.id}"/><button type="button" data-d="1">＋</button></div><div class="gc-sub" data-sub="${d.id}">¥${yen(q*d.price)}</div></div><div class="gc-info" data-info="${d.id}"></div></div>`;
+    c.querySelector(".gc-img").addEventListener("click",()=>{const i=document.getElementById("lbImg");i.src=imgSrc(d.img);i.dataset.rel=d.img;i.dataset.cdnIdx="0";i.onerror=function(){imgFallback(this)};document.getElementById("lb").classList.add("open")});
     const inp=c.querySelector("input");
     c.querySelectorAll(".gc-qw button").forEach(b=>b.addEventListener("click",()=>{let v=parseInt(inp.value||"0",10);if(isNaN(v))v=0;v+=parseInt(b.dataset.d);if(v<0)v=0;inp.value=v;qty[d.id]=v;recalc()}));
     inp.addEventListener("input",()=>{let v=parseInt(inp.value||"0",10);if(isNaN(v)||v<0)v=0;qty[d.id]=v;recalc()});
