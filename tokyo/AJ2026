@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>AnimeJapan 2026 代购下单</title>
+  <style>
+    :root{--dock-h:100px;--dock-m:10px;--accent:#e03c3c;--bg:#f5f5f5;--card:#fff;--text:#222;--muted:#888;--border:#e4e4e4;--r:14px;--sh:0 3px 12px rgba(0,0,0,.05)}
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{max-width:100%;overflow-x:hidden}
+    body{font-family:"Noto Sans SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.55;padding:12px 12px calc(var(--dock-h)+var(--dock-m)*2+16px);-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+    .hdr{text-align:center;padding:14px 0 10px}
+    .hdr h1{font-size:18px;font-weight:900}
+    .hdr .sub{color:var(--muted);font-size:11px;margin-top:3px}
+    .hdr .dates{display:inline-block;margin-top:6px;padding:5px 12px;background:#111;color:#fff;border-radius:20px;font-size:11px;font-weight:700}
+    .fbar{position:sticky;top:0;z-index:100;background:rgba(245,245,245,.96);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:6px 0;margin:0 -12px;border-bottom:1px solid var(--border)}
+    .frow{display:flex;gap:5px;overflow-x:auto;padding:0 12px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+    .frow::-webkit-scrollbar{display:none}
+    .frow+.frow{margin-top:4px}
+    .ftab{flex-shrink:0;padding:5px 10px;border:1px solid var(--border);border-radius:18px;background:var(--card);cursor:pointer;font-size:11px;font-weight:700;white-space:nowrap;transition:all .12s}
+    .ftab:active{transform:scale(.96)}
+    .ftab.active{background:var(--text);color:#fff;border-color:var(--text)}
+    .ftab.bt.active{background:#1a5276;border-color:#1a5276}
+    .booth-sec{margin:14px 0 20px}.booth-sec.hidden{display:none}
+    .booth-hdr{font-size:15px;font-weight:900;padding:8px 12px;background:#1a5276;color:#fff;border-radius:10px;margin-bottom:4px}
+    .booth-bonus{font-size:11px;color:#6a3d00;background:#fff8e6;border:1px solid #ffe4a0;padding:5px 8px;border-radius:8px;margin:4px 0}
+    .booth-rule{font-size:11px;color:var(--muted);margin-bottom:4px;padding:0 2px}
+    .booth-after{font-size:11px;color:#1a5276;margin-bottom:8px;padding:0 2px}
+    .ip-sec{margin:10px 0 16px}.ip-sec.hidden{display:none}
+    .ip-hdr{font-size:14px;font-weight:900;padding:6px 0 3px;border-bottom:2px solid var(--text);margin-bottom:6px}
+    .gc{display:grid;grid-template-columns:clamp(72px,26vw,110px) 1fr;border:1px solid var(--border);border-radius:var(--r);background:var(--card);margin-bottom:8px;overflow:hidden;box-shadow:var(--sh)}
+    .gc.hidden{display:none}
+    .gc-img{display:flex;align-items:center;justify-content:center;border-right:1px solid #f0f0f0;padding:6px;background:#fafafa;cursor:pointer}
+    .gc-img img{width:100%;max-width:100px;height:auto;border-radius:8px;display:block}
+    .gc-body{padding:8px;display:flex;flex-direction:column;gap:3px;min-width:0}
+    .gc-zh{font-size:13px;font-weight:800;word-break:break-word}
+    .gc-ja{font-size:10px;color:var(--muted);word-break:break-word}
+    .gc-meta{font-size:10px;color:var(--muted)}
+    .gc-tags{display:flex;gap:3px;flex-wrap:wrap;align-items:center}
+    .gc-tag{font-size:10px;padding:2px 5px;border-radius:6px;display:inline-block}
+    .gc-tag.lim{color:#1a4d2e;background:#ecfff2;border:1px solid #b8f2c7}
+    .gc-tag.venue{color:#6a3d00;background:#fff8e6;border:1px solid #ffe4a0}
+    .gc-tag.trad{color:#1a3d6e;background:#e8f0ff;border:1px solid #a8c8ff}
+    .gc-price{font-size:13px;font-weight:900;color:var(--accent)}
+    .gc-row{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:1px}
+    .gc-qw{display:flex;align-items:center;gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;height:30px}
+    .gc-qw button{width:30px;height:30px;border:0;background:var(--card);font-size:16px;font-weight:700;cursor:pointer;color:var(--text);display:flex;align-items:center;justify-content:center;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
+    .gc-qw button:active{background:#eee}
+    .gc-qw input{width:38px;height:30px;border:0;border-left:1px solid var(--border);border-right:1px solid var(--border);text-align:center;font-size:13px;font-weight:700;background:#fff;-moz-appearance:textfield}
+    .gc-qw input::-webkit-outer-spin-button,.gc-qw input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+    .gc-sub{font-size:12px;font-weight:800;margin-left:auto;white-space:nowrap}
+    .gc-info{font-size:10px;color:#1a4d2e;background:#ecfff2;border:1px solid #b8f2c7;padding:1px 5px;border-radius:6px;margin-top:1px;display:none;width:fit-content}
+    .gc-info.show{display:block}
+    .dock{position:fixed;left:var(--dock-m);right:var(--dock-m);bottom:var(--dock-m);z-index:200;display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;padding:8px 10px;background:rgba(255,255,255,.97);border:1px solid var(--border);border-radius:14px;box-shadow:0 -4px 20px rgba(0,0,0,.1);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+    .dock .dl{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+    .dock .dr{display:flex;flex-direction:column;gap:2px;align-items:flex-end;margin-left:auto}
+    .dock .tot{font-size:15px;font-weight:900;color:var(--accent)}
+    .dock .qi{font-size:10px;color:var(--text);font-weight:700;max-width:200px;text-align:right}
+    .db{padding:6px 12px;border:1px solid var(--border);border-radius:10px;background:var(--card);cursor:pointer;font-weight:800;font-size:12px;-webkit-tap-highlight-color:transparent}
+    .db:active{background:#eee}
+    .db.pri{background:var(--text);color:#fff;border-color:var(--text)}
+    .db.pri:active{background:#000}
+    @media(max-width:400px){:root{--dock-h:116px}.dock{padding:6px 8px}.dock .tot{font-size:13px}}
+    .lb{position:fixed;inset:0;display:none;z-index:9999}.lb.open{display:block}
+    .lb-bg{position:absolute;inset:0;background:rgba(0,0,0,.75)}
+    .lb-w{position:relative;margin:5vh auto;width:min(92vw,560px);height:min(90vh,560px);display:flex;align-items:center;justify-content:center}
+    .lb-w img{max-width:100%;max-height:100%;border-radius:12px;background:#111}
+    .lb-x{position:absolute;top:6px;right:6px;width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(0,0,0,.4);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+    .modal{position:fixed;inset:0;display:none;z-index:10000}.modal.open{display:block}
+    .modal .mbg{position:absolute;inset:0;background:rgba(0,0,0,.5)}
+    .modal .mp{position:relative;width:min(94vw,540px);max-height:88vh;overflow:auto;margin:5vh auto;background:#fff;border-radius:16px;box-shadow:0 14px 40px rgba(0,0,0,.2);padding:14px;-webkit-overflow-scrolling:touch}
+    .modal h2{font-size:16px;font-weight:900;margin-bottom:8px}
+    .muted{color:var(--muted);font-size:11px;margin-top:3px}
+    .field{display:flex;flex-direction:column;gap:3px;margin:8px 0}
+    .field label{font-size:11px;font-weight:800}
+    .field input{padding:8px;border:1px solid var(--border);border-radius:10px;font-size:14px;outline:none}
+    .field input:focus{border-color:var(--text)}
+    .err{display:none;color:#b00020;font-size:10px}.err.show{display:block}
+    .okTip{display:none;margin-top:6px;background:#ecfff2;border:1px solid #b8f2c7;color:#1a4d2e;padding:8px;border-radius:12px;font-size:12px;font-weight:800}.okTip.show{display:block}
+    .bigId{font-size:18px;font-weight:900;background:#111;color:#fff;padding:8px;border-radius:12px;display:inline-block;margin:6px 0;word-break:break-all}
+    .mact{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+    .st{width:100%;border-collapse:collapse;margin-top:8px;font-size:11px}
+    .st th,.st td{border:1px solid #eee;padding:5px 6px;text-align:left}
+    .st th{background:#fafafa;font-weight:700;white-space:nowrap}
+    .st .qb{font-weight:900;font-size:13px}
+    .hpf{position:absolute;left:-9999px;top:-9999px;opacity:0}
+    .toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.9);background:rgba(0,0,0,.8);color:#fff;padding:8px 16px;border-radius:12px;font-size:12px;font-weight:700;z-index:99999;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}.toast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+  </style>
+</head>
+<body>
+<div class="hdr"><h1>AnimeJapan 2026 代购下单</h1><div class="sub">多厂商商品目录 · 所有价格为日元含税价</div><div class="dates">3/28（土）・3/29（日）東京ビッグサイト</div></div>
+<div class="fbar"><div class="frow" id="boothTabs"></div><div class="frow" id="ipTabs"></div><div class="frow" id="typeTabs"><button class="ftab active" data-type="all">全部</button><button class="ftab" data-type="single">指定款</button><button class="ftab" data-type="random">盲抽</button><button class="ftab" data-type="ticket">前売券</button></div></div>
+<div id="goodsList"></div>
+<div class="dock"><div class="dl"><button class="db" id="resetBtn">清空</button><button class="db" id="saveBtn">保存</button><button class="db pri" id="submitBtn">提交订单</button></div><div class="dr"><div class="qi" id="queueInfo"></div><div class="tot">¥<span id="grandTotal">0</span></div></div></div>
+<div id="lb" class="lb"><div class="lb-bg" id="lbBg"></div><div class="lb-w"><button class="lb-x" id="lbX">×</button><img id="lbImg" alt=""/></div></div>
+<div id="modal" class="modal"><div class="mbg" id="mBg"></div><div class="mp"><h2 id="mTitle">提交订单</h2><div id="stepForm"><div class="muted">填写联系方式，提交后生成订单号，建议截图保存。</div><div class="field"><label>微信号/联系方式</label><input id="cInput" type="text" placeholder="微信号或手机号"/><div class="err" id="cErr"></div></div><div class="field"><label>备注（可选）</label><input id="rInput" type="text" placeholder="角色偏好等"/></div><div class="hpf"><input id="hp" type="text"/></div><div class="mact"><button class="db" id="mCancel">取消</button><button class="db pri" id="mConfirm">确认提交</button></div></div><div id="stepOk" style="display:none"><div class="okTip show">提交成功！请截图保存订单号发给客服。</div><div>订单号：</div><div class="bigId" id="orderId">-</div><div class="mact"><button class="db" id="cpId">复制订单号</button><button class="db" id="cpList">复制清单</button><button class="db pri" id="mClose">关闭</button></div><table class="st" id="sumTbl"><thead><tr><th>厂商</th><th>IP</th><th>商品</th><th>数量</th></tr></thead><tbody></tbody></table><div class="muted" id="sumMeta"></div></div></div></div>
+<div class="toast" id="toast"></div>
+<script>
+const yen=n=>new Intl.NumberFormat("ja-JP").format(n);
+const SK="aj2026_goods_v2";
+const AI="https://cdn.jsdelivr.net/gh/danew16012/gemini/aj2026_images/aniplex/";
+const AM="https://cdn.jsdelivr.net/gh/danew16012/gemini/aj2026_images/amnibus/";
+
+const BOOTHS=[
+  {id:"aniplex",name:"ANIPLEX",rule:"各商品ごとに個別の購入制限",bonuses:[{ip:"DARK MOON",t:"DARK MOON: ¥3,000ごとにENHYPEN写真1枚(全14種)"}],after:"事後通販 3/30 12:00～4/12 23:59"},
+  {id:"amnibus",name:"AMNIBUS",rule:"トレーディング:各3BOX分 / オープン:各種3個",bonuses:[{ip:"賭ケグルイ",t:"賭ケグルイ: ¥2,000以上でポストカード1枚(全1種)"},{ip:"進撃の巨人",t:"進撃の巨人: ¥2,000ごとにポストカード1枚(全5種)"},{ip:"ブルーロック",t:"ブルーロック: ¥2,000ごとにフィルム風カード1枚(全9種)"}],after:"事後受注 3/30 12:00～ amnibus.com"}
+];
+
+const DATA=[
+// ── ANIPLEX ──
+{id:"ak01",b:"aniplex",ip:"あかね噺",zh:"亚克力立牌(全11种)",ja:"アクリルスタンド（全11種）",price:1200,limit:"各5",limitN:5,cat:"single",img:AI+"goods_11807_main.jpg",note:"W120×H160mm"},
+{id:"ak02",b:"aniplex",ip:"あかね噺",zh:"特殊印刷插画卡(全2种)",ja:"特殊印刷イラストカード（全2種）",price:1000,limit:"各5",limitN:5,cat:"single",img:AI+"goods_11806_main.jpg"},
+{id:"ak03",b:"aniplex",ip:"あかね噺",zh:"随机闪粉徽章(全14种)",ja:"ランダムグリッター缶バッジ（全14種）",price:700,limit:"14",limitN:14,cat:"random",img:AI+"goods_11805_main.jpg"},
+{id:"ak04",b:"aniplex",ip:"あかね噺",zh:"透明文件夹(全2种)",ja:"クリアファイル（全2種）",price:500,limit:"各5",limitN:5,cat:"single",img:AI+"goods_11804_main.jpg"},
+{id:"ak05",b:"aniplex",ip:"あかね噺",zh:"扇子",ja:"扇子",price:2500,limit:"5",limitN:5,cat:"single",img:AI+"goods_11803_main.jpg"},
+{id:"ak06",b:"aniplex",ip:"あかね噺",zh:"手巾",ja:"手ぬぐい",price:2200,limit:"5",limitN:5,cat:"single",img:AI+"goods_11802_main.jpg"},
+{id:"ak07",b:"aniplex",ip:"あかね噺",zh:"贴纸页",ja:"ステッカーシート",price:500,limit:"5",limitN:5,cat:"single",img:AI+"goods_11801_main.jpg"},
+{id:"ak08",b:"aniplex",ip:"あかね噺",zh:"大入袋风便签",ja:"特製大入袋風メモ",price:500,limit:"5",limitN:5,cat:"single",img:AI+"goods_11800_main.jpg"},
+{id:"km01",b:"aniplex",ip:"鬼滅の刃",zh:"亚克力立牌(全3种·ufotable)",ja:"アクリルスタンド（全3種）",price:1500,limit:"各3",limitN:3,cat:"single",img:AI+"goods_11799_main.jpg"},
+{id:"km02",b:"aniplex",ip:"鬼滅の刃",zh:"金属文件夹(全3种)",ja:"メタリッククリアファイル（全3種）",price:600,limit:"各3",limitN:3,cat:"single",img:AI+"goods_11798_main.jpg"},
+{id:"km03s",b:"aniplex",ip:"鬼滅の刃",zh:"随机透明卡(全6种·单抽)",ja:"ランダムクリアカード（単品）",price:300,limit:"単12/BOX2",limitN:12,cat:"random",img:AI+"goods_11797_main.jpg",group:"km_cc"},
+{id:"km03b",b:"aniplex",ip:"鬼滅の刃",zh:"随机透明卡(全6种·BOX)",ja:"ランダムクリアカード（BOX）",price:1800,limit:"BOX2",limitN:2,cat:"random",img:AI+"goods_11797_main.jpg",group:"km_cc",uq:6},
+{id:"km04s",b:"aniplex",ip:"鬼滅の刃",zh:"随机徽章(全6种·单抽)",ja:"ランダム缶バッジ（単品）",price:800,limit:"単12/BOX2",limitN:12,cat:"random",img:AI+"goods_11796_main.jpg",group:"km_badge"},
+{id:"km04b",b:"aniplex",ip:"鬼滅の刃",zh:"随机徽章(全6种·BOX)",ja:"ランダム缶バッジ（BOX）",price:4800,limit:"BOX2",limitN:2,cat:"random",img:AI+"goods_11796_main.jpg",group:"km_badge",uq:6},
+{id:"sk01",b:"aniplex",ip:"春夏秋冬代行者",zh:"明信片套装(4张)",ja:"ポストカードセット",price:900,limit:"3",limitN:3,cat:"single",img:AI+"goods_11843_main.jpg"},
+{id:"sk02",b:"aniplex",ip:"春夏秋冬代行者",zh:"亚克力展示板",ja:"アクリルボード",price:2800,limit:"3",limitN:3,cat:"single",img:AI+"goods_11842_main.jpg"},
+{id:"sk03",b:"aniplex",ip:"春夏秋冬代行者",zh:"双人立牌(全2种)",ja:"ペアアクリルスタンド（全2種）",price:2200,limit:"3",limitN:3,cat:"single",img:AI+"goods_11841_main.jpg"},
+{id:"ao01",b:"aniplex",ip:"青ブタ",zh:"剧场版前售券(第2弹)",ja:"限定グッズ付き前売券 第二弾",price:2000,limit:"3",limitN:3,cat:"ticket",img:AI+"goods_11810_main.jpg"},
+{id:"ao02",b:"aniplex",ip:"青ブタ",zh:"亚克力立牌(麻衣)",ja:"アクリルスタンド",price:1400,limit:"3",limitN:3,cat:"single",img:AI+"goods_11809_main.jpg"},
+{id:"dm01",b:"aniplex",ip:"DARK MOON",zh:"亚克力立牌(全7种)",ja:"アクリルスタンド（全7種）",price:1500,limit:"各3",limitN:3,cat:"single",img:AI+"goods_11819_main.jpg"},
+{id:"dm02",b:"aniplex",ip:"DARK MOON",zh:"随机卡片(全21种)",ja:"ランダムカードコレクション",price:400,limit:"10",limitN:10,cat:"random",img:AI+"goods_11818_main.jpg"},
+{id:"dm03",b:"aniplex",ip:"DARK MOON",zh:"随机挂件(全7种)",ja:"ランダムアクリルチャーム",price:800,limit:"10",limitN:10,cat:"random",img:AI+"goods_11817_main.jpg"},
+{id:"dm04",b:"aniplex",ip:"DARK MOON",zh:"A4文件夹(全3种)",ja:"A4クリアファイル（全3種）",price:500,limit:"各3",limitN:3,cat:"single",img:AI+"goods_11816_main.jpg"},
+{id:"ng01",b:"aniplex",ip:"超絶カワイイ",zh:"A4文件夹",ja:"A4クリアファイル",price:500,limit:"3",limitN:3,cat:"single",img:AI+"goods_11840_main.jpg"},
+{id:"ng02",b:"aniplex",ip:"超絶カワイイ",zh:"连接挂件(全3种)",ja:"繋がるアクリルチャーム（全3種）",price:1200,limit:"各3",limitN:3,cat:"single",img:AI+"goods_11839_main.jpg"},
+{id:"hk01",b:"aniplex",ip:"花君",zh:"亚克力立牌(全5种)",ja:"アクリルスタンド（全5種）",price:1500,limit:"3",limitN:3,cat:"single",img:AI+"goods_11815_main.jpg"},
+{id:"hk02",b:"aniplex",ip:"花君",zh:"随机徽章(全5种)",ja:"ランダム缶バッジ",price:500,limit:"10",limitN:10,cat:"random",img:AI+"goods_11814_main.jpg"},
+{id:"hk03",b:"aniplex",ip:"花君",zh:"随机卡片(全5种)",ja:"ランダムカードコレクション",price:400,limit:"10",limitN:10,cat:"random",img:AI+"goods_11813_main.jpg"},
+{id:"hk04",b:"aniplex",ip:"花君",zh:"A4文件夹(第2弹)",ja:"A4クリアファイル 第二弾",price:500,limit:"3",limitN:3,cat:"single",img:AI+"goods_11812_main.jpg"},
+{id:"hk05",b:"aniplex",ip:"花君",zh:"明信片套装",ja:"ポストカードセット",price:1000,limit:"3",limitN:3,cat:"single",img:AI+"goods_11811_main.jpg"},
+{id:"bd01s",b:"aniplex",ip:"ビルディバイド",zh:"櫻坂46 TCG(单包)",ja:"櫻坂46×ビルディバイド（単品）",price:350,limit:"-",limitN:999,cat:"single",img:AI+"goods_11838_main.jpg"},
+{id:"bd01b",b:"aniplex",ip:"ビルディバイド",zh:"櫻坂46 TCG(BOX·20包)",ja:"櫻坂46×ビルディバイド（BOX）",price:7000,limit:"-",limitN:999,cat:"single",img:AI+"goods_11838_main.jpg"},
+{id:"sf01",b:"aniplex",ip:"Fate/SF",zh:"B2挂画布(弗朗切斯卡)",ja:"描きおろしB2タペストリー",price:3000,limit:"3",limitN:3,cat:"single",img:AI+"goods_11837_main.jpg"},
+{id:"sf02",b:"aniplex",ip:"Fate/SF",zh:"立牌(弗朗切斯卡)",ja:"描きおろしアクリルスタンド",price:1500,limit:"3",limitN:3,cat:"single",img:AI+"goods_11836_main.jpg"},
+{id:"sf03",b:"aniplex",ip:"Fate/SF",zh:"A4文件夹(弗朗切斯卡)",ja:"描きおろしA4クリアファイル",price:600,limit:"3",limitN:3,cat:"single",img:AI+"goods_11835_main.jpg"},
+{id:"sf04",b:"aniplex",ip:"Fate/SF",zh:"大号全息徽章(弗朗切斯卡)",ja:"描きおろしビッグホロ缶バッジ",price:800,limit:"3",limitN:3,cat:"single",img:AI+"goods_11834_main.jpg"},
+{id:"sf05",b:"aniplex",ip:"Fate/SF",zh:"A4文件夹(全3种)",ja:"A4クリアファイル（全3種）",price:600,limit:"各3",limitN:3,cat:"single",img:AI+"goods_11833_main.jpg"},
+{id:"sf06",b:"aniplex",ip:"Fate/SF",zh:"明信片3张套装",ja:"ポストカード3枚セット",price:900,limit:"3",limitN:3,cat:"single",img:AI+"goods_11832_main.jpg"},
+{id:"sf07",b:"aniplex",ip:"Fate/SF",zh:"随机照片卡A(全9种)",ja:"ランダムポートレートA",price:400,limit:"9",limitN:9,cat:"random",img:AI+"goods_11831_main.jpg"},
+{id:"sf08",b:"aniplex",ip:"Fate/SF",zh:"随机照片卡B(全8种)",ja:"ランダムポートレートB",price:400,limit:"8",limitN:8,cat:"random",img:AI+"goods_11830_main.jpg"},
+{id:"sf09",b:"aniplex",ip:"Fate/SF",zh:"和纸胶带",ja:"マスキングテープ",price:800,limit:"3",limitN:3,cat:"single",img:AI+"goods_11829_main.jpg"},
+{id:"sf10",b:"aniplex",ip:"Fate/SF",zh:"床单(弗朗切斯卡)⚠通販",ja:"ベッドシーツ【通販】",price:9000,limit:"-",limitN:999,cat:"single",img:AI+"goods_11828_main.jpg",venue:"online"},
+{id:"sf11",b:"aniplex",ip:"Fate/SF",zh:"亚克力块(全3种)⚠通販",ja:"アクリルブロック【通販】",price:3000,limit:"-",limitN:999,cat:"single",img:AI+"goods_11827_main.jpg",venue:"online"},
+{id:"mh01",b:"aniplex",ip:"魔法科",zh:"剧场版前售券(第2弹·A3海报付)",ja:"劇場版 第2弾バンドル付き前売券",price:2600,limit:"5",limitN:5,cat:"ticket",img:AI+"goods_11808_main.jpg"},
+{id:"mm01",b:"aniplex",ip:"まどマギ",zh:"亚克力立牌(全2种)",ja:"アクリルスタンド（全2種）",price:900,limit:"各3",limitN:3,cat:"single",img:AI+"goods_11824_main.jpg"},
+{id:"mm02",b:"aniplex",ip:"まどマギ",zh:"名牌徽章(全2种)",ja:"おなまえ缶バッジ",price:500,limit:"各3",limitN:3,cat:"single",img:AI+"goods_11823_main.jpg"},
+{id:"mm03",b:"aniplex",ip:"まどマギ",zh:"写真套装(3张)",ja:"ブロマイドセット",price:500,limit:"3",limitN:3,cat:"single",img:AI+"goods_11822_main.jpg"},
+{id:"mm04",b:"aniplex",ip:"まどマギ",zh:"贴纸套装",ja:"ステッカーセット",price:800,limit:"3",limitN:3,cat:"single",img:AI+"goods_11821_main.jpg"},
+{id:"yt01",b:"aniplex",ip:"黄泉のツガイ",zh:"A5亚克力板(全2种)",ja:"A5アクリルプレート",price:2500,limit:"各3",limitN:3,cat:"single",img:AI+"goods_11826_main.jpg"},
+{id:"yt02",b:"aniplex",ip:"黄泉のツガイ",zh:"A4文件夹&明信片套装(全2种)",ja:"クリアファイル＆ポストカードセット",price:800,limit:"各3",limitN:3,cat:"single",img:AI+"goods_11825_main.jpg"},
+{id:"rt01",b:"aniplex",ip:"楽園追放",zh:"预售票(AJ限定特典付)",ja:"ムビチケ前売券【AJ限定】",price:1600,limit:"3",limitN:3,cat:"ticket",img:AI+"goods_11820_main.jpg",venue:"venue"},
+
+// ── AMNIBUS 賭ケグルイ ──
+{id:"kg01s",b:"amnibus",ip:"賭ケグルイ",zh:"闪粉徽章(全10种·单抽)",ja:"グリッター缶バッジ（単品）",price:600,limit:"30个(3BOX分)",limitN:30,cat:"random",img:AM+"a4accf5c623f4ad4c0f27649f7092211.jpg",note:"φ56mm",group:"kg_gl"},
+{id:"kg01b",b:"amnibus",ip:"賭ケグルイ",zh:"闪粉徽章(全10种·BOX)",ja:"グリッター缶バッジ（BOX）",price:6000,limit:"3BOX",limitN:3,cat:"random",img:AM+"a4accf5c623f4ad4c0f27649f7092211.jpg",group:"kg_gl",uq:10},
+{id:"kg02s",b:"amnibus",ip:"賭ケグルイ",zh:"原作分镜徽章(全15种·单抽)",ja:"原作コマ缶バッジ（単品）",price:500,limit:"45个(3BOX分)",limitN:45,cat:"random",img:AM+"777d7305a73727add507cdd0755c635d.jpg",group:"kg_km"},
+{id:"kg02b",b:"amnibus",ip:"賭ケグルイ",zh:"原作分镜徽章(全15种·BOX)",ja:"原作コマ缶バッジ（BOX）",price:7500,limit:"3BOX",limitN:3,cat:"random",img:AM+"777d7305a73727add507cdd0755c635d.jpg",group:"kg_km",uq:15},
+{id:"kg03s",b:"amnibus",ip:"賭ケグルイ",zh:"亚克力卡(全10种·单抽)",ja:"アクリルカード（単品）",price:800,limit:"30个(3BOX分)",limitN:30,cat:"random",img:AM+"8435e2edf693852f4a8b0e4284e11fe1.jpg",group:"kg_ac"},
+{id:"kg03b",b:"amnibus",ip:"賭ケグルイ",zh:"亚克力卡(全10种·BOX)",ja:"アクリルカード（BOX）",price:8000,limit:"3BOX",limitN:3,cat:"random",img:AM+"8435e2edf693852f4a8b0e4284e11fe1.jpg",group:"kg_ac",uq:10},
+{id:"kg04s",b:"amnibus",ip:"賭ケグルイ",zh:"插画卡(全33种·单抽)",ja:"イラストカード（単品）",price:300,limit:"99个(3BOX分)",limitN:99,cat:"random",img:AM+"c22ff909419098c70bef2bb91e934c03.jpg",group:"kg_ic"},
+{id:"kg04b",b:"amnibus",ip:"賭ケグルイ",zh:"插画卡(全33种·BOX)",ja:"イラストカード（BOX）",price:9900,limit:"3BOX",limitN:3,cat:"random",img:AM+"c22ff909419098c70bef2bb91e934c03.jpg",group:"kg_ic",uq:33},
+{id:"kg05s",b:"amnibus",ip:"賭ケグルイ",zh:"写真卡(全33种·单抽)",ja:"ブロマイド（単品）",price:300,limit:"99个(3BOX分)",limitN:99,cat:"random",img:AM+"dff905a9673e3bb1720befb95f9d1cc2.jpg",group:"kg_br"},
+{id:"kg05b",b:"amnibus",ip:"賭ケグルイ",zh:"写真卡(全33种·BOX)",ja:"ブロマイド（BOX）",price:9900,limit:"3BOX",limitN:3,cat:"random",img:AM+"dff905a9673e3bb1720befb95f9d1cc2.jpg",group:"kg_br",uq:33},
+{id:"kg06",b:"amnibus",ip:"賭ケグルイ",zh:"BIG亚克力立牌",ja:"BIGアクリルスタンド",price:2000,limit:"各3",limitN:3,cat:"single",img:AM+"5dc4687caefa302758b9d0bcb545a3c4.jpg"},
+{id:"kg07",b:"amnibus",ip:"賭ケグルイ",zh:"双连线亚克力钥匙扣",ja:"2連ワイヤーアクリルキーホルダー",price:1000,limit:"各3",limitN:3,cat:"single",img:AM+"8ff48c2ec1bb567f04670311e71115aa.jpg"},
+{id:"kg08",b:"amnibus",ip:"賭ケグルイ",zh:"证件照风写真5张套装",ja:"証明写真風ブロマイド5枚セット",price:900,limit:"3",limitN:3,cat:"single",img:AM+"dd22309aaba6a73609c2e44e50b68250.jpg"},
+
+// ── AMNIBUS 進撃の巨人 ──
+{id:"sn01s",b:"amnibus",ip:"進撃の巨人",zh:"闪粉徽章(全8种·单抽)",ja:"戦う背中2弾 グリッター缶バッジ（単品）",price:600,limit:"24个(3BOX分)",limitN:24,cat:"random",img:AM+"614183a4c8abb293071546d9bbcdea2a.jpg",group:"sn_gl"},
+{id:"sn01b",b:"amnibus",ip:"進撃の巨人",zh:"闪粉徽章(全8种·BOX)",ja:"戦う背中2弾 グリッター缶バッジ（BOX）",price:4800,limit:"3BOX",limitN:3,cat:"random",img:AM+"614183a4c8abb293071546d9bbcdea2a.jpg",group:"sn_gl",uq:8},
+{id:"sn02s",b:"amnibus",ip:"進撃の巨人",zh:"亚克力卡(全8种·单抽)",ja:"戦う背中2弾 アクリルカード（単品）",price:800,limit:"24个(3BOX分)",limitN:24,cat:"random",img:AM+"9bbef1224287ce38fa9944a68cf927b3.jpg",group:"sn_ac"},
+{id:"sn02b",b:"amnibus",ip:"進撃の巨人",zh:"亚克力卡(全8种·BOX)",ja:"戦う背中2弾 アクリルカード（BOX）",price:6400,limit:"3BOX",limitN:3,cat:"random",img:AM+"9bbef1224287ce38fa9944a68cf927b3.jpg",group:"sn_ac",uq:8},
+{id:"sn03s",b:"amnibus",ip:"進撃の巨人",zh:"Ani-Frame(全8种·单抽)",ja:"戦う背中2弾 Ani-Frame（単品）",price:300,limit:"24个(3BOX分)",limitN:24,cat:"random",img:AM+"bf0d7cb483bef7329f5a7144d0e61f18.jpg",group:"sn_af"},
+{id:"sn03b",b:"amnibus",ip:"進撃の巨人",zh:"Ani-Frame(全8种·BOX)",ja:"戦う背中2弾 Ani-Frame（BOX）",price:2400,limit:"3BOX",limitN:3,cat:"random",img:AM+"bf0d7cb483bef7329f5a7144d0e61f18.jpg",group:"sn_af",uq:8},
+{id:"sn04s",b:"amnibus",ip:"進撃の巨人",zh:"写真卡(全8种·单抽)",ja:"戦う背中2弾 ブロマイド（単品）",price:300,limit:"24个(3BOX分)",limitN:24,cat:"random",img:AM+"4d6fb03a248ae37898df24b3d55c0319.jpg",group:"sn_br"},
+{id:"sn04b",b:"amnibus",ip:"進撃の巨人",zh:"写真卡(全8种·BOX)",ja:"戦う背中2弾 ブロマイド（BOX）",price:2400,limit:"3BOX",limitN:3,cat:"random",img:AM+"4d6fb03a248ae37898df24b3d55c0319.jpg",group:"sn_br",uq:8},
+{id:"sn05",b:"amnibus",ip:"進撃の巨人",zh:"BIG亚克力立牌",ja:"戦う背中2弾 BIGアクリルスタンド",price:2000,limit:"各3",limitN:3,cat:"single",img:AM+"9408f8e0cb73a838d13244ab604789ef.jpg"},
+
+// ── AMNIBUS ブルーロック ──
+{id:"bl01s",b:"amnibus",ip:"ブルーロック",zh:"闪粉徽章(全18种·单抽)",ja:"戦う背中×雨 グリッター缶バッジ（単品）",price:600,limit:"54个(3BOX分)",limitN:54,cat:"random",img:AM+"570a923c3469377ccba2c2a02f0c742c.jpg",group:"bl_gl"},
+{id:"bl01b",b:"amnibus",ip:"ブルーロック",zh:"闪粉徽章(全18种·BOX)",ja:"戦う背中×雨 グリッター缶バッジ（BOX）",price:10800,limit:"3BOX",limitN:3,cat:"random",img:AM+"570a923c3469377ccba2c2a02f0c742c.jpg",group:"bl_gl",uq:18},
+{id:"bl02s",b:"amnibus",ip:"ブルーロック",zh:"迷你透明卡(全18种·单抽)",ja:"コンパクトクリアカード（単品）",price:500,limit:"54个(3BOX分)",limitN:54,cat:"random",img:AM+"7fe61aa9879631943833539c2dde8fa5.jpg",group:"bl_cc"},
+{id:"bl02b",b:"amnibus",ip:"ブルーロック",zh:"迷你透明卡(全18种·BOX)",ja:"コンパクトクリアカード（BOX）",price:9000,limit:"3BOX",limitN:3,cat:"random",img:AM+"7fe61aa9879631943833539c2dde8fa5.jpg",group:"bl_cc",uq:18},
+{id:"bl03s",b:"amnibus",ip:"ブルーロック",zh:"亚克力杯垫(全9种·单抽)",ja:"アクリルコースター（単品）",price:900,limit:"27个(3BOX分)",limitN:27,cat:"random",img:AM+"2ede554b85bd68f65102c5a5da1ed28c.jpg",group:"bl_co"},
+{id:"bl03b",b:"amnibus",ip:"ブルーロック",zh:"亚克力杯垫(全9种·BOX)",ja:"アクリルコースター（BOX）",price:8100,limit:"3BOX",limitN:3,cat:"random",img:AM+"2ede554b85bd68f65102c5a5da1ed28c.jpg",group:"bl_co",uq:9},
+{id:"bl04s",b:"amnibus",ip:"ブルーロック",zh:"插画卡(全24种·单抽)",ja:"イラストカード（単品）",price:300,limit:"72个(3BOX分)",limitN:72,cat:"random",img:AM+"46ef6a0d15fbbcca824883ab3dbe6a54.jpg",group:"bl_ic"},
+{id:"bl04b",b:"amnibus",ip:"ブルーロック",zh:"插画卡(全24种·BOX)",ja:"イラストカード（BOX）",price:7200,limit:"3BOX",limitN:3,cat:"random",img:AM+"46ef6a0d15fbbcca824883ab3dbe6a54.jpg",group:"bl_ic",uq:24},
+{id:"bl05s",b:"amnibus",ip:"ブルーロック",zh:"写真卡(全25种·单抽)",ja:"ブロマイド（単品）",price:300,limit:"75个(3BOX分)",limitN:75,cat:"random",img:AM+"2452dbc9aef93e72729b8b4be02f42b2.jpg",group:"bl_br"},
+{id:"bl05b",b:"amnibus",ip:"ブルーロック",zh:"写真卡(全25种·BOX)",ja:"ブロマイド（BOX）",price:7500,limit:"3BOX",limitN:3,cat:"random",img:AM+"2452dbc9aef93e72729b8b4be02f42b2.jpg",group:"bl_br",uq:25},
+{id:"bl06",b:"amnibus",ip:"ブルーロック",zh:"BIG亚克力立牌",ja:"BIGアクリルスタンド",price:2000,limit:"各3",limitN:3,cat:"single",img:AM+"c98919b3adfb6593ba3d4c85531575f2.jpg"},
+{id:"bl07",b:"amnibus",ip:"ブルーロック",zh:"亚克力御守",ja:"アクリルお守り",price:1400,limit:"各3",limitN:3,cat:"single",img:AM+"6b31239d6904f9e9085680456c6c98f3.jpg"},
+{id:"bl08",b:"amnibus",ip:"ブルーロック",zh:"照片卡夹",ja:"フォトカードホルダー",price:2200,limit:"各3",limitN:3,cat:"single",img:AM+"aeab655a1671af5c2c86ba1856dbee71.jpg"},
+];
+
+const BIDs=[...new Set(DATA.map(d=>d.b))];
+const IPs=[...new Set(DATA.map(d=>d.ip))];
+let qty={},fB="all",fI="all",fT="all";
+function sv(){try{localStorage.setItem(SK,JSON.stringify(qty))}catch(e){}}
+function ld(){try{const s=localStorage.getItem(SK);if(s)qty=JSON.parse(s)}catch(e){}}
+function cl(){try{localStorage.removeItem(SK)}catch(e){}}
+function toast(m,ms=1200){const t=document.getElementById("toast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),ms)}
+
+function renderFilters(){
+  const bt=document.getElementById("boothTabs");
+  bt.innerHTML=`<button class="ftab bt active" data-b="all">全部厂商</button>`;
+  BOOTHS.forEach(b=>{bt.innerHTML+=`<button class="ftab bt" data-b="${b.id}">${b.name}</button>`});
+  bt.querySelectorAll(".ftab").forEach(el=>el.addEventListener("click",()=>{fB=el.dataset.b;bt.querySelectorAll(".ftab").forEach(x=>x.classList.toggle("active",x===el));updIP();af()}));
+  updIP();
+  document.querySelectorAll("#typeTabs .ftab").forEach(el=>el.addEventListener("click",()=>{fT=el.dataset.type;document.querySelectorAll("#typeTabs .ftab").forEach(x=>x.classList.toggle("active",x===el));af()}));
+}
+function updIP(){
+  const it=document.getElementById("ipTabs");
+  const vis=fB==="all"?IPs:[...new Set(DATA.filter(d=>d.b===fB).map(d=>d.ip))];
+  it.innerHTML=`<button class="ftab active" data-ip="all">全部IP</button>`;
+  vis.forEach(ip=>{it.innerHTML+=`<button class="ftab" data-ip="${ip}">${ip}</button>`});
+  fI="all";
+  it.querySelectorAll(".ftab").forEach(el=>el.addEventListener("click",()=>{fI=el.dataset.ip;it.querySelectorAll(".ftab").forEach(x=>x.classList.toggle("active",x===el));af()}));
+}
+function af(){
+  document.querySelectorAll(".gc").forEach(c=>{const bO=fB==="all"||c.dataset.b===fB;const iO=fI==="all"||c.dataset.ip===fI;const tO=fT==="all"||c.dataset.cat===fT;c.classList.toggle("hidden",!(bO&&iO&&tO))});
+  document.querySelectorAll(".booth-sec").forEach(s=>{const bO=fB==="all"||s.dataset.b===fB;const hv=s.querySelectorAll(".gc:not(.hidden)").length>0;s.classList.toggle("hidden",!bO||!hv)});
+  document.querySelectorAll(".ip-sec").forEach(s=>{s.classList.toggle("hidden",s.querySelectorAll(".gc:not(.hidden)").length===0)});
+}
+
+function renderGoods(){
+  const L=document.getElementById("goodsList");L.innerHTML="";
+  let cB=null,cI=null,bS=null,iS=null;
+  DATA.forEach(d=>{
+    if(d.b!==cB){cB=d.b;cI=null;const b=BOOTHS.find(x=>x.id===d.b);bS=document.createElement("div");bS.className="booth-sec";bS.dataset.b=d.b;
+      bS.innerHTML=`<div class="booth-hdr">${b.name}</div><div class="booth-rule">${b.rule}</div>${b.bonuses.map(x=>`<div class="booth-bonus">${x.t}</div>`).join("")}<div class="booth-after">${b.after||""}</div>`;
+      L.appendChild(bS)}
+    if(d.ip!==cI){cI=d.ip;iS=document.createElement("div");iS.className="ip-sec";iS.dataset.ip=d.ip;iS.dataset.b=d.b;iS.innerHTML=`<div class="ip-hdr">${d.ip}</div>`;bS.appendChild(iS)}
+    const q=qty[d.id]||0;
+    const vt=d.venue==="online"?`<span class="gc-tag venue">通販限定</span>`:d.venue==="venue"?`<span class="gc-tag venue">会場限定</span>`:"";
+    const gt=d.group?`<span class="gc-tag trad">单/BOX共享限购</span>`:"";
+    const c=document.createElement("div");c.className="gc";c.dataset.id=d.id;c.dataset.b=d.b;c.dataset.ip=d.ip;c.dataset.cat=d.cat;
+    c.innerHTML=`<div class="gc-img"><img src="${d.img}" alt="${d.zh}" loading="lazy" onerror="this.style.display='none'"/></div><div class="gc-body"><div class="gc-zh">${d.zh}</div><div class="gc-ja">${d.ja}</div>${d.note?`<div class="gc-meta">${d.note}</div>`:""}<div class="gc-tags"><span class="gc-tag lim">限购:${d.limit}</span>${vt}${gt}</div><div class="gc-price">¥${yen(d.price)}</div><div class="gc-row"><div class="gc-qw"><button type="button" data-d="-1">−</button><input type="number" min="0" value="${q}" inputmode="numeric" data-id="${d.id}"/><button type="button" data-d="1">＋</button></div><div class="gc-sub" data-sub="${d.id}">¥${yen(q*d.price)}</div></div><div class="gc-info" data-info="${d.id}"></div></div>`;
+    c.querySelector(".gc-img").addEventListener("click",()=>{document.getElementById("lbImg").src=d.img;document.getElementById("lb").classList.add("open")});
+    const inp=c.querySelector("input");
+    c.querySelectorAll(".gc-qw button").forEach(b=>b.addEventListener("click",()=>{let v=parseInt(inp.value||"0",10);if(isNaN(v))v=0;v+=parseInt(b.dataset.d);if(v<0)v=0;inp.value=v;qty[d.id]=v;recalc()}));
+    inp.addEventListener("input",()=>{let v=parseInt(inp.value||"0",10);if(isNaN(v)||v<0)v=0;qty[d.id]=v;recalc()});
+    inp.addEventListener("change",()=>{let v=parseInt(inp.value||"0",10);if(isNaN(v)||v<0)v=0;inp.value=v;qty[d.id]=v;recalc()});
+    iS.appendChild(c);
+  });
+}
+
+function recalc(){
+  let total=0;
+  DATA.forEach(d=>{const q=qty[d.id]||0;total+=q*d.price;const el=document.querySelector(`[data-sub="${d.id}"]`);if(el)el.textContent="¥"+yen(q*d.price)});
+  document.getElementById("grandTotal").textContent=yen(total);
+  // Queue per booth
+  const bq={};BIDs.forEach(b=>{bq[b]=0});
+  // Non-grouped
+  DATA.filter(d=>!d.group).forEach(d=>{const q=qty[d.id]||0;if(q<=0)return;const r=Math.ceil(q/d.limitN);bq[d.b]=Math.max(bq[d.b],r);const el=document.querySelector(`[data-info="${d.id}"]`);if(el){if(r>1){el.textContent=`需${r}次排队`;el.classList.add("show")}else{el.textContent="";el.classList.remove("show")}}});
+  // Grouped
+  const gs={};
+  DATA.filter(d=>d.group).forEach(d=>{const q=qty[d.id]||0;const k=d.b+"::"+d.group;if(!gs[k])gs[k]={b:d.b,bQ:0,sQ:0,bL:0,sL:0,ids:[]};const g=gs[k];g.ids.push(d.id);if(d.uq&&d.uq>1){g.bQ+=q;g.bL=d.limitN}else{g.sQ+=q;g.sL=d.limitN}});
+  Object.values(gs).forEach(g=>{let r=0;if(g.bQ>0&&g.bL>0)r=Math.max(r,Math.ceil(g.bQ/g.bL));if(g.sQ>0&&g.sL>0)r=Math.max(r,Math.ceil(g.sQ/g.sL));bq[g.b]=Math.max(bq[g.b],r);g.ids.forEach(id=>{const el=document.querySelector(`[data-info="${id}"]`);if(el){if(r>1){el.textContent=`需${r}次排队`;el.classList.add("show")}else{el.textContent="";el.classList.remove("show")}}})});
+  const qp=[];BOOTHS.forEach(b=>{if(bq[b.id]>0)qp.push(`${b.name}:${bq[b.id]}次`)});
+  document.getElementById("queueInfo").textContent=qp.length?("排队 "+qp.join(" / ")):"";
+}
+
+// Lightbox
+document.getElementById("lbBg").addEventListener("click",()=>document.getElementById("lb").classList.remove("open"));
+document.getElementById("lbX").addEventListener("click",()=>document.getElementById("lb").classList.remove("open"));
+// Copy
+function cp(t){return new Promise(r=>{if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(()=>r(true)).catch(()=>r(fc(t)));else r(fc(t))})}
+function fc(t){const a=document.createElement("textarea");a.value=t;a.style.cssText="position:fixed;left:-9999px;top:0;opacity:0";document.body.appendChild(a);a.focus();a.select();let ok=false;try{ok=document.execCommand("copy")}catch(e){}document.body.removeChild(a);return ok}
+// Buttons
+document.getElementById("resetBtn").addEventListener("click",()=>{if(!confirm("确定清空？"))return;qty={};document.querySelectorAll(".gc-qw input").forEach(i=>i.value=0);cl();recalc();toast("已清空")});
+document.getElementById("saveBtn").addEventListener("click",()=>{sv();toast("草稿已保存")});
+// Modal
+const modal=document.getElementById("modal");
+function oM(){modal.classList.add("open")}function cM(){modal.classList.remove("open")}
+document.getElementById("mBg").addEventListener("click",cM);document.getElementById("mCancel").addEventListener("click",cM);document.getElementById("mClose").addEventListener("click",cM);
+function picked(){return DATA.map(d=>({d,q:qty[d.id]||0})).filter(x=>x.q>0)}
+document.getElementById("submitBtn").addEventListener("click",()=>{if(!picked().length){toast("请先填写数量");return}document.getElementById("stepForm").style.display="";document.getElementById("stepOk").style.display="none";document.getElementById("mTitle").textContent="提交订单";document.getElementById("cInput").value="";document.getElementById("rInput").value="";document.getElementById("cErr").classList.remove("show");oM()});
+document.getElementById("mConfirm").addEventListener("click",async()=>{const c=document.getElementById("cInput").value.trim();const err=document.getElementById("cErr");if(!c||c.length<2){err.textContent="请填写联系方式";err.classList.add("show");return}err.classList.remove("show");const btn=document.getElementById("mConfirm");btn.disabled=true;btn.textContent="提交中...";const oid="AJ26-"+Date.now().toString(36).toUpperCase()+Math.random().toString(36).slice(2,5).toUpperCase();await new Promise(r=>setTimeout(r,300));btn.disabled=false;btn.textContent="确认提交";document.getElementById("mTitle").textContent="提交成功";document.getElementById("stepForm").style.display="none";document.getElementById("stepOk").style.display="";document.getElementById("orderId").textContent=oid;bSum(oid,c);sv()});
+function bSum(oid,contact){const p=picked();const tb=document.querySelector("#sumTbl tbody");tb.innerHTML="";let cB="";p.forEach(x=>{const bn=BOOTHS.find(b=>b.id===x.d.b)?.name||x.d.b;const tr=document.createElement("tr");tr.innerHTML=`<td>${bn!==cB?(cB=bn,bn):""}</td><td>${x.d.ip}</td><td><strong>${x.d.zh}</strong></td><td class="qb">${x.q}</td>`;tb.appendChild(tr)});const total=p.reduce((s,x)=>s+x.q*x.d.price,0);document.getElementById("sumMeta").textContent=`合计${p.reduce((s,x)=>s+x.q,0)}项 / ¥${yen(total)}`;
+  document.getElementById("cpId").onclick=async()=>{const ok=await cp(oid);toast(ok?"已复制":"复制失败")};
+  document.getElementById("cpList").onclick=async()=>{const lines=["AJ2026代购订单",`订单号：${oid}`,`联系：${contact}`,`总价：¥${yen(total)}`,""];let lb="",li="";p.forEach(x=>{const bn=BOOTHS.find(b=>b.id===x.d.b)?.name||x.d.b;if(bn!==lb){lines.push(`\n【${bn}】`);lb=bn;li=""}if(x.d.ip!==li){lines.push(`  [${x.d.ip}]`);li=x.d.ip}lines.push(`    ${x.d.zh} ×${x.q} ¥${yen(x.q*x.d.price)}`)});const ok=await cp(lines.join("\n"));toast(ok?"已复制":"复制失败")}}
+// Init
+ld();renderFilters();renderGoods();DATA.forEach(d=>{if(qty[d.id]){const i=document.querySelector(`input[data-id="${d.id}"]`);if(i)i.value=qty[d.id]}});recalc();af();
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")sv()});window.addEventListener("pagehide",sv);window.addEventListener("beforeunload",sv);
+</script>
+</body>
+</html>
