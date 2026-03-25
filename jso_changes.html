@@ -1,0 +1,118 @@
+<!doctype html><html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JSO 变化记录</title>
+<style>
+*{box-sizing:border-box}
+body{font-family:system-ui,-apple-system,sans-serif;padding:10px;margin:0;background:#fff}
+h2{margin:0 0 4px;font-size:18px}
+p.ts{color:#888;font-size:12px;margin:0 0 8px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{border:1px solid #ddd;padding:5px 7px;text-align:left;white-space:nowrap}
+th{background:#f5f5f5;position:sticky;top:0;z-index:1}
+tr:nth-child(even){background:#fafafa}
+tr.pri{background:#fffde7}
+tr.pri td{font-weight:600}
+tr.sup{background:#f3f4f6;color:#9ca3af}
+a{color:#1a73e8;text-decoration:none}
+a:hover{text-decoration:underline}
+input[type=checkbox]{width:18px;height:18px;cursor:pointer}
+input[type=checkbox]:disabled{cursor:default;opacity:.3}
+/* 浮动操作栏 */
+#bar{position:sticky;bottom:0;background:#fff;border-top:2px solid #1a73e8;padding:8px 12px;
+  display:flex;align-items:center;gap:12px;z-index:10;box-shadow:0 -2px 8px rgba(0,0,0,.1)}
+#bar button{background:#1a73e8;color:#fff;border:none;border-radius:6px;padding:8px 20px;
+  font-size:14px;font-weight:600;cursor:pointer}
+#bar button:disabled{background:#ccc;cursor:default}
+#bar button:hover:not(:disabled){background:#1557b0}
+#cnt{font-size:14px;font-weight:600;min-width:80px}
+#bar label{font-size:13px;cursor:pointer;user-select:none}
+.acts{margin-left:auto;display:flex;gap:8px}
+@media(max-width:700px){
+  td:nth-child(4),th:nth-child(4),
+  td:nth-child(7),th:nth-child(7){display:none}
+  table{font-size:12px}
+  th,td{padding:4px 5px}
+}
+</style>
+</head><body>
+<h2>JSO 变化记录</h2>
+<p class="ts">更新：2026-03-25 16:34:03</p>
+<table>
+<thead><tr>
+<th><input type="checkbox" id="allck"></th>
+<th>时间</th><th>类型</th><th>Handle</th><th>商品名</th>
+<th>规格</th><th>SKU</th><th>变化</th><th>加购</th>
+</tr></thead>
+<tbody><tr><td><input type='checkbox' class='sel' data-vid='42181772542160' data-qty='10'></td><td>2026-03-25 16:34:03</td><td>商品补货</td><td><a href='https://jumpshop-online.com/products/18047138' target='_blank'>18047138</a></td><td>『呪術廻戦』虎杖が東堂に奢ったあの日のラーメンどんぶり</td><td>Default Title</td><td>18047138</td><td>当前：有货</td><td><a href='https://jumpshop-online.com/cart/add?id=42181772542160&quantity=10' target='_blank'>加购 10</a></td></tr><tr class='sup'><td><input type='checkbox' class='sel' data-vid='43159934795984' data-qty='10'></td><td>2026-03-25 16:34:03</td><td>商品补货</td><td><a href='https://jumpshop-online.com/products/18050613' target='_blank'>18050613</a></td><td>『僕のヒーローアカデミア』アニマル刺繍バッジコレクション（全9種／ランダム1種入り）</td><td>Default Title</td><td>18050613</td><td>当前：有货</td><td><a href='https://jumpshop-online.com/cart/add?id=43159934795984&quantity=10' target='_blank'>加购 10</a></td></tr><tr class='sup'><td><input type='checkbox' class='sel' data-vid='44136659288272' data-qty='10'></td><td>2026-03-25 16:34:03</td><td>商品补货</td><td><a href='https://jumpshop-online.com/products/18056873' target='_blank'>18056873</a></td><td>『僕のヒーローアカデミア』エッチングクリップス　だいなま　（10個入り）</td><td>Default Title</td><td>18056873</td><td>当前：有货</td><td><a href='https://jumpshop-online.com/cart/add?id=44136659288272&quantity=10' target='_blank'>加购 10</a></td></tr><tr><td><input type='checkbox' class='sel' data-vid='44136659353808' data-qty='10'></td><td>2026-03-25 16:34:03</td><td>商品补货</td><td><a href='https://jumpshop-online.com/products/18056874' target='_blank'>18056874</a></td><td>『呪術廻戦』エッチングクリップス　ツカモト　（10個入り）</td><td>Default Title</td><td>18056874</td><td>当前：有货</td><td><a href='https://jumpshop-online.com/cart/add?id=44136659353808&quantity=10' target='_blank'>加购 10</a></td></tr><tr><td><input type='checkbox' class='sel' data-vid='44136659386576' data-qty='10'></td><td>2026-03-25 16:34:03</td><td>商品补货</td><td><a href='https://jumpshop-online.com/products/18056875' target='_blank'>18056875</a></td><td>『ハイキュー!!』エッチングクリップス　ヒナガラス　（10個入り）</td><td>Default Title</td><td>18056875</td><td>当前：有货</td><td><a href='https://jumpshop-online.com/cart/add?id=44136659386576&quantity=10' target='_blank'>加购 10</a></td></tr><tr><td><input type='checkbox' class='sel' data-vid='44136659419344' data-qty='10'></td><td>2026-03-25 16:34:03</td><td>商品补货</td><td><a href='https://jumpshop-online.com/products/18056876' target='_blank'>18056876</a></td><td>『銀魂』エッチングクリップス　エリザベス　（10個入り）</td><td>Default Title</td><td>18056876</td><td>当前：有货</td><td><a href='https://jumpshop-online.com/cart/add?id=44136659419344&quantity=10' target='_blank'>加购 10</a></td></tr><tr><td><input type='checkbox' class='sel' data-vid='44341849227472' data-qty='10'></td><td>2026-03-25 16:34:03</td><td>商品补货</td><td><a href='https://jumpshop-online.com/products/18059866' target='_blank'>18059866</a></td><td>『ONE PIECE』エッチングクリップス　モンキー・D・ルフィ　（10個入り）</td><td>Default Title</td><td>18059866</td><td>当前：有货</td><td><a href='https://jumpshop-online.com/cart/add?id=44341849227472&quantity=10' target='_blank'>加购 10</a></td></tr><tr><td><input type='checkbox' class='sel' data-vid='44341849260240' data-qty='10'></td><td>2026-03-25 16:34:03</td><td>商品补货</td><td><a href='https://jumpshop-online.com/products/18059867' target='_blank'>18059867</a></td><td>『ONE PIECE』エッチングクリップス　ロロノア・ゾロ　（10個入り）</td><td>Default Title</td><td>18059867</td><td>当前：有货</td><td><a href='https://jumpshop-online.com/cart/add?id=44341849260240&quantity=10' target='_blank'>加购 10</a></td></tr><tr><td><input type='checkbox' class='sel' data-vid='44341849293008' data-qty='10'></td><td>2026-03-25 16:34:03</td><td>商品补货</td><td><a href='https://jumpshop-online.com/products/18059868' target='_blank'>18059868</a></td><td>『ONE PIECE』エッチングクリップス　トニートニー・チョッパー　（10個入り）</td><td>Default Title</td><td>18059868</td><td>当前：有货</td><td><a href='https://jumpshop-online.com/cart/add?id=44341849293008&quantity=10' target='_blank'>加购 10</a></td></tr><tr><td><input type='checkbox' class='sel' data-vid='44341849325776' data-qty='10'></td><td>2026-03-25 16:34:03</td><td>商品补货</td><td><a href='https://jumpshop-online.com/products/18059869' target='_blank'>18059869</a></td><td>『DRAGON BALL』エッチングクリップス　孫悟空　（10個入り）</td><td>Default Title</td><td>18059869</td><td>当前：有货</td><td><a href='https://jumpshop-online.com/cart/add?id=44341849325776&quantity=10' target='_blank'>加购 10</a></td></tr></tbody>
+</table>
+<div id="bar">
+  <span id="cnt">已选 0 件</span>
+  <label><input type="checkbox" id="ckpri"> 仅选优先</label>
+  <div class="acts">
+    <button id="btnCart" disabled>🛒 批量加购</button>
+    <button id="btnCopy" disabled>📋 复制链接</button>
+  </div>
+</div>
+<script>
+const BASE="https://jumpshop-online.com";
+const boxes=document.querySelectorAll('.sel');
+const cntEl=document.getElementById('cnt');
+const btnCart=document.getElementById('btnCart');
+const btnCopy=document.getElementById('btnCopy');
+const allCk=document.getElementById('allck');
+const ckPri=document.getElementById('ckpri');
+
+function update(){
+  const n=[...boxes].filter(b=>b.checked).length;
+  cntEl.textContent='已选 '+n+' 件';
+  btnCart.disabled=btnCopy.disabled=n===0;
+}
+
+allCk.addEventListener('change',function(){
+  const v=this.checked;
+  boxes.forEach(b=>{
+    if(!b.disabled){
+      if(ckPri.checked){
+        b.checked=v&&b.closest('tr').classList.contains('pri');
+      }else{
+        b.checked=v;
+      }
+    }
+  });
+  update();
+});
+
+ckPri.addEventListener('change',function(){
+  if(this.checked){
+    boxes.forEach(b=>{
+      if(!b.disabled&&!b.closest('tr').classList.contains('pri')) b.checked=false;
+    });
+  }
+  update();
+});
+
+boxes.forEach(b=>b.addEventListener('change',update));
+
+function buildUrl(){
+  const items=[...boxes].filter(b=>b.checked);
+  const params=items.map((b,i)=>
+    'items['+i+'][id]='+b.dataset.vid+'&items['+i+'][quantity]='+b.dataset.qty
+  ).join('&');
+  return BASE+'/cart/add?'+params;
+}
+
+btnCart.addEventListener('click',function(){
+  window.open(buildUrl(),'_blank');
+});
+
+btnCopy.addEventListener('click',function(){
+  const url=buildUrl();
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(url).then(()=>{this.textContent='✅ 已复制';setTimeout(()=>this.textContent='📋 复制链接',2000)});
+  }else{
+    const ta=document.createElement('textarea');ta.value=url;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
+    this.textContent='✅ 已复制';setTimeout(()=>this.textContent='📋 复制链接',2000);
+  }
+});
+</script>
+</body></html>
