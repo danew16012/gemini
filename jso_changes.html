@@ -1,56 +1,90 @@
 <!doctype html><html><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
 <title>JSO 变化记录</title>
 <style>
-*{box-sizing:border-box}
-body{font-family:system-ui,-apple-system,sans-serif;padding:10px;margin:0;background:#fff}
-h2{margin:0 0 4px;font-size:18px}
-p.ts{color:#888;font-size:12px;margin:0 0 8px}
-table{border-collapse:collapse;width:100%;font-size:13px}
-th,td{border:1px solid #ddd;padding:5px 7px;text-align:left;white-space:nowrap}
-th{background:#f5f5f5;position:sticky;top:0;z-index:1}
-tr:nth-child(even){background:#fafafa}
-tr.pri{background:#fffde7}
-tr.pri td{font-weight:600}
-tr.sup{background:#f3f4f6;color:#9ca3af}
-a{color:#1a73e8;text-decoration:none}
-a:hover{text-decoration:underline}
-input[type=checkbox]{width:18px;height:18px;cursor:pointer}
-input[type=checkbox]:disabled{cursor:default;opacity:.3}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:#f5f6f8;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;color:#222}
+.wrap{max-width:760px;margin:0 auto;padding:12px 12px 96px}
+header h2{margin:0 0 2px;font-size:18px}
+header p{margin:0 0 12px;color:#888;font-size:12px}
+
+.list{display:flex;flex-direction:column;gap:8px}
+.card{display:flex;gap:10px;background:#fff;border-radius:10px;padding:12px;
+  box-shadow:0 1px 3px rgba(0,0,0,.06);cursor:pointer;
+  border:2px solid transparent;transition:border-color .15s,box-shadow .15s}
+.card:has(.sel:checked){border-color:#1a73e8;box-shadow:0 2px 8px rgba(26,115,232,.18)}
+.card.pri{background:#fffde7}
+.card.sup{background:#f3f4f6;color:#9ca3af;cursor:default}
+.card.sup .title,.card.sup .link{color:#9ca3af}
+
+.ck{flex:0 0 auto;display:flex;align-items:flex-start;padding-top:2px}
+.ck input[type=checkbox]{width:22px;height:22px;cursor:pointer;margin:0;accent-color:#1a73e8}
+.ck input[type=checkbox]:disabled{cursor:default;opacity:.3}
+
+.body{flex:1;min-width:0}
+.title{font-size:15px;font-weight:600;line-height:1.4;word-break:break-word}
+.card.pri .title{font-weight:700}
+.icon{margin-right:4px}
+
+.meta{margin-top:4px;font-size:13px;color:#666;line-height:1.5;word-break:break-word}
+.badge{display:inline-block;background:#1a73e8;color:#fff;font-size:11px;font-weight:600;
+  padding:1px 7px;border-radius:10px;margin-right:6px;vertical-align:1px}
+.card.sup .badge{background:#9ca3af}
+
+.foot{margin-top:8px;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;
+  font-size:12px;color:#888}
+.foot .ts{color:#aaa}
+.foot .link{color:#1a73e8;text-decoration:none;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px}
+.foot .cart{margin-left:auto;color:#1a73e8;text-decoration:none;font-weight:600;font-size:12px;
+  padding:4px 10px;border:1px solid #1a73e8;border-radius:6px}
+.foot a:active{opacity:.6}
+
+.empty{text-align:center;color:#999;padding:60px 0}
+
 /* 浮动操作栏 */
-#bar{position:sticky;bottom:0;background:#fff;border-top:2px solid #1a73e8;padding:8px 12px;
-  display:flex;align-items:center;gap:12px;z-index:10;box-shadow:0 -2px 8px rgba(0,0,0,.1)}
-#bar button{background:#1a73e8;color:#fff;border:none;border-radius:6px;padding:8px 20px;
-  font-size:14px;font-weight:600;cursor:pointer}
-#bar button:disabled{background:#ccc;cursor:default}
-#bar button:hover:not(:disabled){background:#1557b0}
-#cnt{font-size:14px;font-weight:600;min-width:80px}
-#bar label{font-size:13px;cursor:pointer;user-select:none}
+#bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #e5e7eb;
+  padding:10px 14px;display:flex;align-items:center;gap:10px;z-index:10;
+  box-shadow:0 -2px 10px rgba(0,0,0,.08);
+  padding-bottom:calc(10px + env(safe-area-inset-bottom))}
+#cnt{font-size:14px;font-weight:600;flex:0 0 auto}
+#ckpri-wrap{font-size:12px;color:#555;display:flex;align-items:center;gap:4px;cursor:pointer;user-select:none}
+#ckpri{width:16px;height:16px;accent-color:#1a73e8}
 .acts{margin-left:auto;display:flex;gap:8px}
-@media(max-width:700px){
-  td:nth-child(4),th:nth-child(4),
-  td:nth-child(7),th:nth-child(7){display:none}
-  table{font-size:12px}
-  th,td{padding:4px 5px}
+#bar button{background:#1a73e8;color:#fff;border:none;border-radius:8px;padding:9px 16px;
+  font-size:14px;font-weight:600;cursor:pointer;-webkit-appearance:none}
+#bar button:disabled{background:#cbd5e1;cursor:default}
+#bar button:active:not(:disabled){background:#1557b0}
+#bar button.icon-only{padding:9px 12px}
+
+/* 顶部全选 */
+#topbar{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:13px;color:#555}
+#topbar label{display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none}
+#topbar input{width:18px;height:18px;accent-color:#1a73e8;margin:0}
+
+@media(max-width:480px){
+  .wrap{padding:10px 10px 96px}
+  .title{font-size:14px}
+  .meta{font-size:12px}
+  #bar button{padding:9px 14px;font-size:13px}
 }
 </style>
 </head><body>
-<h2>JSO 变化记录</h2>
-<p class="ts">更新：2026-04-10 13:42:59</p>
-<table>
-<thead><tr>
-<th><input type="checkbox" id="allck"></th>
-<th>时间</th><th>类型</th><th>Handle</th><th>商品名</th>
-<th>规格</th><th>SKU</th><th>变化</th><th>加购</th>
-</tr></thead>
-<tbody><tr class='pri'><td><input type='checkbox' disabled></td><td>2026-04-01 14:02:58</td><td>即将上架</td><td><a href='https://jumpshop-online.com/products/00044178' target='_blank'>00044178</a></td><td>🐅 ハイキュー!!　合同練習会2022　缶バッジ（デコレーション仕様）（全11種）</td><td>Default Title</td><td>00044178</td><td>当前：无货</td><td>-</td></tr><tr class='pri'><td><input type='checkbox' disabled></td><td>2026-04-02 11:35:11</td><td>即将上架</td><td><a href='https://jumpshop-online.com/products/00037580' target='_blank'>00037580</a></td><td>🐅 ハイキュー!!　合同練習会2020　缶バッジ（デコレーション仕様）（全9種）</td><td>Default Title</td><td>00037580</td><td>当前：无货</td><td>-</td></tr><tr><td><input type='checkbox' class='sel' data-vid='44868260069584' data-qty='10'></td><td>2026-04-02 12:00:47</td><td>商品补货</td><td><a href='https://jumpshop-online.com/products/18066516' target='_blank'>18066516</a></td><td>『銀魂 将軍だーれだ』</td><td>Default Title</td><td>18066516</td><td>当前：有货</td><td><a href='https://jumpshop-online.com/cart/add?id=44868260069584&quantity=10' target='_blank'>加购 10</a></td></tr><tr class='sup'><td><input type='checkbox' disabled></td><td>2026-04-03 10:09:59</td><td>即将上架</td><td><a href='https://jumpshop-online.com/products/18067508' target='_blank'>18067508</a></td><td>『僕のヒーローアカデミア』二層マグネット　爆豪勝己</td><td>Default Title</td><td>18067508</td><td>当前：无货</td><td>-</td></tr><tr class='sup'><td><input type='checkbox' disabled></td><td>2026-04-03 10:09:59</td><td>即将上架</td><td><a href='https://jumpshop-online.com/products/18067509' target='_blank'>18067509</a></td><td>『僕のヒーローアカデミア』二層マグネット　轟焦凍</td><td>Default Title</td><td>18067509</td><td>当前：无货</td><td>-</td></tr><tr><td><input type='checkbox' class='sel' data-vid='40375663132880' data-qty='10'></td><td>2026-04-03 17:11:29</td><td>商品补货</td><td><a href='https://jumpshop-online.com/products/18039892' target='_blank'>18039892</a></td><td>『鬼滅の刃』名刺カードコレクション　第１弾　（全２１種／ランダム３枚セット）</td><td>Default Title</td><td>18039892</td><td>当前：有货</td><td><a href='https://jumpshop-online.com/cart/add?id=40375663132880&quantity=10' target='_blank'>加购 10</a></td></tr><tr class='pri'><td><input type='checkbox' class='sel' data-vid='43159935385808' data-qty='10'></td><td>2026-04-03 17:11:29</td><td>商品补货</td><td><a href='https://jumpshop-online.com/products/18050627' target='_blank'>18050627</a></td><td>🐱 『家庭教師ヒットマンREBORN!』ステータスカードコレクション　（全15種／ランダム1種入り）</td><td>Default Title</td><td>18050627</td><td>当前：有货</td><td><a href='https://jumpshop-online.com/cart/add?id=43159935385808&quantity=10' target='_blank'>加购 10</a></td></tr><tr class='pri'><td><input type='checkbox' class='sel' data-vid='43363885940944' data-qty='10'></td><td>2026-04-03 17:11:29</td><td>商品补货</td><td><a href='https://jumpshop-online.com/products/18052377' target='_blank'>18052377</a></td><td>🐅 『呪術廻戦』コレクション缶バッジ“HEROES”　【五条悟】（全１０種／ランダム１種入り）</td><td>Default Title</td><td>18052377</td><td>当前：有货</td><td><a href='https://jumpshop-online.com/cart/add?id=43363885940944&quantity=10' target='_blank'>加购 10</a></td></tr><tr><td><input type='checkbox' class='sel' data-vid='44341851750608' data-qty='10'></td><td>2026-04-03 17:11:29</td><td>商品补货</td><td><a href='https://jumpshop-online.com/products/18059912' target='_blank'>18059912</a></td><td>『呪術廻戦』キャラクターズホロカードコレクション2枚入り　（全10組／ランダム1組入り）</td><td>Default Title</td><td>18059912</td><td>当前：有货</td><td><a href='https://jumpshop-online.com/cart/add?id=44341851750608&quantity=10' target='_blank'>加购 10</a></td></tr><tr><td><input type='checkbox' class='sel' data-vid='44423577403600' data-qty='10'></td><td>2026-04-03 17:11:29</td><td>商品补货</td><td><a href='https://jumpshop-online.com/products/18061161' target='_blank'>18061161</a></td><td>『ハイキュー!!』メモリアルコレクション　第1弾　（全32種／ランダム2種入り）</td><td>Default Title</td><td>18061161</td><td>当前：有货</td><td><a href='https://jumpshop-online.com/cart/add?id=44423577403600&quantity=10' target='_blank'>加购 10</a></td></tr><tr class='pri'><td><input type='checkbox' class='sel' data-vid='44538913751248' data-qty='10'></td><td>2026-04-03 17:11:29</td><td>商品补货</td><td><a href='https://jumpshop-online.com/products/18062000' target='_blank'>18062000</a></td><td>🐅 『呪術廻戦』缶バッジ4個セット　EMOTIONS　五条悟　－人外魔境新宿決戦－</td><td>Default Title</td><td>18062000</td><td>当前：有货</td><td><a href='https://jumpshop-online.com/cart/add?id=44538913751248&quantity=10' target='_blank'>加购 10</a></td></tr><tr class='pri'><td><input type='checkbox' class='sel' data-vid='44538913784016' data-qty='10'></td><td>2026-04-03 17:11:29</td><td>商品补货</td><td><a href='https://jumpshop-online.com/products/18062001' target='_blank'>18062001</a></td><td>🐅 『呪術廻戦』缶バッジ4個セット　EMOTIONS　宿儺　－人外魔境新宿決戦－</td><td>Default Title</td><td>18062001</td><td>当前：有货</td><td><a href='https://jumpshop-online.com/cart/add?id=44538913784016&quantity=10' target='_blank'>加购 10</a></td></tr><tr class='sup'><td><input type='checkbox' class='sel' data-vid='44934283591888' data-qty='10'></td><td>2026-04-03 17:11:57</td><td>商品补货</td><td><a href='https://jumpshop-online.com/products/18067508' target='_blank'>18067508</a></td><td>『僕のヒーローアカデミア』二層マグネット　爆豪勝己</td><td>Default Title</td><td>18067508</td><td>当前：有货</td><td><a href='https://jumpshop-online.com/cart/add?id=44934283591888&quantity=10' target='_blank'>加购 10</a></td></tr><tr class='sup'><td><input type='checkbox' class='sel' data-vid='44934283919568' data-qty='10'></td><td>2026-04-03 17:11:57</td><td>商品补货</td><td><a href='https://jumpshop-online.com/products/18067509' target='_blank'>18067509</a></td><td>『僕のヒーローアカデミア』二層マグネット　轟焦凍</td><td>Default Title</td><td>18067509</td><td>当前：有货</td><td><a href='https://jumpshop-online.com/cart/add?id=44934283919568&quantity=10' target='_blank'>加购 10</a></td></tr><tr class='pri'><td><input type='checkbox' class='sel' data-vid='43363885940944' data-qty='10'></td><td>2026-04-06 10:32:23</td><td>商品补货</td><td><a href='https://jumpshop-online.com/products/18052377' target='_blank'>18052377</a></td><td>🐅 『呪術廻戦』コレクション缶バッジ“HEROES”　【五条悟】（全１０種／ランダム１種入り）</td><td>Default Title</td><td>18052377</td><td>无货 → 有货</td><td><a href='https://jumpshop-online.com/cart/add?id=43363885940944&quantity=10' target='_blank'>加购 10</a></td></tr><tr><td><input type='checkbox' class='sel' data-vid='44341851750608' data-qty='10'></td><td>2026-04-06 10:32:23</td><td>商品补货</td><td><a href='https://jumpshop-online.com/products/18059912' target='_blank'>18059912</a></td><td>『呪術廻戦』キャラクターズホロカードコレクション2枚入り　（全10組／ランダム1組入り）</td><td>Default Title</td><td>18059912</td><td>无货 → 有货</td><td><a href='https://jumpshop-online.com/cart/add?id=44341851750608&quantity=10' target='_blank'>加购 10</a></td></tr><tr><td><input type='checkbox' class='sel' data-vid='44423577403600' data-qty='10'></td><td>2026-04-06 10:32:23</td><td>商品补货</td><td><a href='https://jumpshop-online.com/products/18061161' target='_blank'>18061161</a></td><td>『ハイキュー!!』メモリアルコレクション　第1弾　（全32種／ランダム2種入り）</td><td>Default Title</td><td>18061161</td><td>无货 → 有货</td><td><a href='https://jumpshop-online.com/cart/add?id=44423577403600&quantity=10' target='_blank'>加购 10</a></td></tr><tr class='pri'><td><input type='checkbox' class='sel' data-vid='43159935385808' data-qty='10'></td><td>2026-04-06 10:36:32</td><td>商品补货</td><td><a href='https://jumpshop-online.com/products/18050627' target='_blank'>18050627</a></td><td>🐱 『家庭教師ヒットマンREBORN!』ステータスカードコレクション　（全15種／ランダム1種入り）</td><td>Default Title</td><td>18050627</td><td>无货 → 有货</td><td><a href='https://jumpshop-online.com/cart/add?id=43159935385808&quantity=10' target='_blank'>加购 10</a></td></tr><tr class='pri'><td><input type='checkbox' class='sel' data-vid='43159935385808' data-qty='10'></td><td>2026-04-07 09:35:45</td><td>商品补货</td><td><a href='https://jumpshop-online.com/products/18050627' target='_blank'>18050627</a></td><td>🐱 『家庭教師ヒットマンREBORN!』ステータスカードコレクション　（全15種／ランダム1種入り）</td><td>Default Title</td><td>18050627</td><td>无货 → 有货</td><td><a href='https://jumpshop-online.com/cart/add?id=43159935385808&quantity=10' target='_blank'>加购 10</a></td></tr><tr><td><input type='checkbox' class='sel' data-vid='44670555783376' data-qty='10'></td><td>2026-04-10 13:42:59</td><td>商品补货</td><td><a href='https://jumpshop-online.com/products/18063776' target='_blank'>18063776</a></td><td>『呪術廻戦』アニバーサリーメタルプレート</td><td>Default Title</td><td>18063776</td><td>当前：有货</td><td><a href='https://jumpshop-online.com/cart/add?id=44670555783376&quantity=10' target='_blank'>加购 10</a></td></tr></tbody>
-</table>
+<div class="wrap">
+  <header>
+    <h2>JSO 变化记录</h2>
+    <p>更新：2026-04-10 17:31:00 ・ 共 2 条</p>
+  </header>
+  <div id="topbar">
+    <label><input type="checkbox" id="allck"> 全选</label>
+    <label><input type="checkbox" id="ckpri"> 仅选优先</label>
+  </div>
+  <div class="list"><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="40375756325072" data-qty="10"></div><div class="body"><div class="title">『鬼滅の刃』Ａ全アートポスター</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18041324 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:31:00</span><a class="link" href="https://jumpshop-online.com/products/18041324" target="_blank">18041324</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=40375756325072&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="40376017354960" data-qty="10"></div><div class="body"><div class="title">『ハイキュー!!』アクリルmini☆miniフィギュア　（全30種のうちランダム5個入）</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18036924 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:31:00</span><a class="link" href="https://jumpshop-online.com/products/18036924" target="_blank">18036924</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=40376017354960&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label></div>
+</div>
 <div id="bar">
-  <span id="cnt">已选 0 件</span>
-  <label><input type="checkbox" id="ckpri"> 仅选优先</label>
+  <span id="cnt">已选 0</span>
   <div class="acts">
+    <button id="btnCopy" disabled class="icon-only">📋</button>
     <button id="btnCart" disabled>🛒 批量加购</button>
-    <button id="btnCopy" disabled>📋 复制链接</button>
   </div>
 </div>
 <script>
@@ -64,19 +98,28 @@ const ckPri=document.getElementById('ckpri');
 
 function update(){
   const n=[...boxes].filter(b=>b.checked).length;
-  cntEl.textContent='已选 '+n+' 件';
+  cntEl.textContent='已选 '+n;
   btnCart.disabled=btnCopy.disabled=n===0;
+  // 同步全选状态
+  const enabled=[...boxes].filter(b=>!b.disabled);
+  const filtered=ckPri.checked?enabled.filter(b=>b.closest('.card').classList.contains('pri')):enabled;
+  if(filtered.length>0&&filtered.every(b=>b.checked)) allCk.checked=true;
+  else allCk.checked=false;
 }
+
+// 点击卡片任意位置切换 checkbox（label 包裹已自动处理，但要阻止链接冒泡）
+document.querySelectorAll('.card a').forEach(a=>{
+  a.addEventListener('click',e=>e.stopPropagation());
+});
 
 allCk.addEventListener('change',function(){
   const v=this.checked;
   boxes.forEach(b=>{
-    if(!b.disabled){
-      if(ckPri.checked){
-        b.checked=v&&b.closest('tr').classList.contains('pri');
-      }else{
-        b.checked=v;
-      }
+    if(b.disabled) return;
+    if(ckPri.checked){
+      b.checked=v&&b.closest('.card').classList.contains('pri');
+    }else{
+      b.checked=v;
     }
   });
   update();
@@ -85,7 +128,7 @@ allCk.addEventListener('change',function(){
 ckPri.addEventListener('change',function(){
   if(this.checked){
     boxes.forEach(b=>{
-      if(!b.disabled&&!b.closest('tr').classList.contains('pri')) b.checked=false;
+      if(!b.disabled&&!b.closest('.card').classList.contains('pri')) b.checked=false;
     });
   }
   update();
@@ -107,11 +150,13 @@ btnCart.addEventListener('click',function(){
 
 btnCopy.addEventListener('click',function(){
   const url=buildUrl();
+  const done=()=>{this.textContent='✅';setTimeout(()=>this.textContent='📋',1500)};
   if(navigator.clipboard){
-    navigator.clipboard.writeText(url).then(()=>{this.textContent='✅ 已复制';setTimeout(()=>this.textContent='📋 复制链接',2000)});
+    navigator.clipboard.writeText(url).then(done.bind(this)).catch(()=>{
+      const ta=document.createElement('textarea');ta.value=url;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);done.call(this);
+    });
   }else{
-    const ta=document.createElement('textarea');ta.value=url;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
-    this.textContent='✅ 已复制';setTimeout(()=>this.textContent='📋 复制链接',2000);
+    const ta=document.createElement('textarea');ta.value=url;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);done.call(this);
   }
 });
 </script>
