@@ -14,8 +14,6 @@ header p{margin:0 0 12px;color:#888;font-size:12px}
   border:2px solid transparent;transition:border-color .15s,box-shadow .15s}
 .card:has(.sel:checked){border-color:#1a73e8;box-shadow:0 2px 8px rgba(26,115,232,.18)}
 .card.pri{background:#fffde7}
-.card.sup{background:#f3f4f6;color:#9ca3af;cursor:default}
-.card.sup .title,.card.sup .link{color:#9ca3af}
 
 .ck{flex:0 0 auto;display:flex;align-items:flex-start;padding-top:2px}
 .ck input[type=checkbox]{width:22px;height:22px;cursor:pointer;margin:0;accent-color:#1a73e8}
@@ -29,7 +27,6 @@ header p{margin:0 0 12px;color:#888;font-size:12px}
 .meta{margin-top:4px;font-size:13px;color:#666;line-height:1.5;word-break:break-word}
 .badge{display:inline-block;background:#1a73e8;color:#fff;font-size:11px;font-weight:600;
   padding:1px 7px;border-radius:10px;margin-right:6px;vertical-align:1px}
-.card.sup .badge{background:#9ca3af}
 
 .foot{margin-top:8px;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;
   font-size:12px;color:#888}
@@ -47,13 +44,13 @@ header p{margin:0 0 12px;color:#888;font-size:12px}
   box-shadow:0 -2px 10px rgba(0,0,0,.08);
   padding-bottom:calc(10px + env(safe-area-inset-bottom))}
 #cnt{font-size:14px;font-weight:600;flex:0 0 auto}
-#ckpri-wrap{font-size:12px;color:#555;display:flex;align-items:center;gap:4px;cursor:pointer;user-select:none}
-#ckpri{width:16px;height:16px;accent-color:#1a73e8}
-.acts{margin-left:auto;display:flex;gap:8px}
-#bar button{background:#1a73e8;color:#fff;border:none;border-radius:8px;padding:9px 16px;
-  font-size:14px;font-weight:600;cursor:pointer;-webkit-appearance:none}
-#bar button:disabled{background:#cbd5e1;cursor:default}
-#bar button:active:not(:disabled){background:#1557b0}
+.acts{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+#bar button{background:#1a73e8;color:#fff;border:none;border-radius:8px;padding:9px 14px;
+  font-size:13px;font-weight:600;cursor:pointer;-webkit-appearance:none;white-space:nowrap}
+#bar button.secondary{background:#fff;color:#1a73e8;border:1px solid #1a73e8}
+#bar button.warn{background:#fff;color:#dc2626;border:1px solid #dc2626}
+#bar button:disabled{background:#cbd5e1;color:#fff;border-color:#cbd5e1;cursor:default}
+#bar button:active:not(:disabled){opacity:.7}
 #bar button.icon-only{padding:9px 12px}
 
 /* 顶部全选 */
@@ -62,28 +59,29 @@ header p{margin:0 0 12px;color:#888;font-size:12px}
 #topbar input{width:18px;height:18px;accent-color:#1a73e8;margin:0}
 
 @media(max-width:480px){
-  .wrap{padding:10px 10px 96px}
+  .wrap{padding:10px 10px 110px}
   .title{font-size:14px}
   .meta{font-size:12px}
-  #bar button{padding:9px 14px;font-size:13px}
+  #bar button{padding:8px 10px;font-size:12px}
 }
 </style>
 </head><body>
 <div class="wrap">
   <header>
     <h2>JSO 变化记录</h2>
-    <p>更新：2026-04-10 17:36:16 ・ 共 37 条</p>
+    <p>更新：2026-04-13 09:54:28 ・ 共 1 条</p>
   </header>
   <div id="topbar">
     <label><input type="checkbox" id="allck"> 全选</label>
-    <label><input type="checkbox" id="ckpri"> 仅选优先</label>
   </div>
-  <div class="list"><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="44567159832784" data-qty="10"></div><div class="body"><div class="title">『ハイキュー!!』今治ミニタオル　＜SUMMER JUMP COLLECTION＞</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18026127 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:36:16</span><a class="link" href="https://jumpshop-online.com/products/18026127" target="_blank">18026127</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=44567159832784&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="44857283936464" data-qty="10"></div><div class="body"><div class="title">『銀魂』キャラクターズホロカードコレクション2枚入り　第1弾　（全10組／ランダム1組入り）</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18066176 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:32:31</span><a class="link" href="https://jumpshop-online.com/products/18066176" target="_blank">18066176</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=44857283936464&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="44748357730512" data-qty="10"></div><div class="body"><div class="title">『魔男のイチ』メタリックポストカードコレクション　第1弾　（全8種／ランダム1種入り）</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18065378 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:32:31</span><a class="link" href="https://jumpshop-online.com/products/18065378" target="_blank">18065378</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=44748357730512&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="44748358549712" data-qty="10"></div><div class="body"><div class="title">『カグラバチ』箔押しステッカーコレクション　第1弾　（全16種／ランダム2種入り）</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18065351 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:32:31</span><a class="link" href="https://jumpshop-online.com/products/18065351" target="_blank">18065351</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=44748358549712&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card pri"><div class="ck"><input type="checkbox" class="sel" data-vid="44676686545104" data-qty="10"></div><div class="body"><div class="title"><span class="icon">🐕</span>『カグラバチ』アートカードコレクション　第1弾　（全12種／ランダム1種入り）</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18063670 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:32:31</span><a class="link" href="https://jumpshop-online.com/products/18063670" target="_blank">18063670</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=44676686545104&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="44562479939792" data-qty="10"></div><div class="body"><div class="title">『呪術廻戦』箔入りアクリルカード　伏黒甚爾（懐玉・玉折　描き下ろしイラスト）</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18062241 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:32:31</span><a class="link" href="https://jumpshop-online.com/products/18062241" target="_blank">18062241</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=44562479939792&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="44562479874256" data-qty="10"></div><div class="body"><div class="title">『呪術廻戦』箔入りアクリルカード　夏油傑（懐玉・玉折　描き下ろしイラスト）</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18062239 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:32:31</span><a class="link" href="https://jumpshop-online.com/products/18062239" target="_blank">18062239</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=44562479874256&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="44562479841488" data-qty="10"></div><div class="body"><div class="title">『呪術廻戦』箔入りアクリルカード　五条悟（懐玉・玉折　描き下ろしイラスト）</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18062238 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:32:31</span><a class="link" href="https://jumpshop-online.com/products/18062238" target="_blank">18062238</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=44562479841488&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="44538914308304" data-qty="10"></div><div class="body"><div class="title">『呪術廻戦』キャリーオンバッグ　【Go to OKINAWA】</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18062015 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:32:31</span><a class="link" href="https://jumpshop-online.com/products/18062015" target="_blank">18062015</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=44538914308304&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="44458419683536" data-qty="10"></div><div class="body"><div class="title">『家庭教師ヒットマンREBORN!』ブロマイド風カードくじ　Ver.ホロ　18種セット</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18061505 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:32:31</span><a class="link" href="https://jumpshop-online.com/products/18061505" target="_blank">18061505</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=44458419683536&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="44423577403600" data-qty="10"></div><div class="body"><div class="title">『ハイキュー!!』メモリアルコレクション　第1弾　（全32種／ランダム2種入り）</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18061161 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:32:31</span><a class="link" href="https://jumpshop-online.com/products/18061161" target="_blank">18061161</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=44423577403600&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="44341853716688" data-qty="10"></div><div class="body"><div class="title">『憂国のモリアーティ』色紙風アクリルキーホルダー　第1弾　（全10種／ランダム1種入り）</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18059964 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:32:31</span><a class="link" href="https://jumpshop-online.com/products/18059964" target="_blank">18059964</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=44341853716688&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="44341851750608" data-qty="10"></div><div class="body"><div class="title">『呪術廻戦』キャラクターズホロカードコレクション2枚入り　（全10組／ランダム1組入り）</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18059912 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:32:31</span><a class="link" href="https://jumpshop-online.com/products/18059912" target="_blank">18059912</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=44341851750608&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="44341851226320" data-qty="10"></div><div class="body"><div class="title">『銀魂』オリジナルステッカーコレクション　第1弾　（全30種／ランダム3種入り）</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18059898 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:32:31</span><a class="link" href="https://jumpshop-online.com/products/18059898" target="_blank">18059898</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=44341851226320&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card pri"><div class="ck"><input type="checkbox" class="sel" data-vid="43902748754128" data-qty="10"></div><div class="body"><div class="title"><span class="icon">🐅</span>『呪術廻戦』デコレクション缶バッジ　第1弾（全12種／ランダム1種入り）</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18056029 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:32:31</span><a class="link" href="https://jumpshop-online.com/products/18056029" target="_blank">18056029</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=43902748754128&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card sup"><div class="ck"><input type="checkbox" disabled></div><div class="body"><div class="title">『僕のヒーローアカデミア』Ａ全アートポスター</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18054348 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:32:31</span><a class="link" href="https://jumpshop-online.com/products/18054348" target="_blank">18054348</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=43705308119248&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="43363886661840" data-qty="10"></div><div class="body"><div class="title">『呪術廻戦』マスキングテープコレクション　第１弾（全８種／ランダム１種入り）</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18052399 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:32:31</span><a class="link" href="https://jumpshop-online.com/products/18052399" target="_blank">18052399</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=43363886661840&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="43363886563536" data-qty="10"></div><div class="body"><div class="title">『呪術廻戦』アクリルminiフィギュア　～The childhood of THE "JUJUTSU" characters～【第1弾】（全11種／ランダム1種入り）</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18052396 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:32:31</span><a class="link" href="https://jumpshop-online.com/products/18052396" target="_blank">18052396</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=43363886563536&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card pri"><div class="ck"><input type="checkbox" class="sel" data-vid="43159935385808" data-qty="10"></div><div class="body"><div class="title"><span class="icon">🐱</span>『家庭教師ヒットマンREBORN!』ステータスカードコレクション　（全15種／ランダム1種入り）</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18050627 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:32:31</span><a class="link" href="https://jumpshop-online.com/products/18050627" target="_blank">18050627</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=43159935385808&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card pri"><div class="ck"><input type="checkbox" class="sel" data-vid="40375663132880" data-qty="10"></div><div class="body"><div class="title"><span class="icon">🐇</span>『鬼滅の刃』名刺カードコレクション　第１弾　（全２１種／ランダム３枚セット）</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18039892 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:32:31</span><a class="link" href="https://jumpshop-online.com/products/18039892" target="_blank">18039892</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=40375663132880&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="43541251915984" data-qty="10"></div><div class="body"><div class="title">『ハイキュー!!』横断幕アクリルスタンド　宮侑</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18042160 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:31:42</span><a class="link" href="https://jumpshop-online.com/products/18042160" target="_blank">18042160</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=43541251915984&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="43541251883216" data-qty="10"></div><div class="body"><div class="title">『ハイキュー!!』横断幕アクリルスタンド　宮治</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18042159 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:31:42</span><a class="link" href="https://jumpshop-online.com/products/18042159" target="_blank">18042159</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=43541251883216&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="43541252112592" data-qty="10"></div><div class="body"><div class="title">『ハイキュー!!』横断幕アクリルスタンド　赤葦京治</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18042156 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:31:42</span><a class="link" href="https://jumpshop-online.com/products/18042156" target="_blank">18042156</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=43541252112592&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="43541252243664" data-qty="10"></div><div class="body"><div class="title">『ハイキュー!!』横断幕アクリルスタンド　木兎光太郎</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18042155 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:31:42</span><a class="link" href="https://jumpshop-online.com/products/18042155" target="_blank">18042155</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=43541252243664&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="43541252047056" data-qty="10"></div><div class="body"><div class="title">『ハイキュー!!』横断幕アクリルスタンド　孤爪研磨</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18042154 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:31:42</span><a class="link" href="https://jumpshop-online.com/products/18042154" target="_blank">18042154</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=43541252047056&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="43541252079824" data-qty="10"></div><div class="body"><div class="title">『ハイキュー!!』横断幕アクリルスタンド　黒尾鉄朗</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18042153 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:31:42</span><a class="link" href="https://jumpshop-online.com/products/18042153" target="_blank">18042153</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=43541252079824&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="43541251850448" data-qty="10"></div><div class="body"><div class="title">『ハイキュー!!』横断幕アクリルスタンド　及川徹</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18042151 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:31:42</span><a class="link" href="https://jumpshop-online.com/products/18042151" target="_blank">18042151</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=43541251850448&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="43541251981520" data-qty="10"></div><div class="body"><div class="title">『ハイキュー!!』横断幕アクリルスタンド　月島蛍</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18042150 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:31:42</span><a class="link" href="https://jumpshop-online.com/products/18042150" target="_blank">18042150</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=43541251981520&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="43541251784912" data-qty="10"></div><div class="body"><div class="title">『ハイキュー!!』横断幕アクリルスタンド　影山飛雄</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18042149 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:31:42</span><a class="link" href="https://jumpshop-online.com/products/18042149" target="_blank">18042149</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=43541251784912&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="43541252178128" data-qty="10"></div><div class="body"><div class="title">『ハイキュー!!』横断幕アクリルスタンド　日向翔陽</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18042148 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:31:42</span><a class="link" href="https://jumpshop-online.com/products/18042148" target="_blank">18042148</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=43541252178128&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="40375939858640" data-qty="10"></div><div class="body"><div class="title">『鬼滅の刃』ダイカットステッカー　甘露寺蜜璃</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18039472 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:31:42</span><a class="link" href="https://jumpshop-online.com/products/18039472" target="_blank">18039472</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=40375939858640&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="40376068964560" data-qty="10"></div><div class="body"><div class="title">『鬼滅の刃』ダイカットステッカー　栗花落カナヲ</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18036604 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:31:42</span><a class="link" href="https://jumpshop-online.com/products/18036604" target="_blank">18036604</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=40376068964560&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="40376068702416" data-qty="10"></div><div class="body"><div class="title">『鬼滅の刃』ダイカットステッカー　宇髄天元</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18036603 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:31:42</span><a class="link" href="https://jumpshop-online.com/products/18036603" target="_blank">18036603</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=40376068702416&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="40376068276432" data-qty="10"></div><div class="body"><div class="title">『鬼滅の刃』ダイカットステッカー　胡蝶しのぶ</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18036602 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:31:42</span><a class="link" href="https://jumpshop-online.com/products/18036602" target="_blank">18036602</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=40376068276432&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="43541252767952" data-qty="10"></div><div class="body"><div class="title">『DRAGON BALL』ダイカットステッカー　悟空</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18033950 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:31:42</span><a class="link" href="https://jumpshop-online.com/products/18033950" target="_blank">18033950</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=43541252767952&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="40375756325072" data-qty="10"></div><div class="body"><div class="title">『鬼滅の刃』Ａ全アートポスター</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18041324 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:31:00</span><a class="link" href="https://jumpshop-online.com/products/18041324" target="_blank">18041324</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=40375756325072&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label><label class="card"><div class="ck"><input type="checkbox" class="sel" data-vid="40376017354960" data-qty="10"></div><div class="body"><div class="title">『ハイキュー!!』アクリルmini☆miniフィギュア　（全30種のうちランダム5個入）</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18036924 ・ 当前：有货</div><div class="foot"><span class="ts">2026-04-10 17:31:00</span><a class="link" href="https://jumpshop-online.com/products/18036924" target="_blank">18036924</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=40376017354960&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label></div>
+  <div class="list"><label class="card pri"><div class="ck"><input type="checkbox" class="sel" data-vid="43159935385808" data-handle="18050627" data-name="『家庭教師ヒットマンREBORN!』ステータスカードコレクション　（全15種／ランダム1種入り）" data-qty="10"></div><div class="body"><div class="title"><span class="icon">🐱</span>『家庭教師ヒットマンREBORN!』ステータスカードコレクション　（全15種／ランダム1種入り）</div><div class="meta"><span class="badge">商品补货</span>Default Title ・ 18050627 ・ 无货 → 有货</div><div class="foot"><span class="ts">2026-04-13 09:54:28</span><a class="link" href="https://jumpshop-online.com/products/18050627" target="_blank">18050627</a><a class="cart" href="https://jumpshop-online.com/cart/add?id=43159935385808&amp;quantity=10" target="_blank">🛒 单独加购 10</a></div></div></label></div>
 </div>
 <div id="bar">
   <span id="cnt">已选 0</span>
   <div class="acts">
-    <button id="btnCopy" disabled class="icon-only">📋</button>
+    <button id="btnWatch" disabled class="secondary">⭐ 导出重点</button>
+    <button id="btnExclude" disabled class="warn">🚫 导出排除</button>
+    <button id="btnCopy" disabled class="icon-only secondary">📋</button>
     <button id="btnCart" disabled>🛒 批量加购</button>
   </div>
 </div>
@@ -93,44 +91,26 @@ const boxes=document.querySelectorAll('.sel');
 const cntEl=document.getElementById('cnt');
 const btnCart=document.getElementById('btnCart');
 const btnCopy=document.getElementById('btnCopy');
+const btnWatch=document.getElementById('btnWatch');
+const btnExclude=document.getElementById('btnExclude');
 const allCk=document.getElementById('allck');
-const ckPri=document.getElementById('ckpri');
 
 function update(){
   const n=[...boxes].filter(b=>b.checked).length;
   cntEl.textContent='已选 '+n;
-  btnCart.disabled=btnCopy.disabled=n===0;
-  // 同步全选状态
+  btnCart.disabled=btnCopy.disabled=btnWatch.disabled=btnExclude.disabled=n===0;
   const enabled=[...boxes].filter(b=>!b.disabled);
-  const filtered=ckPri.checked?enabled.filter(b=>b.closest('.card').classList.contains('pri')):enabled;
-  if(filtered.length>0&&filtered.every(b=>b.checked)) allCk.checked=true;
-  else allCk.checked=false;
+  allCk.checked=enabled.length>0&&enabled.every(b=>b.checked);
 }
 
-// 点击卡片任意位置切换 checkbox（label 包裹已自动处理，但要阻止链接冒泡）
+// 阻止卡片内链接触发 label 选中
 document.querySelectorAll('.card a').forEach(a=>{
   a.addEventListener('click',e=>e.stopPropagation());
 });
 
 allCk.addEventListener('change',function(){
   const v=this.checked;
-  boxes.forEach(b=>{
-    if(b.disabled) return;
-    if(ckPri.checked){
-      b.checked=v&&b.closest('.card').classList.contains('pri');
-    }else{
-      b.checked=v;
-    }
-  });
-  update();
-});
-
-ckPri.addEventListener('change',function(){
-  if(this.checked){
-    boxes.forEach(b=>{
-      if(!b.disabled&&!b.closest('.card').classList.contains('pri')) b.checked=false;
-    });
-  }
+  boxes.forEach(b=>{if(!b.disabled) b.checked=v;});
   update();
 });
 
@@ -159,5 +139,39 @@ btnCopy.addEventListener('click',function(){
     const ta=document.createElement('textarea');ta.value=url;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);done.call(this);
   }
 });
+
+function exportList(type,label){
+  const items=[...boxes].filter(b=>b.checked).map(b=>({
+    handle: b.dataset.handle,
+    name: b.dataset.name
+  }));
+  // 按 handle 去重
+  const seen=new Set();
+  const unique=items.filter(it=>{
+    if(seen.has(it.handle)) return false;
+    seen.add(it.handle);
+    return true;
+  });
+  const now=new Date();
+  const pad=n=>String(n).padStart(2,'0');
+  const ts=now.getFullYear()+pad(now.getMonth()+1)+pad(now.getDate())+'_'+pad(now.getHours())+pad(now.getMinutes());
+  const data={
+    type: type,
+    exported_at: now.toISOString(),
+    count: unique.length,
+    items: unique
+  };
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='jso_'+type+'_'+ts+'.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+}
+
+btnWatch.addEventListener('click',function(){exportList('watch','重点')});
+btnExclude.addEventListener('click',function(){exportList('exclude','排除')});
 </script>
 </body></html>
